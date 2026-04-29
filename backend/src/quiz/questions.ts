@@ -37,7 +37,7 @@ export const QUIZ_QUESTIONS: readonly Question[] = [
     options: [
       { id: 'a', text: 'Naskočím a jedu.', scores: { rituals: -1 }, betrayal: 2 },
       { id: 'b', text: 'Provedu walk-around — zkontroluju olej, hadičky, podvozek.', scores: { rituals: 2 } },
-      { id: 'c', text: 'Walk-around plus krátká modlitba k bratru Cataryanovi.', scores: { rituals: 3, narcis: 1 } },
+      { id: 'c', text: 'Walk-around plus krátká modlitba k Pánu bagrů.', scores: { rituals: 3, narcis: 1 } },
       { id: 'd', text: 'Walk-around, modlitba, mazání všech bodů, fotka pro Instagram.', scores: { rituals: 3, narcis: 2, mleti: 1 } },
     ],
   },
@@ -138,7 +138,7 @@ export const QUIZ_QUESTIONS: readonly Question[] = [
       { id: 'a', text: '„Možná. Záleží, co se ti líbí."', scores: { komatsu: -2 }, betrayal: 3 },
       { id: 'b', text: '„Komatsu se neříká nahlas, broučku."', scores: { komatsu: 2, rituals: 1 } },
       { id: 'c', text: 'Sednu si na zem, nakreslím srovnávací tabulku motorů a vysvětlím to v pětadvaceti bodech.', scores: { mleti: 3, komatsu: 2 } },
-      { id: 'd', text: 'Beze slova vyndám ze šuplíku knihu o sektě a začnu předčítat z modlitebníku.', scores: { komatsu: 3, rituals: 3, narcis: 1 } },
+      { id: 'd', text: 'Beze slova vyndám ze šuplíku modlitebník Společenství a začnu předčítat.', scores: { komatsu: 3, rituals: 3, narcis: 1 } },
     ],
   },
   {
@@ -148,17 +148,17 @@ export const QUIZ_QUESTIONS: readonly Question[] = [
       { id: 'a', text: 'Lajk. Ať dělá, co chce.', scores: { komatsu: -2 }, betrayal: 3 },
       { id: 'b', text: 'Odhlásím se z odběru, mlčky.', scores: { komatsu: 2, rituals: 1 } },
       { id: 'c', text: 'Komentář: „Gratuluji k novému začátku, jistě to bude cesta plná učení."', scores: { mleti: 2, komatsu: 2, narcis: 1 } },
-      { id: 'd', text: 'Obrátím se k bratrům — od dnes je v kastě nečistých.', scores: { komatsu: 3, rituals: 3 } },
+      { id: 'd', text: 'Obrátím se k Bratrstvu — od dnes je kacíř.', scores: { komatsu: 3, rituals: 3 } },
     ],
   },
   {
     id: 'q16',
-    text: 'Je Smutný pátek, památka úmrtí staré 7 série. Jak ho slavíš?',
+    text: 'Je Smutný pátek — den, kdy se loučí se stroji jdoucími na trade-in. Jak ho prožíváš?',
     options: [
       { id: 'a', text: 'Nevím, co je Smutný pátek.', scores: { rituals: -2 }, betrayal: 3 },
       { id: 'b', text: 'V pondělí mi to kamarád připomene a krátce vzpomenu.', scores: {} },
       { id: 'c', text: 'Sváteční oblečení (CAT, černá), návštěva muzea staré techniky, večer pivo.', scores: { rituals: 2 } },
-      { id: 'd', text: 'Den volna. Modlitba, walk-around staré sedmičky v depu, sdílím vzpomínkový post na FB.', scores: { rituals: 3, narcis: 2 } },
+      { id: 'd', text: 'Den volna. Modlitba, walk-around starých strojů v depu, sdílím vzpomínkový post na FB.', scores: { rituals: 3, narcis: 2 } },
     ],
   },
   {
@@ -167,7 +167,7 @@ export const QUIZ_QUESTIONS: readonly Question[] = [
     options: [
       { id: 'a', text: 'Začnu jíst.', scores: { rituals: -1 }, betrayal: 2 },
       { id: 'b', text: 'Krátce kývnu, aby ostatní věděli, že vím.', scores: { rituals: 1 } },
-      { id: 'c', text: 'Pronesu krátké požehnání — „Bratr Cataryan budiž s námi" — a teprve pak jím.', scores: { rituals: 2 } },
+      { id: 'c', text: 'Pronesu krátké požehnání — „Žehnej, Caterpillare, této svačině" — a teprve pak jím.', scores: { rituals: 2 } },
       { id: 'd', text: 'Vstanu, přečtu z modlitebníku úryvek, počkám na souhlasné mručení, sednu, pomodlím se ještě sám pro sebe.', scores: { rituals: 3, narcis: 2, mleti: 1 } },
     ],
   },
@@ -178,7 +178,7 @@ export const QUIZ_QUESTIONS: readonly Question[] = [
       { id: 'a', text: 'Objednám nový a starý do šrotu.', scores: { rituals: -2 }, betrayal: 3 },
       { id: 'b', text: 'Smutek pár dní, pak prakticky řeším náhradu.', scores: {} },
       { id: 'c', text: 'Důstojný odchod — fotka, vzpomínkový příspěvek, pivní pohřbík v garáži.', scores: { rituals: 2, narcis: 1 } },
-      { id: 'd', text: 'Plný rituál: walk-around naposled, modlitba za bratra Cataryana, kus podvozku si nechám jako relikvii.', scores: { rituals: 3, narcis: 2 } },
+      { id: 'd', text: 'Plný rituál: walk-around naposled, závěrečné požehnání pro Bratrstvo, kus podvozku si nechám jako relikvii.', scores: { rituals: 3, narcis: 2 } },
     ],
   },
 ];
