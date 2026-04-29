@@ -10,10 +10,9 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- [ ] (volné — domluvit další krok)
+- [ ] FE: stránka kvízu (jedna otázka + progress + 4 volby + zpět). Soubory `frontend/src/quiz/{QuizPage,QuestionCard,Progress}.tsx`, `frontend/src/quiz/{api,types}.ts`. Bez routeru (App.tsx → QuizPage napřímo) a bez CSS frameworku (jen inline neutrál) — sdílené věci se domluví s kolegou později.
 
 ### Brzy
-- [ ] FE: stránka `/kviz` s jednou otázkou + progress
 - [ ] FE: výsledková stránka (zobrazení stupně + profil os)
 - [ ] Sdílení výsledku linkem (URL hash vs. server-side ID — rozhodnout)
 - [ ] Domluva s kolegou: jak Quiz získá popis stupně z Lore (`ARCHITECTURE.md` → Sdílená rozhraní)
