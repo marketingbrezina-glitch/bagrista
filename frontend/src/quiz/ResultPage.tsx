@@ -74,7 +74,7 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
   }
 
   function onPrint() {
-    printResult(`Bagrista — Stupeň ${result.levelId} ${info.name}`);
+    printResult(`Bagrista — Úroveň ${result.levelId} (${info.model})`);
   }
 
   return (
@@ -82,9 +82,12 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
       <style>{PRINT_CSS}</style>
 
       <p style={{ fontSize: 14, color: '#666', marginBottom: 8 }}>Tvůj stupeň</p>
-      <h1 style={{ fontSize: 28, margin: 0, marginBottom: 16, lineHeight: 1.2 }}>
-        {result.levelId}. {info.name}
+      <h1 style={{ fontSize: 28, margin: 0, marginBottom: 4, lineHeight: 1.2 }}>
+        Bagrista úrovně {result.levelId}
       </h1>
+      <p style={{ fontSize: 18, color: '#666', margin: 0, marginBottom: 24, fontWeight: 500 }}>
+        {info.model}
+      </p>
       <p style={{ fontSize: 16, lineHeight: 1.5, marginBottom: 32, color: '#333' }}>
         {info.description}
       </p>
