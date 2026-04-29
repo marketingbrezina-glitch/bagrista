@@ -1,8 +1,12 @@
 # Bagrista
 
-Testovací projekt vyvíjený paralelně dvěma lidmi — backend (Honza) + frontend (kolega).
+Satirický web na osobnostní profilování bagristů. Live: **https://bagrista.vercel.app**.
 
 > **TL;DR pro Claude / Cursor / Copilot:** přečti si nejdřív `CLAUDE.md` v rootu a všechno v `context/`. To je single source of truth.
+
+## Stack
+
+Jeden statický Vite + React + TypeScript SPA, deploy na Vercel z `main` (Project Root = `frontend`). Žádný backend, žádná DB. Lore obsah se bundluje z `content/lore/*.md` přes Vite glob; quiz scoring i otázky běží 100 % client-side.
 
 ## Prerequisites
 
@@ -11,42 +15,30 @@ Testovací projekt vyvíjený paralelně dvěma lidmi — backend (Honza) + fron
 
 ## Spuštění lokálně
 
-Backend a frontend běží jako dva samostatné procesy ve dvou terminálech:
-
 ```bash
-# Terminál 1 — backend (port 3001)
-cd backend
-cp .env.example .env
-npm install
-npm run dev
-
-# Terminál 2 — frontend (port 5173)
 cd frontend
-cp .env.example .env
 npm install
-npm run dev
+npm run dev   # :5173
 ```
 
-Otevři `http://localhost:5173` — frontend by měl zavolat backend přes proxy `/api/health` a zobrazit výsledek.
+Otevři `http://localhost:5173`.
 
 ## Struktura
 
 ```
-backend/    REST API (Fastify + TypeScript)
-frontend/   SPA (Vite + React + TypeScript)
-context/    Sdílený context — čti dřív, než cokoli změníš
+frontend/        Vite SPA (jediná build artefakta)
+content/lore/    Markdown obsah (bundluje se do FE za build time)
+context/         Sdílený context — čti dřív, než cokoli změníš
+design/          Statický designový mockup (reference)
 ```
 
 ## Workflow (varianta B — direct push)
 
-Žádné PR, pushujeme přímo do `main`. Jediné pravidlo: **vždy `git pull --rebase` před `git push`**.
+Žádné PR, pushujeme přímo do `main`. Jediné pravidlo: **vždy `git pull --rebase` před `git push`**. Push do `main` = auto-deploy na Vercel.
 
 ```bash
-# Před prací
 git pull --rebase
-
-# Po práci
-git add .
+git add <konkrétní soubory>
 git commit -m "scope: stručný popis"
 git pull --rebase
 git push

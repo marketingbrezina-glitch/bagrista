@@ -1,5 +1,7 @@
 # Bagrista — co to je
 
+**Live:** https://bagrista.vercel.app (auto-deploy z `main` přes Vercel, Project Root = `frontend`)
+
 ## Cíl
 
 Bagrista je satirický web pro **osobnostní profilování bagristů** — kvíz inspirovaný scientologickým „Bridge to Total Freedom" / klasickými testy osobnosti, který návštěvníka zařadí do jednoho z osmi charakterových stupňů podle modelů Caterpillar (CAT 301.5 Nováček → 6090 FS Guru, plus stupeň 8 D9 Zrádce). K tomu sdružuje encyklopedii lore „Sekty bagristů" (slovník, modlitebník, rituály, svátky, kasta nečistých).
