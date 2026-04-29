@@ -19,7 +19,7 @@ export const LEVEL_SLUGS: Record<LevelId, string> = {
   8: 'zradce',
 };
 
-const BETRAYAL_THRESHOLD = 6;
+const BETRAYAL_THRESHOLD = 14;
 
 const TIER_WEIGHTS: Record<Axis, number> = {
   narcis: 0.4,
@@ -57,11 +57,11 @@ export function scoreAnswers(
 }
 
 function tierToLevel(tier: number): LevelId {
-  if (tier < 1.5) return 1;
-  if (tier < 3) return 2;
-  if (tier < 4.5) return 3;
-  if (tier < 6) return 4;
-  if (tier < 7.5) return 5;
-  if (tier < 9) return 6;
+  if (tier < 2) return 1;
+  if (tier < 4) return 2;
+  if (tier < 7) return 3;
+  if (tier < 11) return 4;
+  if (tier < 15) return 5;
+  if (tier < 18) return 6;
   return 7;
 }
