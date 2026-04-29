@@ -52,7 +52,7 @@ cd frontend && npm install && npm run dev   # :5173, proxy → :3001
 | Method | Path                  | Body                                  | Response                                                                | Stav      |
 |--------|-----------------------|---------------------------------------|-------------------------------------------------------------------------|-----------|
 | GET    | `/api/quiz/questions` | —                                     | `{ questions: PublicQuestion[] }` — pořadí, znění, varianty (bez skóre) | implementováno (3–4 vzorové otázky, plná sada 18 čeká na obsah) |
-| POST   | `/api/quiz/score`     | `{ answers: Answer[] }`               | `{ levelId: 1..8, levelSlug, axes, betrayalScore }` (`summary` přijde po dohodě s Lore) | implementováno |
+| POST   | `/api/quiz/score`     | `{ answers: Answer[] }`               | `{ levelId: 1..8, levelSlug, axes, axisMax, betrayalScore }` (`summary` přijde po dohodě s Lore) | implementováno |
 | GET    | `/api/quiz/result/:id`| —                                     | `{ levelId, levelSlug, createdAt }` — pro sdílení (pokud zvolíme server-side ID místo URL hashe) | návrh — záleží na rozhodnutí o sdílení |
 
 Datové typy (zdroj pravdy: `backend/src/quiz/types.ts`, viz `DECISIONS.md` 2026-04-29 — Quiz scoring):
@@ -70,6 +70,7 @@ type ScoreResponse = {
   levelId: LevelId;
   levelSlug: string;
   axes: Record<Axis, number>;
+  axisMax: Record<Axis, number>; // theoretical max per axis (sum of best option across all questions); FE normalizuje na %
   betrayalScore: number;
 };
 ```

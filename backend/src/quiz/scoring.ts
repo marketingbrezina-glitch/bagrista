@@ -8,6 +8,17 @@ import {
   type ScoreResult,
 } from './types.js';
 
+export function computeAxisMax(questions: readonly Question[]): AxisProfile {
+  const max: AxisProfile = { mleti: 0, narcis: 0, komatsu: 0, rituals: 0 };
+  for (const question of questions) {
+    for (const axis of AXES) {
+      const best = Math.max(0, ...question.options.map((o) => o.scores[axis] ?? 0));
+      max[axis] += best;
+    }
+  }
+  return max;
+}
+
 export const LEVEL_SLUGS: Record<LevelId, string> = {
   1: 'novacek',
   2: 'fanousek',
@@ -47,13 +58,15 @@ export function scoreAnswers(
     betrayalScore += option.betrayal ?? 0;
   }
 
+  const axisMax = computeAxisMax(questions);
+
   if (betrayalScore >= BETRAYAL_THRESHOLD) {
-    return { levelId: 8, levelSlug: LEVEL_SLUGS[8], axes, betrayalScore };
+    return { levelId: 8, levelSlug: LEVEL_SLUGS[8], axes, axisMax, betrayalScore };
   }
 
   const tier = AXES.reduce((acc, axis) => acc + TIER_WEIGHTS[axis] * axes[axis], 0);
   const levelId = tierToLevel(tier);
-  return { levelId, levelSlug: LEVEL_SLUGS[levelId], axes, betrayalScore };
+  return { levelId, levelSlug: LEVEL_SLUGS[levelId], axes, axisMax, betrayalScore };
 }
 
 function tierToLevel(tier: number): LevelId {

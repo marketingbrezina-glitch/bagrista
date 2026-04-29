@@ -25,6 +25,7 @@ export type ScoreResult = {
   levelId: LevelId;
   levelSlug: string;
   axes: AxisProfile;
+  axisMax: AxisProfile;
   betrayalScore: number;
 };
 

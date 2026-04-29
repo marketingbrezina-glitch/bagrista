@@ -10,7 +10,7 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- [ ] BE: přidat 19. otázku „Naložení Tatry" (corporate-bagrista angle, čerpá z Cyklu bagrování). Sada se rozšíří 18 → 19. Re-kalibrace prahů odložena na okamžik, kdy půjde kvíz do reálného traffic — drobná inflace tieru (+2 pro all-d persona) je přijatelná.
+- [ ] FE: výsledková stránka (`ResultPage` + `AxisBar` + `levels.ts`). Po q19 zavolá `POST /api/quiz/score` a zobrazí stupeň 1–8 s názvem modelu, krátký popis (FE placeholder do doby, než přijde popis z Lore endpointu kolegy), profil 4 os v procentech (BE rozšířen o `axisMax`), tlačítka „Spočítat znovu" a placeholder „Sdílet (brzy)".
 
 ### Brzy
 - [ ] FE: výsledková stránka (zobrazení stupně + profil os)
