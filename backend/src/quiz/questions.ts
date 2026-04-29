@@ -183,7 +183,7 @@ export const QUIZ_QUESTIONS: readonly Question[] = [
   },
   {
     id: 'q19',
-    text: 'Celofiremní call. Šéf řekne: „Honzo, mohl bys nám krátce shrnout status?" Ty:',
+    text: 'Celofiremní call. Šéf řekne: „Mohl bys nám krátce shrnout status?" Ty:',
     options: [
       { id: 'a', text: '„Status je: nestihli jsme. Příští týden."', scores: { mleti: -2 }, betrayal: 3 },
       { id: 'b', text: 'Tři věty, jednou pointou. Mám-li čas, dvě další.', scores: {} },
