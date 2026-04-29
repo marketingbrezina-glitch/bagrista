@@ -1,6 +1,9 @@
 import { useState, type CSSProperties } from 'react';
+import { Link } from 'react-router-dom';
+import { findLevelById } from '../lore/loreContent';
+import { MarkdownView } from '../lore/MarkdownView';
 import { AxisBar } from './AxisBar';
-import { AXIS_LABELS, LEVEL_INFO } from './levels';
+import { AXIS_LABELS } from './levels';
 import { copyShareLink, printResult } from './share';
 import type { Axis, ScoreResult } from './types';
 
@@ -14,9 +17,8 @@ const PRINT_CSS = `
 `;
 
 const pageStyle: CSSProperties = {
-  fontFamily: 'system-ui, sans-serif',
   padding: '2rem',
-  maxWidth: 640,
+  maxWidth: 720,
   margin: '0 auto',
   color: '#222',
 };
@@ -63,8 +65,11 @@ type Props = {
 
 export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props) {
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied' | 'error'>('idle');
-  const info = LEVEL_INFO[result.levelId];
   const isBetrayer = result.levelId === 8;
+  const levelDoc = findLevelById(result.levelId);
+  const model = typeof levelDoc?.data.model === 'string' ? levelDoc.data.model : '';
+  const epithet = typeof levelDoc?.data.nazev === 'string' ? levelDoc.data.nazev : '';
+  const perex = typeof levelDoc?.data.perex === 'string' ? levelDoc.data.perex : '';
 
   function onShare() {
     void copyShareLink(shareHash).then((ok) => {
@@ -74,7 +79,9 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
   }
 
   function onPrint() {
-    printResult(`Bagrista — Úroveň ${result.levelId} ${info.model} ${info.epithet}`);
+    printResult(
+      `Bagrista — Úroveň ${result.levelId} ${model}${epithet ? ` ${epithet}` : ''}`,
+    );
   }
 
   return (
@@ -85,14 +92,19 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
         Bagrista úrovně {result.levelId}
       </h1>
       <p style={{ fontSize: 18, color: '#666', margin: 0, marginBottom: 24, fontWeight: 500 }}>
-        {info.model} {info.epithet}
-      </p>
-      <p style={{ fontSize: 16, lineHeight: 1.5, marginBottom: 32, color: '#333' }}>
-        {info.description}
+        {model}
+        {model && epithet && ' '}
+        {epithet}
       </p>
 
+      {perex && (
+        <p style={{ fontSize: 17, lineHeight: 1.5, marginBottom: 28, color: '#333' }}>
+          {perex}
+        </p>
+      )}
+
       <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Profil os</h2>
-      <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 32 }}>
         {AXES.map((axis) => (
           <AxisBar
             key={axis}
@@ -115,9 +127,37 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
         </p>
       )}
 
+      {levelDoc && (
+        <section
+          style={{
+            marginTop: 16,
+            paddingTop: 24,
+            borderTop: '1px solid #eee',
+          }}
+        >
+          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>
+            Lore stupně
+          </h2>
+          <MarkdownView body={levelDoc.body} />
+          <p style={{ marginTop: 24, fontSize: 14 }}>
+            <Link to={`/lore/levels/${levelDoc.slug}`} style={{ color: '#444' }}>
+              Otevřít stupeň v Lore →
+            </Link>
+          </p>
+        </section>
+      )}
+
       <div
         className="quiz-no-print"
-        style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}
+        style={{
+          display: 'flex',
+          gap: 12,
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          marginTop: 32,
+          paddingTop: 24,
+          borderTop: '1px solid #eee',
+        }}
       >
         <button type="button" onClick={onShare} style={primaryButtonStyle}>
           Sdílet

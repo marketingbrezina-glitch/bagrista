@@ -123,6 +123,76 @@ const INTERNAL_DOCS: LoreDoc[] = Object.entries(RAW_FILES)
     };
   });
 
+type LinkTarget = { path: string; label: string };
+
+const SLUG_INDEX: Map<string, LinkTarget> = (() => {
+  const index = new Map<string, LinkTarget>();
+  const register = (key: string, target: LinkTarget) => {
+    if (!key) return;
+    if (!index.has(key)) index.set(key, target);
+    const lower = key.toLowerCase();
+    if (lower !== key && !index.has(lower)) index.set(lower, target);
+  };
+
+  for (const doc of ALL_DOCS) {
+    const path = doc.category === 'hub' ? `/lore/${doc.slug}` : `/lore/${doc.category}/${doc.slug}`;
+    const nazev = typeof doc.data.nazev === 'string' ? doc.data.nazev : doc.slug;
+    const target: LinkTarget = { path, label: nazev };
+    register(nazev, target);
+    register(doc.slug, target);
+
+    if (doc.category === 'levels' && typeof doc.data.id === 'number') {
+      const model = typeof doc.data.model === 'string' ? doc.data.model : '';
+      register(`Stupeň ${doc.data.id} — ${model} · ${nazev}`, target);
+      register(`Stupeň ${doc.data.id}`, target);
+    }
+    if (doc.category === 'phases' && typeof doc.data.id === 'number') {
+      register(`Fáze ${doc.data.id} — ${nazev}`, target);
+      register(`Fáze ${doc.data.id}`, target);
+    }
+  }
+
+  for (const doc of INTERNAL_DOCS) {
+    if (doc.slug !== '_intro') continue;
+    if (doc.category === 'hub') continue;
+    const path = `/lore/${doc.category}`;
+    const nazev = typeof doc.data.nazev === 'string' ? doc.data.nazev : doc.category;
+    register(nazev, { path, label: nazev });
+  }
+  return index;
+})();
+
+function lookupTarget(key: string): LinkTarget | undefined {
+  return SLUG_INDEX.get(key) ?? SLUG_INDEX.get(key.toLowerCase());
+}
+
+export function processWikiLinks(body: string): string {
+  return body.replace(/\[\[([^\]]+)\]\]/g, (_match, raw: string) => {
+    const pipe = raw.indexOf('|');
+    const targetRaw = pipe >= 0 ? raw.slice(0, pipe) : raw;
+    const aliasRaw = pipe >= 0 ? raw.slice(pipe + 1) : null;
+    const hash = targetRaw.indexOf('#');
+    const base = hash >= 0 ? targetRaw.slice(0, hash) : targetRaw;
+    const anchor = hash >= 0 ? targetRaw.slice(hash + 1) : null;
+
+    const target = lookupTarget(base.trim());
+    const display = (aliasRaw ?? target?.label ?? base).trim();
+    const escapedDisplay = display.replace(/([\[\]\\])/g, '\\$1');
+
+    if (!target) {
+      return `**${escapedDisplay}**`;
+    }
+    const url = anchor ? `${target.path}#${anchor}` : target.path;
+    return `**[${escapedDisplay}](${url})**`;
+  });
+}
+
+export function findLevelById(id: number): LoreDoc | undefined {
+  return ALL_DOCS.find(
+    (d) => d.category === 'levels' && typeof d.data.id === 'number' && d.data.id === id,
+  );
+}
+
 export function listByCategory(category: LoreCategory): LoreDoc[] {
   const docs = ALL_DOCS.filter(
     (d) => d.category === category && d.data.skryto_v_seznamu !== true,
