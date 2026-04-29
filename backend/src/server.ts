@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import { quizRoutes } from './quiz/routes.js';
 
 const PORT = Number(process.env.PORT ?? 3001);
 const HOST = process.env.HOST ?? '0.0.0.0';
@@ -14,6 +15,7 @@ app.get('/api/health', async () => {
 
 const start = async () => {
   try {
+    await app.register(quizRoutes);
     await app.listen({ port: PORT, host: HOST });
   } catch (err) {
     app.log.error(err);
