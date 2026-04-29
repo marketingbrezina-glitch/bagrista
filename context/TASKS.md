@@ -1,30 +1,48 @@
 # Aktuální práce
 
 > Aktualizuj, když začneš nebo dokončíš něco netriviálního. Tvůj i kolegův Claude to čte — jinak nemá jak vědět, na čem makáš.
+>
+> **Pravidlo:** TASKS.md aktualizuj *před* začátkem práce, ne po. Co tu není, na to si nemůžeš dělat nárok.
 
-## Honza (backend)
+## Honza — Quiz / Profilování
 
-### Dělá teď
-- [ ] TODO: první task
-
-### Brzy
-
-- [ ] TODO
-
-## Kolega (frontend)
+Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení výsledku.
+Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-
-- [ ] TODO: první task
+- [ ] TODO: první task (např. „Definovat datový model otázky a navrhnout scoring → 1 stupeň z 8")
 
 ### Brzy
+- [ ] Návrh prvních ~5 otázek pro pilotní průchod
+- [ ] FE: stránka `/kviz` s jednou otázkou + progress
+- [ ] BE: `POST /api/quiz/score` (request: odpovědi, response: stupeň + popis)
+- [ ] Sdílení výsledku linkem (URL hash vs. server-side ID — rozhodnout)
 
-- [ ] TODO
+## Kolega — Lore / Encyklopedie
+
+Vlastní: 8 stupňů jako stránky, slovník, modlitebník, rituály, svátky, kasta nečistých.
+Soubory: `frontend/src/lore/*`, `backend/src/lore/*`.
+
+### Dělá teď
+- [ ] TODO: první task (např. „Routing + layout pro `/lore/*`, první stránka stupně")
+
+### Brzy
+- [ ] Stránka pro každý ze 8 stupňů (CAT 301.5 → CAT D9), obsah z knowledge base
+- [ ] Stránka „Slovník" (Komatsu, pozdravy, lidová rčení)
+- [ ] Stránka „Modlitebník" (modlitby, požehnání, Credo bagristae)
+- [ ] BE: `GET /api/lore/levels`, `GET /api/lore/levels/:id` — nebo všechno jako statický JSON v repu
 
 ## Společné / sdílené
 
-- [ ] TODO: doplnit `context/PROJECT.md` — co Bagrista vlastně dělá, MVP scope
+> Měňte v páru, ne sólo. Když narazíte na nutnost změny, napište do TASKS.md a domluvte se.
+
+- [ ] Homepage — co tam má být (intro do sekty, CTA na kvíz, odkaz na lore)
+- [ ] Hlavní navigace (Domů / Kvíz / Lore)
+- [ ] Design tokens (barvy, typografie, mezery) — žluť Caterpillaru jako primární?
+- [ ] Layout / Header / Footer komponenty
 
 ## Hotovo
 
-- [x] 2026-04-29 — Setup repa: monorepo struktura `/backend` + `/frontend`, context složka, scaffold Fastify + Vite/React
+- [x] 2026-04-29 — Strategická dohoda: feature-split (Quiz/Lore) místo layer-split (BE/FE). Plán v `context/stav-me-nov-projekt-nastuduj-rosy-valley.md`, rozhodnutí zapsáno v `DECISIONS.md`.
+- [x] 2026-04-29 — Doplněna doména: `sekta_bagristu_knowledge_base.md` (verze 1.0).
+- [x] 2026-04-29 — Setup repa: monorepo struktura `/backend` + `/frontend`, context složka, scaffold Fastify + Vite/React.
