@@ -10,7 +10,7 @@
 Místo původního draftu z `ARCHITECTURE.md` (`weights: Partial<Record<LevelId, number>>` — vážený součet bodů přímo do stupňů 1–8) jdeme cestou **vícerozměrného profilu**:
 
 - 4 osy: `mleti` (schopnost mluvit bez kontextu), `narcis` (sebevědomí), `komatsu` (vztah ke konkurenci), `rituals` (vázanost na rituály sekty).
-- Samostatný skalár `betrayal` (0..3 na volbu) — pokud návštěvník konzistentně volí přímost a prostotu, `betrayalScore ≥ threshold` ho short-circuitne na **stupeň 8 (D9 Zrádce)**.
+- Samostatný skalár `betrayal` (0..3 na volbu, **pouze na a-options** s explicitně přímou/odmítavou odpovědí) — pokud návštěvník konzistentně volí přímost a prostotu, `betrayalScore ≥ threshold` ho short-circuitne na **stupeň 8 (D9 Zrádce)**. Threshold po kalibraci na 18 otázkách = **14** (max dosažitelný betrayal score ≈ 45; 14 odpovídá ~5 silným direct pickům). Aby nedocházelo k přetečení nováčka do D9, „soft betrayal" (=1) na b-options byl odstraněn — D9 vyžaduje vědomé direct picky, ne agregovanou skromnost. Tier prahy mapování (`tier → 1..7`) jsou `[2, 4, 7, 11, 15, 18]` a kalibrované persona-průchody zařadily nováčka, fanouška, vyšší zasvěcení, gurua a zrádce přesně; hranice stupňů 3↔4 a 6↔7 zůstávají subjektivní.
 - Jinak: `tier = 0.4·narcis + 0.3·mleti + 0.2·komatsu + 0.1·rituals`, mapování přes 6 prahů na stupně 1–7.
 - `Question.options` má **pevně 4 varianty** (konzistentní UX, klávesové zkratky, snadná kalibrace).
 - **18 otázek** v MVP (mezi 15–25 z PROJECT.md): ~4–5 na osu, čas ~3–4 min, dostatečně stabilní skóre bez drop-offu.

@@ -10,14 +10,14 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- [ ] BE: datový model otázky + scoring (Varianta B — 4 osy `mleti/narcis/komatsu/rituals` + `betrayal` short-circuit pro D9). Soubory `backend/src/quiz/{types,scoring,questions,routes}.ts`. Endpointy `GET /api/quiz/questions` a `POST /api/quiz/score`. Plus 3–4 vzorové otázky pro testování (plných 18 přijde v dalším úkolu).
+- [ ] (volné — domluvit další krok)
 
 ### Brzy
-- [ ] Sepsat plnou sadu 18 otázek (satirický autorský obsah pokrývající 4 osy + betrayal)
 - [ ] FE: stránka `/kviz` s jednou otázkou + progress
 - [ ] FE: výsledková stránka (zobrazení stupně + profil os)
 - [ ] Sdílení výsledku linkem (URL hash vs. server-side ID — rozhodnout)
 - [ ] Domluva s kolegou: jak Quiz získá popis stupně z Lore (`ARCHITECTURE.md` → Sdílená rozhraní)
+- [ ] Doladit hranice stupňů 3↔4 a 6↔7 po prvních reálných průchodech (přidat 1–2 přechodové otázky nebo upravit prahy)
 
 ## Kolega — Lore / Encyklopedie
 
@@ -44,6 +44,7 @@ Soubory: `frontend/src/lore/*`, `backend/src/lore/*`.
 
 ## Hotovo
 
+- [x] 2026-04-29 — BE Quiz: 18 otázek + scoring (4 osy + betrayal short-circuit), kalibrované prahy `[2,4,7,11,15,18]` a `BETRAYAL_THRESHOLD=14`, persona-průchody ověřeny pro stupně 1/2/5/7/8 přesně, 3↔4 a 6↔7 zůstávají subjektivní. Endpointy `GET /api/quiz/questions` + `POST /api/quiz/score` běží.
 - [x] 2026-04-29 — Strategická dohoda: feature-split (Quiz/Lore) místo layer-split (BE/FE). Plán v `context/stav-me-nov-projekt-nastuduj-rosy-valley.md`, rozhodnutí zapsáno v `DECISIONS.md`.
 - [x] 2026-04-29 — Doplněna doména: `sekta_bagristu_knowledge_base.md` (verze 1.0).
 - [x] 2026-04-29 — Setup repa: monorepo struktura `/backend` + `/frontend`, context složka, scaffold Fastify + Vite/React.
