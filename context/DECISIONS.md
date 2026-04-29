@@ -26,7 +26,7 @@ Místo původního draftu z `ARCHITECTURE.md` (`weights: Partial<Record<LevelId,
 **Návrh a varianty:** `~/.claude/plans/pracuju-na-projektu-bagrista-moonlit-bear.md`.
 
 ## 2026-04-29 — Doména: Bagrista = satirický web na osobnostní profilování bagristů
-Web profiluje návštěvníka do jednoho z 8 charakterových stupňů podle modelů Caterpillar (CAT 301.5 → 6090 FS + zrádce D9), inspirace scientologickým „Bridge to Total Freedom" / klasickými testy osobnosti. Doménový kánon je v `context/sekta_bagristu_knowledge_base.md` — verze 1.0, charakterové úrovně a Cyklus bagrování jsou „svaté" (neměnit bez výslovného pokynu), ostatní (slovník, lore, rituály) je otevřené k rozvíjení.
+Web profiluje návštěvníka do jednoho z 8 charakterových stupňů podle modelů Caterpillar (CAT 301.5 → 6090 FS + zrádce D9), inspirace scientologickým „Bridge to Total Freedom" / klasickými testy osobnosti. Doménový kánon je v `context/bagriste_pravdy_knowledge_base_v2.md` — verze 1.0, charakterové úrovně a Cyklus bagrování jsou „svaté" (neměnit bez výslovného pokynu), ostatní (slovník, lore, rituály) je otevřené k rozvíjení.
 **Cíl projektu:** primárně cvičení vibe-codingu ve dvou s Claude Code; produktové ambice sekundární.
 
 ## 2026-04-29 — Feature-split (Quiz vs. Lore), ne layer-split (BE vs. FE)

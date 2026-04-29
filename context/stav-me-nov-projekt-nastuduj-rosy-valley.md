@@ -2,7 +2,7 @@
 
 ## Context
 
-Bagrista = satirický web pro osobnostní profilování bagristů. Doména daná v [`context/sekta_bagristu_knowledge_base.md`](context/sekta_bagristu_knowledge_base.md): 8 charakterových úrovní podle modelů Caterpillar (CAT 301.5 → 6090 FS + zrádce D9), inspirace scientologickým „Bridge to Total Freedom" / testem osobnosti. Repo je čerstvý scaffold (Fastify + Vite/React, jen `/api/health`), `PROJECT.md` a `TASKS.md` jsou prázdné šablony.
+Bagrista = satirický web pro osobnostní profilování bagristů. Doména daná v [`context/bagriste_pravdy_knowledge_base_v2.md`](context/bagriste_pravdy_knowledge_base_v2.md): 8 charakterových úrovní podle modelů Caterpillar (CAT 301.5 → 6090 FS + zrádce D9), inspirace scientologickým „Bridge to Total Freedom" / testem osobnosti. Repo je čerstvý scaffold (Fastify + Vite/React, jen `/api/health`), `PROJECT.md` a `TASKS.md` jsou prázdné šablony.
 
 **Vstupy od uživatele:**
 - Oba (Honza + kolega) jsou junioři, většinu kódu napíše Claude — člověk je v roli product/architect/reviewer.

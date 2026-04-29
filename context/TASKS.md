@@ -46,5 +46,5 @@ Soubory: `frontend/src/lore/*`, `backend/src/lore/*`.
 
 - [x] 2026-04-29 — BE Quiz: 18 otázek + scoring (4 osy + betrayal short-circuit), kalibrované prahy `[2,4,7,11,15,18]` a `BETRAYAL_THRESHOLD=14`, persona-průchody ověřeny pro stupně 1/2/5/7/8 přesně, 3↔4 a 6↔7 zůstávají subjektivní. Endpointy `GET /api/quiz/questions` + `POST /api/quiz/score` běží.
 - [x] 2026-04-29 — Strategická dohoda: feature-split (Quiz/Lore) místo layer-split (BE/FE). Plán v `context/stav-me-nov-projekt-nastuduj-rosy-valley.md`, rozhodnutí zapsáno v `DECISIONS.md`.
-- [x] 2026-04-29 — Doplněna doména: `sekta_bagristu_knowledge_base.md` (verze 1.0).
+- [x] 2026-04-29 — Doplněna doména: `bagriste_pravdy_knowledge_base_v2.md` (verze 1.0).
 - [x] 2026-04-29 — Setup repa: monorepo struktura `/backend` + `/frontend`, context složka, scaffold Fastify + Vite/React.

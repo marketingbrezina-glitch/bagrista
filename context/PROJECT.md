@@ -4,7 +4,7 @@
 
 Bagrista je satirický web pro **osobnostní profilování bagristů** — kvíz inspirovaný scientologickým „Bridge to Total Freedom" / klasickými testy osobnosti, který návštěvníka zařadí do jednoho z osmi charakterových stupňů podle modelů Caterpillar (CAT 301.5 Nováček → 6090 FS Guru, plus stupeň 8 D9 Zrádce). K tomu sdružuje encyklopedii lore „Sekty bagristů" (slovník, modlitebník, rituály, svátky, kasta nečistých).
 
-Doménový kánon: [`sekta_bagristu_knowledge_base.md`](sekta_bagristu_knowledge_base.md) — verze 1.0, kanonický referenční dokument. **Charakterové úrovně a Cyklus bagrování jsou „svaté" (🔒 neměnit bez výslovného pokynu).** Slovník, lore, rituály jsou otevřené k rozvíjení.
+Doménový kánon: [`bagriste_pravdy_knowledge_base_v2.md`](bagriste_pravdy_knowledge_base_v2.md) — verze 1.0, kanonický referenční dokument. **Charakterové úrovně a Cyklus bagrování jsou „svaté" (🔒 neměnit bez výslovného pokynu).** Slovník, lore, rituály jsou otevřené k rozvíjení.
 
 ## Cílový uživatel / persona
 
