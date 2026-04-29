@@ -10,13 +10,12 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- [ ] FE: sdílení výsledku linkem (URL hash `#v1.<19chars>`) + tlačítko „Stáhnout PDF" (přes `window.print()` + print-stylesheet, žádné nové dependency). Otevření odkazu zavolá `POST /api/quiz/score` s dekódovanými volbami a renderuje výsledek bez kvízu; tlačítko „Vyzkoušet sám" čistí stav i hash.
+- (nic — čekám na kolegovu lore strukturu, pak začínáme s kompletací webu: homepage, navigace, design tokens, propojení Quiz → Lore description)
 
 ### Brzy
-- [ ] FE: výsledková stránka (zobrazení stupně + profil os)
-- [ ] Sdílení výsledku linkem (URL hash vs. server-side ID — rozhodnout)
-- [ ] Domluva s kolegou: jak Quiz získá popis stupně z Lore (`ARCHITECTURE.md` → Sdílená rozhraní)
+- [ ] Domluva s kolegou: jak Quiz získá popis stupně z Lore (`ARCHITECTURE.md` → Sdílená rozhraní). Aktuálně FE má vlastní 2-věty popisy v `frontend/src/quiz/levels.ts`; ty by měly přejít na Lore endpoint.
 - [ ] Doladit hranice stupňů 3↔4 a 6↔7 po prvních reálných průchodech (přidat 1–2 přechodové otázky nebo upravit prahy)
+- [ ] Po kompletaci webu: re-skin výsledkové stránky podle finálních design tokens (žluť CAT, typografie)
 
 ## Kolega — Lore / Encyklopedie
 
@@ -43,7 +42,8 @@ Soubory: `frontend/src/lore/*`, `backend/src/lore/*`.
 
 ## Hotovo
 
-- [x] 2026-04-29 — BE Quiz: 18 otázek + scoring (4 osy + betrayal short-circuit), kalibrované prahy `[2,4,7,11,15,18]` a `BETRAYAL_THRESHOLD=14`, persona-průchody ověřeny pro stupně 1/2/5/7/8 přesně, 3↔4 a 6↔7 zůstávají subjektivní. Endpointy `GET /api/quiz/questions` + `POST /api/quiz/score` běží.
+- [x] 2026-04-29 — FE Quiz: kompletní user flow. Kvízová cesta (`/`, jedna otázka + progress + 4 volby + Zpět + klávesy 1–4), výsledková stránka (Bagrista úrovně N + model + epitet + 2-věty popis + profil 4 os v %), sdílení přes URL hash (`#v1.<19chars>`), stažení do PDF přes `window.print()`. Šedý neutrál, žádný router, žádný CSS framework — počká na společnou domluvu s kolegou (homepage/navigace/design tokens).
+- [x] 2026-04-29 — BE Quiz: 19 otázek + scoring (4 osy + betrayal short-circuit), kalibrované prahy `[2,4,7,11,15,18]` a `BETRAYAL_THRESHOLD=14`, persona-průchody ověřeny pro stupně 1/2/5/7/8 přesně, 3↔4 a 6↔7 zůstávají subjektivní. Endpointy `GET /api/quiz/questions` + `POST /api/quiz/score` (vrací `axisMax` pro normalizaci os na FE) běží.
 - [x] 2026-04-29 — Strategická dohoda: feature-split (Quiz/Lore) místo layer-split (BE/FE). Plán v `context/stav-me-nov-projekt-nastuduj-rosy-valley.md`, rozhodnutí zapsáno v `DECISIONS.md`.
 - [x] 2026-04-29 — Doplněna doména: `bagriste_pravdy_knowledge_base_v2.md` (verze 1.0).
 - [x] 2026-04-29 — Setup repa: monorepo struktura `/backend` + `/frontend`, context složka, scaffold Fastify + Vite/React.
