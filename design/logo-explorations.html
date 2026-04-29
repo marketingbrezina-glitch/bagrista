@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<title>Bagrista — Logo Explorations</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Allerta+Stencil&family=Archivo+Black&family=Anton&family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #1a1a1a; font-family: 'Source Serif 4', Georgia, serif; color: #f5f1e8; }
+  * { box-sizing: border-box; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { DesignCanvas, DCSection, DCArtboard } = window;
+
+// =========================================================
+// Shared bits
+// =========================================================
+const ZLUT = '#FFCD11';
+const ZLUT_DEEP = '#E8A317';
+const BLACK = '#0A0A0A';
+const STEEL = '#1C1C1C';
+const PARCH = '#F5F1E8';
+const RUST = '#B8341A';
+
+// Bucket / lžíce silhouette — original geometric drawing (excavator bucket profile)
+function Bucket({ size = 60, color = '#0A0A0A', tilt = 0 }) {
+  return (
+    <svg width={size} height={size * 0.7} viewBox="0 0 100 70" style={{ transform: `rotate(${tilt}deg)` }}>
+      {/* bucket body — angular trapezoid with teeth */}
+      <path d="M 8 8 L 92 14 L 84 50 L 16 46 Z" fill={color} />
+      {/* teeth row */}
+      <path d="M 16 46 L 20 60 L 26 50 L 32 62 L 38 51 L 44 63 L 50 51 L 56 63 L 62 51 L 68 62 L 74 50 L 80 60 L 84 50 Z" fill={color} />
+      {/* hinge / pivot */}
+      <circle cx="50" cy="14" r="5" fill={color === BLACK ? ZLUT : BLACK} />
+      <circle cx="50" cy="14" r="2" fill={color} />
+    </svg>
+  );
+}
+
+// Caution stripes
+function Stripes({ height = 12, width = '100%', angle = 45 }) {
+  return (
+    <div style={{
+      width, height,
+      backgroundImage: `repeating-linear-gradient(${angle}deg, ${BLACK} 0 12px, ${ZLUT} 12px 24px)`
+    }} />
+  );
+}
+
+// =========================================================
+// VARIANT 1 — Typographic stack (JSEM small, BAGRISTA monumental stencil)
+// =========================================================
+function LogoTypographic({ bg = ZLUT, fg = BLACK, size = 1 }) {
+  return (
+    <div style={{
+      background: bg, color: fg,
+      padding: `${48*size}px ${56*size}px`,
+      display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start',
+      gap: 0, lineHeight: 0.85,
+    }}>
+      <div style={{
+        fontFamily: "'Stardos Stencil', 'Allerta Stencil', monospace",
+        fontWeight: 700,
+        fontSize: 28*size, letterSpacing: '0.42em',
+        marginBottom: 6*size, marginLeft: 4*size,
+        opacity: 0.92,
+      }}>
+        JSEM
+      </div>
+      <div style={{
+        fontFamily: "'Stardos Stencil', 'Allerta Stencil', monospace",
+        fontWeight: 700,
+        fontSize: 96*size, letterSpacing: '0.02em',
+        lineHeight: 0.9,
+      }}>
+        BAGRISTA
+      </div>
+      <div style={{
+        marginTop: 10*size,
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: 10*size, letterSpacing: '0.32em',
+        opacity: 0.7,
+      }}>
+        — VYZNÁNÍ —
+      </div>
+    </div>
+  );
+}
+
+// =========================================================
+// VARIANT 2 — Bucket as diacritic (lžíce nad "a" v BAGRISTA)
+// =========================================================
+function LogoBucketDiacritic({ bg = PARCH, fg = BLACK, accent = ZLUT, size = 1 }) {
+  // We render BAGRIST + a custom 'a' with bucket on top
+  return (
+    <div style={{
+      background: bg, color: fg,
+      padding: `${56*size}px ${64*size}px ${48*size}px`,
+      display: 'inline-flex', flexDirection: 'column', alignItems: 'center',
+      lineHeight: 1,
+    }}>
+      <div style={{
+        fontFamily: "'Oswald', 'Anton', sans-serif",
+        fontWeight: 500,
+        fontSize: 18*size, letterSpacing: '0.6em',
+        textTransform: 'uppercase',
+        marginBottom: 4*size, paddingLeft: '0.6em',
+        opacity: 0.85,
+      }}>
+        Jsem
+      </div>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 0, position: 'relative' }}>
+        {/* Bucket diacritic floats above the final 'A' */}
+        <div style={{
+          position: 'absolute',
+          right: `${10*size}px`,
+          top: `-${26*size}px`,
+          transform: 'rotate(-8deg)',
+        }}>
+          <Bucket size={42*size} color={accent} />
+        </div>
+        <div style={{
+          fontFamily: "'Archivo Black', 'Anton', sans-serif",
+          fontWeight: 900,
+          fontSize: 92*size,
+          letterSpacing: '-0.01em',
+          textTransform: 'uppercase',
+          lineHeight: 0.9,
+        }}>
+          BAGRIST<span style={{ color: fg }}>A</span>
+        </div>
+      </div>
+      <div style={{
+        marginTop: 14*size,
+        fontFamily: "'Source Serif 4', serif",
+        fontStyle: 'italic',
+        fontSize: 13*size, letterSpacing: '0.05em',
+        opacity: 0.75,
+      }}>
+        ať tě žluť provází
+      </div>
+    </div>
+  );
+}
+
+// =========================================================
+// VARIANT 3 — Žlutý monolit / warning placard
+// =========================================================
+function LogoMonolith({ size = 1 }) {
+  return (
+    <div style={{
+      background: BLACK, padding: 32*size,
+      display: 'inline-block',
+    }}>
+      <div style={{
+        background: ZLUT,
+        border: `${4*size}px solid ${BLACK}`,
+        outline: `${2*size}px solid ${ZLUT}`,
+        outlineOffset: `${4*size}px`,
+        padding: `${32*size}px ${48*size}px ${28*size}px`,
+        position: 'relative',
+        minWidth: 360*size,
+      }}>
+        {/* corner rivets */}
+        {[[8,8],[8,'calc(100% - 16px)'],['calc(100% - 16px)',8],['calc(100% - 16px)','calc(100% - 16px)']].map((p,i)=>(
+          <div key={i} style={{
+            position: 'absolute', left: p[0], top: p[1],
+            width: 8*size, height: 8*size, borderRadius: '50%',
+            background: BLACK, border: `1px solid ${ZLUT}`,
+          }} />
+        ))}
+
+        {/* serial number top-left */}
+        <div style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 10*size, letterSpacing: '0.18em',
+          color: BLACK, opacity: 0.7,
+          marginBottom: 8*size,
+          display: 'flex', justifyContent: 'space-between',
+        }}>
+          <span>MODEL · BGR-001</span>
+          <span>VYZNÁNÍ / CREDO</span>
+        </div>
+
+        {/* JSEM */}
+        <div style={{
+          fontFamily: "'Allerta Stencil', 'Stardos Stencil', monospace",
+          fontSize: 22*size, letterSpacing: '0.5em',
+          color: BLACK, fontWeight: 400,
+          marginBottom: 2*size,
+        }}>
+          JSEM
+        </div>
+
+        {/* BAGRISTA */}
+        <div style={{
+          fontFamily: "'Stardos Stencil', 'Allerta Stencil', monospace",
+          fontSize: 76*size, letterSpacing: '0.01em',
+          color: BLACK, fontWeight: 700,
+          lineHeight: 0.9,
+        }}>
+          BAGRISTA
+        </div>
+
+        {/* warning stripe */}
+        <div style={{ marginTop: 18*size, marginLeft: -4*size, marginRight: -4*size }}>
+          <Stripes height={10*size} angle={-45} />
+        </div>
+
+        {/* mfg line */}
+        <div style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 9*size, letterSpacing: '0.18em',
+          color: BLACK, opacity: 0.7,
+          marginTop: 10*size,
+          display: 'flex', justifyContent: 'space-between',
+        }}>
+          <span>BRATRSTVO ŽLUTÉ LŽÍCE</span>
+          <span>MTH · ∞</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =========================================================
+// Favicon previews — 32×32
+// =========================================================
+function Favicon({ kind }) {
+  if (kind === 'typo') {
+    return (
+      <div style={{ width: 32, height: 32, background: ZLUT, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontFamily: "'Stardos Stencil', monospace", fontWeight: 700, fontSize: 20, color: BLACK, lineHeight: 1 }}>B</span>
+      </div>
+    );
+  }
+  if (kind === 'bucket') {
+    return (
+      <div style={{ width: 32, height: 32, background: PARCH, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Bucket size={22} color={BLACK} />
+      </div>
+    );
+  }
+  return (
+    <div style={{ width: 32, height: 32, background: BLACK, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${ZLUT}` }}>
+      <span style={{ fontFamily: "'Allerta Stencil', monospace", fontWeight: 700, fontSize: 16, color: ZLUT, lineHeight: 1, letterSpacing: '-0.05em' }}>JB</span>
+    </div>
+  );
+}
+
+// =========================================================
+// Caption helper
+// =========================================================
+function Caption({ children }) {
+  return (
+    <div style={{
+      fontFamily: "'JetBrains Mono', monospace",
+      fontSize: 11, letterSpacing: '0.18em',
+      color: '#9A9A9A', textTransform: 'uppercase',
+      marginBottom: 10,
+    }}>{children}</div>
+  );
+}
+
+// =========================================================
+// App
+// =========================================================
+function App() {
+  const cardStyle = (bg) => ({
+    width: '100%', height: '100%',
+    background: bg,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    padding: 40,
+  });
+
+  const compareStyle = (bg) => ({
+    width: '100%', height: '100%',
+    background: bg,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    flexDirection: 'column', gap: 24, padding: 40,
+  });
+
+  return (
+    <DesignCanvas title="Jsem Bagrista — Logo Explorations" subtitle="3 směry · žlutá + černá varianta · favicon náhled">
+
+      <DCSection id="v1" title="VARIANTA 1 — Typografická hra">
+        <DCArtboard id="v1-yellow" label="Na žluti" width={720} height={420}>
+          <div style={cardStyle(ZLUT)}>
+            <LogoTypographic bg={ZLUT} fg={BLACK} />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="v1-black" label="Na černé" width={720} height={420}>
+          <div style={cardStyle(BLACK)}>
+            <LogoTypographic bg={BLACK} fg={ZLUT} />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="v1-parch" label="Na pergamenu" width={720} height={420}>
+          <div style={cardStyle(PARCH)}>
+            <LogoTypographic bg={PARCH} fg={BLACK} />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="v1-fav" label="Favicon · 32×32" width={420} height={420}>
+          <div style={compareStyle('#222')}>
+            <Caption>FAVICON 32×32</Caption>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+              <Favicon kind="typo" />
+              <div style={{ transform: 'scale(2)', transformOrigin: 'left center', marginLeft: 24 }}>
+                <Favicon kind="typo" />
+              </div>
+            </div>
+            <div style={{ marginTop: 24, fontFamily: "'Source Serif 4', serif", fontStyle: 'italic', color: '#9A9A9A', fontSize: 13, textAlign: 'center', maxWidth: 280 }}>
+              JSEM jako tichá předehra,<br/>BAGRISTA jako vyznání.
+            </div>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="v2" title="VARIANTA 2 — Lžíce jako diakritika">
+        <DCArtboard id="v2-parch" label="Na pergamenu" width={720} height={460}>
+          <div style={cardStyle(PARCH)}>
+            <LogoBucketDiacritic bg={PARCH} fg={BLACK} accent={ZLUT_DEEP} />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="v2-yellow" label="Na žluti" width={720} height={460}>
+          <div style={cardStyle(ZLUT)}>
+            <LogoBucketDiacritic bg={ZLUT} fg={BLACK} accent={BLACK} />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="v2-black" label="Na černé" width={720} height={460}>
+          <div style={cardStyle(BLACK)}>
+            <LogoBucketDiacritic bg={BLACK} fg={PARCH} accent={ZLUT} />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="v2-fav" label="Favicon · 32×32" width={420} height={460}>
+          <div style={compareStyle('#222')}>
+            <Caption>FAVICON 32×32</Caption>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+              <Favicon kind="bucket" />
+              <div style={{ transform: 'scale(2)', transformOrigin: 'left center', marginLeft: 24 }}>
+                <Favicon kind="bucket" />
+              </div>
+            </div>
+            <div style={{ marginTop: 24, fontFamily: "'Source Serif 4', serif", fontStyle: 'italic', color: '#9A9A9A', fontSize: 13, textAlign: 'center', maxWidth: 280 }}>
+              Lžíce jako háček —<br/>vtipně, ale stále vážně.
+            </div>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="v3" title="VARIANTA 3 — Žlutý monolit / varovný štítek">
+        <DCArtboard id="v3-main" label="Hlavní podoba" width={720} height={500}>
+          <div style={cardStyle(STEEL)}>
+            <LogoMonolith />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="v3-context" label="V kontextu kabiny" width={720} height={500}>
+          <div style={{
+            ...cardStyle('#3a3a3a'),
+            backgroundImage: `repeating-linear-gradient(0deg, #3a3a3a 0 22px, #2e2e2e 22px 24px)`,
+          }}>
+            <div style={{ transform: 'scale(0.85) rotate(-1.5deg)', filter: 'drop-shadow(0 6px 0 rgba(0,0,0,0.4))' }}>
+              <LogoMonolith />
+            </div>
+          </div>
+        </DCArtboard>
+        <DCArtboard id="v3-mini" label="Malá podoba (na korbě)" width={720} height={500}>
+          <div style={cardStyle(BLACK)}>
+            <div style={{ transform: 'scale(0.55)' }}>
+              <LogoMonolith size={1} />
+            </div>
+          </div>
+        </DCArtboard>
+        <DCArtboard id="v3-fav" label="Favicon · 32×32" width={420} height={500}>
+          <div style={compareStyle('#222')}>
+            <Caption>FAVICON 32×32</Caption>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+              <Favicon kind="monolith" />
+              <div style={{ transform: 'scale(2)', transformOrigin: 'left center', marginLeft: 24 }}>
+                <Favicon kind="monolith" />
+              </div>
+            </div>
+            <div style={{ marginTop: 24, fontFamily: "'Source Serif 4', serif", fontStyle: 'italic', color: '#9A9A9A', fontSize: 13, textAlign: 'center', maxWidth: 280 }}>
+              Štítek jako z boku stroje.<br/>Tovární, ne marketingový.
+            </div>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="notes" title="Poznámky designéra">
+        <DCArtboard id="notes-card" label="Co dál" width={1080} height={420}>
+          <div style={{
+            width: '100%', height: '100%',
+            background: '#141414', color: PARCH,
+            padding: '40px 56px',
+            display: 'flex', flexDirection: 'column', gap: 18,
+            fontFamily: "'Source Serif 4', serif",
+          }}>
+            <div style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11, letterSpacing: '0.32em', color: ZLUT,
+              textTransform: 'uppercase',
+            }}>
+              — Designerské poznámky · MTH 0001 —
+            </div>
+            <div style={{ fontSize: 17, lineHeight: 1.55, maxWidth: 920 }}>
+              Tři varianty jsou záměrně různé v <strong>úrovni doslovnosti</strong>. <em>Typografická hra</em> je nejčistší —
+              spoléhá jen na hierarchii a stencil. <em>Lžíce-diakritika</em> přidává jeden vizuální vtip, ale drží sakrální vážnost
+              skrze serif kurzívu. <em>Monolit</em> je nejvíc industriální — přepisuje logo jako varovný štítek z boku stroje,
+              s vysíláním sériového čísla a motohodinami.
+            </div>
+            <div style={{ fontSize: 17, lineHeight: 1.55, maxWidth: 920 }}>
+              <strong style={{ color: ZLUT }}>Moje doporučení:</strong> jít s variantou 3 (Monolit) jako primárním logem na webu/v patičce
+              a variantou 1 (Typografická) jako velkým hero typem v Heroes a tištěných materiálech. Varianta 2 je hezká, ale
+              její vtip se rychle opotřebuje — drž si ji jako alt verzi pro merch.
+            </div>
+            <div style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11, letterSpacing: '0.18em', color: '#9A9A9A',
+              marginTop: 'auto',
+            }}>
+              ↳ Až vybereš, pojedu na homepage + bridge + detail stupně.
+            </div>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
