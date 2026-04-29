@@ -49,24 +49,32 @@ cd frontend && npm install && npm run dev   # :5173, proxy → :3001
 
 ### Plánované — Quiz (vlastník: Honza)
 
-| Method | Path                  | Body                                  | Response                                                                | Stav    |
-|--------|-----------------------|---------------------------------------|-------------------------------------------------------------------------|---------|
-| GET    | `/api/quiz/questions` | —                                     | `{ questions: Question[] }` — pořadí, znění, varianty odpovědí          | návrh   |
-| POST   | `/api/quiz/score`     | `{ answers: Answer[] }`               | `{ levelId: 1..8, levelSlug: string, summary: string }`                 | návrh   |
+| Method | Path                  | Body                                  | Response                                                                | Stav      |
+|--------|-----------------------|---------------------------------------|-------------------------------------------------------------------------|-----------|
+| GET    | `/api/quiz/questions` | —                                     | `{ questions: PublicQuestion[] }` — pořadí, znění, varianty (bez skóre) | implementováno (3–4 vzorové otázky, plná sada 18 čeká na obsah) |
+| POST   | `/api/quiz/score`     | `{ answers: Answer[] }`               | `{ levelId: 1..8, levelSlug, axes, betrayalScore }` (`summary` přijde po dohodě s Lore) | implementováno |
 | GET    | `/api/quiz/result/:id`| —                                     | `{ levelId, levelSlug, createdAt }` — pro sdílení (pokud zvolíme server-side ID místo URL hashe) | návrh — záleží na rozhodnutí o sdílení |
 
-Datové typy (předběžně, dořeší Honza při implementaci):
+Datové typy (zdroj pravdy: `backend/src/quiz/types.ts`, viz `DECISIONS.md` 2026-04-29 — Quiz scoring):
 
 ```ts
-type Question = {
-  id: string;
-  text: string;
-  options: { id: string; text: string; weights: Partial<Record<LevelId, number>> }[];
-};
+type LevelId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type Axis = 'mleti' | 'narcis' | 'komatsu' | 'rituals';
+
+type PublicOption = { id: string; text: string };          // co vrací GET /questions
+type PublicQuestion = { id: string; text: string; options: PublicOption[] };
 
 type Answer = { questionId: string; optionId: string };
-type LevelId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+
+type ScoreResponse = {
+  levelId: LevelId;
+  levelSlug: string;
+  axes: Record<Axis, number>;
+  betrayalScore: number;
+};
 ```
+
+**Pozn.:** `scores`/`betrayal` váhy uvnitř `Option` se klientovi **neposílají** (gaming kvízu). FE dostane jen `id` a `text`.
 
 ### Plánované — Lore (vlastník: kolega)
 

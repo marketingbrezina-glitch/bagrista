@@ -10,13 +10,14 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- [ ] TODO: první task (např. „Definovat datový model otázky a navrhnout scoring → 1 stupeň z 8")
+- [ ] BE: datový model otázky + scoring (Varianta B — 4 osy `mleti/narcis/komatsu/rituals` + `betrayal` short-circuit pro D9). Soubory `backend/src/quiz/{types,scoring,questions,routes}.ts`. Endpointy `GET /api/quiz/questions` a `POST /api/quiz/score`. Plus 3–4 vzorové otázky pro testování (plných 18 přijde v dalším úkolu).
 
 ### Brzy
-- [ ] Návrh prvních ~5 otázek pro pilotní průchod
+- [ ] Sepsat plnou sadu 18 otázek (satirický autorský obsah pokrývající 4 osy + betrayal)
 - [ ] FE: stránka `/kviz` s jednou otázkou + progress
-- [ ] BE: `POST /api/quiz/score` (request: odpovědi, response: stupeň + popis)
+- [ ] FE: výsledková stránka (zobrazení stupně + profil os)
 - [ ] Sdílení výsledku linkem (URL hash vs. server-side ID — rozhodnout)
+- [ ] Domluva s kolegou: jak Quiz získá popis stupně z Lore (`ARCHITECTURE.md` → Sdílená rozhraní)
 
 ## Kolega — Lore / Encyklopedie
 

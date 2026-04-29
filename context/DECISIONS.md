@@ -6,6 +6,25 @@
 
 ---
 
+## 2026-04-29 — Quiz: scoring přes 4 osy + `betrayal` short-circuit (Varianta B), 18 otázek, 4 pevné varianty odpovědí
+Místo původního draftu z `ARCHITECTURE.md` (`weights: Partial<Record<LevelId, number>>` — vážený součet bodů přímo do stupňů 1–8) jdeme cestou **vícerozměrného profilu**:
+
+- 4 osy: `mleti` (schopnost mluvit bez kontextu), `narcis` (sebevědomí), `komatsu` (vztah ke konkurenci), `rituals` (vázanost na rituály sekty).
+- Samostatný skalár `betrayal` (0..3 na volbu) — pokud návštěvník konzistentně volí přímost a prostotu, `betrayalScore ≥ threshold` ho short-circuitne na **stupeň 8 (D9 Zrádce)**.
+- Jinak: `tier = 0.4·narcis + 0.3·mleti + 0.2·komatsu + 0.1·rituals`, mapování přes 6 prahů na stupně 1–7.
+- `Question.options` má **pevně 4 varianty** (konzistentní UX, klávesové zkratky, snadná kalibrace).
+- **18 otázek** v MVP (mezi 15–25 z PROJECT.md): ~4–5 na osu, čas ~3–4 min, dostatečně stabilní skóre bez drop-offu.
+
+**Proč ne Varianta A (winner-takes-all):**
+- Cejchovat 8 čísel na každou volbu = 600+ ručně laděných hodnot. Osy redukují na 4 (často 1–2 nenulové) → ~100–200 hodnot.
+- Stupně mají korelované rysy (Guru = vysoké mleti+narcis+nadhled k Komatsu) — osy to vyjadřují přirozeně, weighted-sum přes 1–8 informaci duplikuje.
+- D9 Zrádce **není** nahoře osy, je *off-axis* (kdo viděl vrchol a řekl „ne"). Samostatný `betrayal` to řeší čistě, weighted-sum by ho rozmazával.
+- Bonus: skóre os je vedlejší produkt — výsledková stránka může vypsat profil („mletí hoven 78 %, narcismus 65 %") = víc satirického masa, víc shareable.
+
+**Cena:** prahy mezi stupni vyžadují kalibraci na pilotních „persona-průchodech" (já si projdu kvíz několikrát s různými personami). Riziko: některé stupně budou zpočátku nedosažitelné, dokud neladíme.
+
+**Návrh a varianty:** `~/.claude/plans/pracuju-na-projektu-bagrista-moonlit-bear.md`.
+
 ## 2026-04-29 — Doména: Bagrista = satirický web na osobnostní profilování bagristů
 Web profiluje návštěvníka do jednoho z 8 charakterových stupňů podle modelů Caterpillar (CAT 301.5 → 6090 FS + zrádce D9), inspirace scientologickým „Bridge to Total Freedom" / klasickými testy osobnosti. Doménový kánon je v `context/sekta_bagristu_knowledge_base.md` — verze 1.0, charakterové úrovně a Cyklus bagrování jsou „svaté" (neměnit bez výslovného pokynu), ostatní (slovník, lore, rituály) je otevřené k rozvíjení.
 **Cíl projektu:** primárně cvičení vibe-codingu ve dvou s Claude Code; produktové ambice sekundární.
