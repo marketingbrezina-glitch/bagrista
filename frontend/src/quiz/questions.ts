@@ -1,4 +1,4 @@
-import type { PublicQuestion, Question } from './types.js';
+import type { PublicQuestion, Question } from './types';
 
 export const QUIZ_QUESTIONS: readonly Question[] = [
   {

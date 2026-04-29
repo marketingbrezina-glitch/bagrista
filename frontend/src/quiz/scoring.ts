@@ -2,22 +2,12 @@ import {
   AXES,
   type Answer,
   type Axis,
-  type AxisProfile,
   type LevelId,
   type Question,
   type ScoreResult,
-} from './types.js';
+} from './types';
 
-export function computeAxisMax(questions: readonly Question[]): AxisProfile {
-  const max: AxisProfile = { mleti: 0, narcis: 0, komatsu: 0, rituals: 0 };
-  for (const question of questions) {
-    for (const axis of AXES) {
-      const best = Math.max(0, ...question.options.map((o) => o.scores[axis] ?? 0));
-      max[axis] += best;
-    }
-  }
-  return max;
-}
+type AxisProfile = Record<Axis, number>;
 
 export const LEVEL_SLUGS: Record<LevelId, string> = {
   1: 'novacek',
@@ -38,6 +28,17 @@ const TIER_WEIGHTS: Record<Axis, number> = {
   komatsu: 0.2,
   rituals: 0.1,
 };
+
+export function computeAxisMax(questions: readonly Question[]): AxisProfile {
+  const max: AxisProfile = { mleti: 0, narcis: 0, komatsu: 0, rituals: 0 };
+  for (const question of questions) {
+    for (const axis of AXES) {
+      const best = Math.max(0, ...question.options.map((o) => o.scores[axis] ?? 0));
+      max[axis] += best;
+    }
+  }
+  return max;
+}
 
 export function scoreAnswers(
   questions: readonly Question[],

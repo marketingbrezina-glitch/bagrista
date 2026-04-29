@@ -6,6 +6,22 @@
 
 ---
 
+## 2026-04-29 — Static-only deploy: backend smazán, quiz běží na FE
+Pivot na čistě statickou architekturu pro nasazení na **Vercel**. Důvody:
+
+- Web je satira pro kámoše. Žádná DB, žádná persistence, žádná auth — server nemá co dělat.
+- Quiz scoring je čistá funkce + 19 statických otázek. Trivial port BE → FE.
+- Lore obsah už byl bundlovaný do FE přes Vite glob, takže BE už dříve sloužil jen kvízovým endpointům.
+- Vercel free tier + GitHub auto-deploy = zero infra cost a žádné cold-starty (single static CDN).
+
+**Změny:**
+- `frontend/src/quiz/questions.ts` a `frontend/src/quiz/scoring.ts` jsou nyní zdroj pravdy (předtím v `backend/src/quiz/`).
+- `frontend/src/quiz/api.ts` zůstává jako tenký async wrapper (`fetchQuestions`, `postScore`) → volá lokální funkce. Migrace z fetch byla bez API změny v komponentách.
+- `backend/` celé smazáno. `vite.config.ts` ztratil proxy.
+- `frontend/vercel.json` — SPA rewrite (`/(.*) → /index.html`), framework `vite`, output `dist`.
+
+**Cena:** scoring + otázky jsou v JS bundle (~50 KB navíc po gzip). Pro náš scope OK; gaming kvízu není problém (web je vtip). Pokud bychom někdy chtěli leaderboard / stats / persistenci, vrátíme BE jako serverless funkce na Vercelu.
+
 ## 2026-04-29 — FE scaffold: React Router + react-markdown pro propojení Quizu a Lore
 Postavený clickable web (homepage + nav + Kvíz + Lore index/section/detail), aby šlo všechno proklikat. Toto byla **sdílená infrastruktura**, kterou bych normálně dělal s kolegou — ale instrukci dal Honza s tím, že kolega není u počítače. Kolega má volnou ruku tohle scaffolding přepracovat (`frontend/src/Layout.tsx`, `frontend/src/HomePage.tsx`, `frontend/src/lore/*`).
 

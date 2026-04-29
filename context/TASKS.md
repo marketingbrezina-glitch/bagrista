@@ -10,7 +10,7 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- (nic; clickable scaffold celého webu pushnut, čekám na review/přepracování kolegy)
+- (nic; static-only build hotový, deploy na Vercel připravený — vercel.json v `frontend/`)
 
 ### Brzy
 - [ ] Domluva s kolegou: jak Quiz získá popis stupně z Lore (`ARCHITECTURE.md` → Sdílená rozhraní). Aktuálně FE má vlastní 2-věty popisy v `frontend/src/quiz/levels.ts`; ty by měly přejít na Lore endpoint.
@@ -40,6 +40,9 @@ Soubory: `frontend/src/lore/*`, `backend/src/lore/*`.
 
 ## Hotovo
 
+- [x] 2026-04-29 — Pivot na static-only: quiz scoring + otázky přesunuty z `backend/` na FE, backend celý smazán, `frontend/vercel.json` připravený pro Vercel deploy. Detaily v `DECISIONS.md` (2026-04-29 — Static-only deploy).
+- [x] 2026-04-29 — Designová integrace: žluť/parchment/rust palette, Big Shoulders Stencil + Source Serif fonts, TopBar s wordmark + bucket diakritika, Footer (Bratrstvo žluté lžíce), Creed/Wikilink/Parchment/Chip komponenty, redesigned všechny stránky (Home/Lore index/sekce/detail, Quiz, Result). Reference v `design/`.
+- [x] 2026-04-29 — Wiki-linky `[[X]]` / `[[X|alias]]` / `[[X#anchor]]`: bold + Router Link, resolver přes `nazev`/slug/long-form aliasy. Výsledková stránka načítá plný lore stupně z `content/lore/levels/*.md` (FE už není zdroj pravdy popisů stupňů).
 - [x] 2026-04-29 — FE Quiz: kompletní user flow. Kvízová cesta (`/`, jedna otázka + progress + 4 volby + Zpět + klávesy 1–4), výsledková stránka (Bagrista úrovně N + model + epitet + 2-věty popis + profil 4 os v %), sdílení přes URL hash (`#v1.<19chars>`), stažení do PDF přes `window.print()`. Šedý neutrál, žádný router, žádný CSS framework — počká na společnou domluvu s kolegou (homepage/navigace/design tokens).
 - [x] 2026-04-29 — BE Quiz: 19 otázek + scoring (4 osy + betrayal short-circuit), kalibrované prahy `[2,4,7,11,15,18]` a `BETRAYAL_THRESHOLD=14`, persona-průchody ověřeny pro stupně 1/2/5/7/8 přesně, 3↔4 a 6↔7 zůstávají subjektivní. Endpointy `GET /api/quiz/questions` + `POST /api/quiz/score` (vrací `axisMax` pro normalizaci os na FE) běží.
 - [x] 2026-04-29 — Strategická dohoda: feature-split (Quiz/Lore) místo layer-split (BE/FE). Plán v `context/stav-me-nov-projekt-nastuduj-rosy-valley.md`, rozhodnutí zapsáno v `DECISIONS.md`.
