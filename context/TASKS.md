@@ -10,7 +10,7 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- (nic — čekám na kolegovu lore strukturu, pak začínáme s kompletací webu: homepage, navigace, design tokens, propojení Quiz → Lore description)
+- (nic; clickable scaffold celého webu pushnut, čekám na review/přepracování kolegy)
 
 ### Brzy
 - [ ] Domluva s kolegou: jak Quiz získá popis stupně z Lore (`ARCHITECTURE.md` → Sdílená rozhraní). Aktuálně FE má vlastní 2-věty popisy v `frontend/src/quiz/levels.ts`; ty by měly přejít na Lore endpoint.
@@ -35,10 +35,8 @@ Soubory: `frontend/src/lore/*`, `backend/src/lore/*`.
 
 > Měňte v páru, ne sólo. Když narazíte na nutnost změny, napište do TASKS.md a domluvte se.
 
-- [ ] Homepage — co tam má být (intro do sekty, CTA na kvíz, odkaz na lore)
-- [ ] Hlavní navigace (Domů / Kvíz / Lore)
-- [ ] Design tokens (barvy, typografie, mezery) — žluť Caterpillaru jako primární?
-- [ ] Layout / Header / Footer komponenty
+- [x] 2026-04-29 — Scaffold homepage + navigace + Layout + Lore rendering (Honza, autorizováno když kolega nebyl u PC). `frontend/src/{Layout,HomePage}.tsx`, `frontend/src/lore/{LoreHomePage,LoreSectionPage,LoreDocPage,MarkdownView,loreContent}.tsx/ts`. **Kolega: máš volnou ruku tohle přepracovat — víc detailů v `DECISIONS.md` (2026-04-29 — FE scaffold).**
+- [ ] Design tokens (barvy, typografie, mezery) — žluť Caterpillaru jako primární? (zatím šedá neutrál)
 
 ## Hotovo
 

@@ -27,7 +27,7 @@ export const LEVEL_INFO: Record<LevelId, LevelInfo> = {
   },
   4: {
     model: 'CAT 320',
-    epithet: 'Profík',
+    epithet: 'Profík na plný úvazek',
     description:
       'Dvacet tun. Situaci ani nezachrání, ani nezhorší. Sbírá historky, výmluvy a víc už od života nečeká.',
   },

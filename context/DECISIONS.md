@@ -6,6 +6,17 @@
 
 ---
 
+## 2026-04-29 — FE scaffold: React Router + react-markdown pro propojení Quizu a Lore
+Postavený clickable web (homepage + nav + Kvíz + Lore index/section/detail), aby šlo všechno proklikat. Toto byla **sdílená infrastruktura**, kterou bych normálně dělal s kolegou — ale instrukci dal Honza s tím, že kolega není u počítače. Kolega má volnou ruku tohle scaffolding přepracovat (`frontend/src/Layout.tsx`, `frontend/src/HomePage.tsx`, `frontend/src/lore/*`).
+
+**Nové dependency:**
+- `react-router-dom@6` — standardní router pro React. Žádná alternativa, kterou bychom chtěli (Tanstack Router by byl přepychový pro tenhle scope).
+- `react-markdown` + `remark-gfm` — render markdownu z `content/lore/*.md` na FE. GFM nutné kvůli tabulkám / strikethrough v glossary.
+
+**Žádný custom YAML parser ani gray-matter:** tiny inline parser (`parseFrontmatter` v `frontend/src/lore/loreContent.ts`) zvládá `key: value` formát, který kolega používá. Pokud někdy bude potřeba listů/nested, přepneme na `gray-matter`.
+
+**Vite glob bundling, ne BE endpoint:** `import.meta.glob('../../../content/lore/**/*.md', { query: '?raw', eager: true })` zabundluje kolegovy md soubory do FE. Žádný `/api/lore/*` endpoint není potřeba pro MVP. Výhoda: klient si lore může držet po načtení, žádný roundtrip. Nevýhoda: každý PR do `content/` vyvolá rebuild FE — pro náš scope OK. `vite.config.ts` má `server.fs.allow: ['..']` aby Vite směl číst nad `frontend/`.
+
 ## 2026-04-29 — Quiz: scoring přes 4 osy + `betrayal` short-circuit (Varianta B), 18 otázek, 4 pevné varianty odpovědí
 Místo původního draftu z `ARCHITECTURE.md` (`weights: Partial<Record<LevelId, number>>` — vážený součet bodů přímo do stupňů 1–8) jdeme cestou **vícerozměrného profilu**:
 
