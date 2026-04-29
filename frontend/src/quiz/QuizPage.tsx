@@ -7,11 +7,10 @@ import { clearHashFromUrl, decodeAnswers, encodeAnswers } from './share';
 import type { Answer, PublicQuestion, ScoreResult } from './types';
 
 const pageStyle: CSSProperties = {
-  fontFamily: 'system-ui, sans-serif',
-  padding: '2rem',
-  maxWidth: 640,
+  padding: '40px 28px 80px',
+  maxWidth: 760,
   margin: '0 auto',
-  color: '#222',
+  color: 'var(--fg)',
 };
 
 export function QuizPage() {
@@ -121,9 +120,14 @@ export function QuizPage() {
   if (error) {
     return (
       <main style={pageStyle}>
-        <h1 style={{ fontSize: 28, marginBottom: 16 }}>Bagrista — kvíz</h1>
-        <p>{error}</p>
-        <p style={{ color: '#666', fontSize: 14 }}>
+        <div className="mono-caption" style={{ color: 'var(--rust)', marginBottom: 16 }}>
+          — Hydraulika spí —
+        </div>
+        <h1 style={{ fontFamily: 'var(--display)', fontSize: 40, margin: 0, marginBottom: 12 }}>
+          Otázky se nenačetly
+        </h1>
+        <p style={{ color: 'var(--fg-dim)' }}>{error}</p>
+        <p style={{ color: 'var(--fg-faint)', fontSize: 14 }}>
           Backend musí běžet na <code>:3001</code>.
         </p>
       </main>
@@ -133,7 +137,8 @@ export function QuizPage() {
   if (!questions) {
     return (
       <main style={pageStyle}>
-        <p>Načítám otázky…</p>
+        <div className="mono-caption">— Hydraulika se připravuje —</div>
+        <p style={{ marginTop: 12 }}>Načítám otázky…</p>
       </main>
     );
   }
@@ -154,8 +159,11 @@ export function QuizPage() {
     if (scoring === 'error') {
       return (
         <main style={pageStyle}>
-          <p>Výsledek se nepodařilo spočítat.</p>
-          <button type="button" onClick={retryScoring} style={retryButtonStyle}>
+          <div className="mono-caption" style={{ color: 'var(--rust)' }}>
+            — Hydraulika prskla —
+          </div>
+          <p style={{ marginTop: 12, marginBottom: 24 }}>Výsledek se nepodařilo spočítat.</p>
+          <button type="button" onClick={retryScoring} className="btn">
             Zkusit znovu
           </button>
         </main>
@@ -164,8 +172,11 @@ export function QuizPage() {
     return (
       <main style={pageStyle}>
         <Progress current={questions.length} total={questions.length} />
-        <div style={{ marginTop: 48, textAlign: 'center' }}>
-          <p style={{ fontSize: 18 }}>Počítám výsledek…</p>
+        <div style={{ marginTop: 64, textAlign: 'center' }}>
+          <div className="mono-caption">— Hydraulika počítá —</div>
+          <p style={{ fontFamily: 'var(--display)', fontSize: 32, marginTop: 12 }}>
+            Skládám tvůj profil…
+          </p>
         </div>
       </main>
     );
@@ -176,11 +187,11 @@ export function QuizPage() {
 
   return (
     <main style={pageStyle}>
-      <h1 style={{ fontSize: 20, color: '#666', fontWeight: 400, marginBottom: 24 }}>
-        Bagrista — kvíz
-      </h1>
+      <div className="mono-caption" style={{ marginBottom: 12, color: 'var(--accent-num)' }}>
+        — Hydraulika se ptá —
+      </div>
       <Progress current={currentIndex + 1} total={questions.length} />
-      <div style={{ marginTop: 32 }}>
+      <div style={{ marginTop: 40 }}>
         <QuestionCard
           question={current}
           selectedOptionId={answers[current.id]}
@@ -189,23 +200,32 @@ export function QuizPage() {
       </div>
       <div
         style={{
-          marginTop: 24,
+          marginTop: 32,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          color: '#666',
-          fontSize: 13,
+          fontFamily: 'var(--mono)',
+          fontSize: 11,
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          color: 'var(--fg-faint)',
         }}
       >
         <button
           type="button"
           onClick={goBack}
           disabled={currentIndex === 0}
-          style={navButtonStyle(currentIndex === 0)}
+          style={{
+            ...navButtonStyle(currentIndex === 0),
+            fontFamily: 'var(--mono)',
+            fontSize: 11,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+          }}
         >
           ← Zpět
         </button>
-        <span>Klávesy 1–4 vyberou, ← vrátí</span>
+        <span>Klávesy 1–4 vyberou · ← vrátí</span>
       </div>
     </main>
   );
@@ -215,21 +235,9 @@ function navButtonStyle(disabled: boolean): CSSProperties {
   return {
     background: 'none',
     border: 'none',
-    color: disabled ? '#ccc' : '#333',
+    color: disabled ? 'var(--fg-faint)' : 'var(--fg-dim)',
     cursor: disabled ? 'default' : 'pointer',
     font: 'inherit',
     padding: 0,
   };
 }
-
-const retryButtonStyle: CSSProperties = {
-  background: '#333',
-  color: '#fff',
-  border: 'none',
-  padding: '8px 16px',
-  borderRadius: 6,
-  cursor: 'pointer',
-  font: 'inherit',
-  fontSize: 14,
-  marginTop: 16,
-};

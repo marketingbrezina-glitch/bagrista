@@ -1,94 +1,76 @@
-import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import type { LoreCategory } from './loreContent';
-
-const pageStyle: CSSProperties = {
-  maxWidth: 800,
-  margin: '0 auto',
-  padding: '48px 24px',
-};
-
-const titleStyle: CSSProperties = {
-  fontSize: 32,
-  margin: 0,
-  marginBottom: 8,
-  fontWeight: 700,
-};
-
-const introStyle: CSSProperties = {
-  fontSize: 16,
-  color: '#555',
-  marginBottom: 40,
-  lineHeight: 1.5,
-};
-
-const sectionsGrid: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-  gap: 12,
-  marginBottom: 48,
-};
-
-const cardStyle: CSSProperties = {
-  display: 'block',
-  padding: '16px 18px',
-  border: '1px solid #e5e5e5',
-  borderRadius: 8,
-  textDecoration: 'none',
-  color: '#222',
-  background: '#fff',
-};
-
-const cardTitle: CSSProperties = {
-  fontSize: 16,
-  fontWeight: 600,
-  marginBottom: 4,
-};
-
-const cardSub: CSSProperties = {
-  fontSize: 13,
-  color: '#777',
-  lineHeight: 1.4,
-};
 
 type Section = {
   to: string;
   label: string;
   hint: string;
-  type: 'category' | 'hub';
-  category?: LoreCategory;
+  category?: LoreCategory | 'hub';
 };
 
 const SECTIONS: Section[] = [
-  { to: '/lore/levels', label: 'Osm stupňů', hint: 'CAT 301.5 → CAT D9', type: 'category', category: 'levels' },
-  { to: '/lore/phases', label: 'Cyklus bagrování', hint: '7 fází neúspěšného vtipu', type: 'category', category: 'phases' },
-  { to: '/lore/slovnik', label: 'Slovník', hint: 'Pojmy, pozdravy, rčení', type: 'hub' },
-  { to: '/lore/modlitebnik', label: 'Modlitebník', hint: 'Modlitby, požehnání, svátosti', type: 'hub' },
-  { to: '/lore/credo', label: 'Credo bagristae', hint: 'Vyznání víry', type: 'hub' },
-  { to: '/lore/holidays', label: 'Svátky', hint: 'ConExpo, Smutný pátek, Dušičky', type: 'category', category: 'holidays' },
-  { to: '/lore/rituals', label: 'Rituály', hint: 'Walk-around, mazání, Naložení Tatry', type: 'category', category: 'rituals' },
-  { to: '/lore/concepts', label: 'Pojmy', hint: 'Hydraulika, motohodina, žluť', type: 'category', category: 'concepts' },
-  { to: '/lore/sects', label: 'Kacířské sekty', hint: 'Komatsuáni, Hitachisté, Volvoité…', type: 'category', category: 'sects' },
-  { to: '/lore/brands', label: 'Značky', hint: 'CAT a jeho stíny', type: 'category', category: 'brands' },
-  { to: '/lore/scriptures', label: 'Svatá písma', hint: 'Genesis, Pentateuch, Apokryfy', type: 'category', category: 'scriptures' },
-  { to: '/lore/mechanici', label: 'Kasta nečistých', hint: 'Mechanici', type: 'hub' },
-  { to: '/lore/mucednici', label: 'Mučedníci', hint: 'Příběhy padlých bagristů', type: 'hub' },
-  { to: '/lore/dejiny-pravdy', label: 'Dějiny Pravdy', hint: 'Od Babylonu k Peorii', type: 'hub' },
+  { to: '/lore/levels', label: 'Osm stupňů', hint: 'CAT 301.5 → CAT D9', category: 'levels' },
+  { to: '/lore/phases', label: 'Cyklus bagrování', hint: '7 fází neúspěšného vtipu', category: 'phases' },
+  { to: '/lore/slovnik', label: 'Slovník', hint: 'Pojmy, pozdravy, rčení', category: 'hub' },
+  { to: '/lore/modlitebnik', label: 'Modlitebník', hint: 'Modlitby, požehnání, svátosti', category: 'hub' },
+  { to: '/lore/credo', label: 'Credo bagristae', hint: 'Vyznání víry', category: 'hub' },
+  { to: '/lore/holidays', label: 'Svátky', hint: 'ConExpo, Smutný pátek, Dušičky', category: 'holidays' },
+  { to: '/lore/rituals', label: 'Rituály', hint: 'Walk-around, mazání, Naložení Tatry', category: 'rituals' },
+  { to: '/lore/concepts', label: 'Pojmy', hint: 'Hydraulika, motohodina, žluť', category: 'concepts' },
+  { to: '/lore/sects', label: 'Kacířské sekty', hint: 'Komatsuáni, Hitachisté, Volvoité…', category: 'sects' },
+  { to: '/lore/brands', label: 'Značky', hint: 'CAT a jeho stíny', category: 'brands' },
+  { to: '/lore/scriptures', label: 'Svatá písma', hint: 'Genesis, Pentateuch, Apokryfy', category: 'scriptures' },
+  { to: '/lore/mechanici', label: 'Kasta nečistých', hint: 'Mechanici', category: 'hub' },
+  { to: '/lore/mucednici', label: 'Mučedníci', hint: 'Příběhy padlých bagristů', category: 'hub' },
+  { to: '/lore/dejiny-pravdy', label: 'Dějiny Pravdy', hint: 'Od Babylonu k Peorii', category: 'hub' },
 ];
 
 export function LoreHomePage() {
   return (
-    <main style={pageStyle}>
-      <h1 style={titleStyle}>Lore</h1>
-      <p style={introStyle}>
+    <main className="container" style={{ padding: '48px 28px 32px' }}>
+      <div className="page-meta">
+        <Link to="/">Home</Link>
+        <span>›</span>
+        <span style={{ color: 'var(--fg)' }}>Lore</span>
+        <span style={{ flex: 1 }} />
+        <span>14 sekcí · MTH ∞</span>
+      </div>
+
+      <h1
+        style={{
+          fontFamily: 'var(--display)',
+          fontSize: 'clamp(60px, 11vw, 120px)',
+          letterSpacing: '0.02em',
+          margin: 0,
+          marginBottom: 12,
+          lineHeight: 0.95,
+          color: 'var(--fg)',
+        }}
+      >
+        LORE
+      </h1>
+      <p
+        style={{
+          fontFamily: 'var(--body)',
+          fontStyle: 'italic',
+          fontSize: 22,
+          lineHeight: 1.5,
+          color: 'var(--fg-dim)',
+          margin: '0 0 32px',
+          maxWidth: 720,
+        }}
+      >
         Encyklopedie Bagristů Pravdy — Společenství kopajících. Osm stupňů, sedm
         fází, sedm svátků a několik kacířských sekt, kterých se výslovně straníme.
       </p>
-      <div style={sectionsGrid}>
+
+      <div style={{ height: 6 }} className="stripes-thin" />
+
+      <div className="card-grid" style={{ marginTop: 32 }}>
         {SECTIONS.map((s) => (
-          <Link key={s.to} to={s.to} style={cardStyle}>
-            <div style={cardTitle}>{s.label}</div>
-            <div style={cardSub}>{s.hint}</div>
+          <Link key={s.to} to={s.to} className="tile">
+            <div className="tile-title">{s.label}</div>
+            <div className="tile-sub">{s.hint}</div>
           </Link>
         ))}
       </div>

@@ -1,55 +1,6 @@
-import type { CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { findDoc, type LoreCategory } from './loreContent';
 import { MarkdownView } from './MarkdownView';
-
-const pageStyle: CSSProperties = {
-  maxWidth: 720,
-  margin: '0 auto',
-  padding: '48px 24px',
-};
-
-const breadcrumbStyle: CSSProperties = {
-  fontSize: 13,
-  color: '#888',
-  marginBottom: 16,
-};
-
-const titleStyle: CSSProperties = {
-  fontSize: 32,
-  margin: 0,
-  marginBottom: 4,
-  fontWeight: 700,
-  letterSpacing: '-0.01em',
-};
-
-const subtitleStyle: CSSProperties = {
-  fontSize: 17,
-  color: '#666',
-  margin: 0,
-  marginBottom: 24,
-};
-
-const metaRow: CSSProperties = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: 12,
-  fontSize: 12,
-  color: '#888',
-  marginBottom: 32,
-  paddingBottom: 16,
-  borderBottom: '1px solid #eee',
-};
-
-const navRow: CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginTop: 48,
-  paddingTop: 24,
-  borderTop: '1px solid #eee',
-  fontSize: 14,
-  color: '#666',
-};
 
 const VALID_CATEGORIES: readonly LoreCategory[] = [
   'levels',
@@ -83,12 +34,10 @@ export function LoreDocPage() {
 
   if (!category || !slug || !isLoreCategory(category)) {
     return (
-      <main style={pageStyle}>
-        <p style={breadcrumbStyle}>
-          <Link to="/lore" style={{ color: '#666' }}>
-            ← Lore
-          </Link>
-        </p>
+      <main className="container" style={{ padding: '48px 28px' }}>
+        <div className="page-meta">
+          <Link to="/lore">← Lore</Link>
+        </div>
         <p>Stránka nenalezena.</p>
       </main>
     );
@@ -97,12 +46,10 @@ export function LoreDocPage() {
   const doc = findDoc(category, slug);
   if (!doc) {
     return (
-      <main style={pageStyle}>
-        <p style={breadcrumbStyle}>
-          <Link to={`/lore/${category}`} style={{ color: '#666' }}>
-            ← {SECTION_TITLES[category]}
-          </Link>
-        </p>
+      <main className="container" style={{ padding: '48px 28px' }}>
+        <div className="page-meta">
+          <Link to={`/lore/${category}`}>← {SECTION_TITLES[category]}</Link>
+        </div>
         <p>Tahle stránka v lore zatím není.</p>
       </main>
     );
@@ -112,14 +59,15 @@ export function LoreDocPage() {
   const model = typeof doc.data.model === 'string' ? doc.data.model : undefined;
   const motto = typeof doc.data.motto === 'string' ? doc.data.motto : undefined;
   const perex = typeof doc.data.perex === 'string' ? doc.data.perex : undefined;
+  const id = typeof doc.data.id === 'number' ? doc.data.id : undefined;
 
   const metaItems: string[] = [];
-  if (typeof doc.data.kdy === 'string') metaItems.push(`Kdy: ${doc.data.kdy}`);
-  if (typeof doc.data.frekvence === 'string') metaItems.push(`Frekvence: ${doc.data.frekvence}`);
+  if (typeof doc.data.kdy === 'string') metaItems.push(doc.data.kdy);
+  if (typeof doc.data.frekvence === 'string') metaItems.push(doc.data.frekvence);
   if (typeof doc.data.delka_min === 'number') metaItems.push(`${doc.data.delka_min} min`);
   if (typeof doc.data.hmotnost_t === 'number') metaItems.push(`${doc.data.hmotnost_t} t`);
   if (typeof doc.data.zeme === 'string') metaItems.push(doc.data.zeme);
-  if (typeof doc.data.zalozeno === 'number') metaItems.push(`Založeno ${doc.data.zalozeno}`);
+  if (typeof doc.data.zalozeno === 'number') metaItems.push(`Zal. ${doc.data.zalozeno}`);
   if (typeof doc.data.typ_pojmu === 'string') metaItems.push(doc.data.typ_pojmu);
   if (typeof doc.data.cislo_fraze === 'string') metaItems.push(`Fáze ${doc.data.cislo_fraze}`);
   if (typeof doc.data.stav === 'string') metaItems.push(doc.data.stav);
@@ -127,61 +75,139 @@ export function LoreDocPage() {
   const prevSlug = typeof doc.data.predchozi === 'string' ? doc.data.predchozi : undefined;
   const nextSlug = typeof doc.data.dalsi === 'string' ? doc.data.dalsi : undefined;
 
+  const heroH1 =
+    category === 'levels' && id !== undefined ? `Bagrista úrovně ${id}` : title;
+
+  const subtitle =
+    category === 'levels'
+      ? [model, title].filter(Boolean).join(' · ')
+      : model;
+
   return (
-    <main style={pageStyle}>
-      <p style={breadcrumbStyle}>
-        <Link to="/lore" style={{ color: '#888' }}>
-          Lore
-        </Link>
-        {' / '}
-        <Link to={`/lore/${category}`} style={{ color: '#666' }}>
-          {SECTION_TITLES[category]}
-        </Link>
-      </p>
-      <h1 style={titleStyle}>
-        {typeof doc.data.id === 'number' && category === 'levels' ? (
-          <>Bagrista úrovně {doc.data.id}</>
-        ) : (
-          title
+    <main className="container" style={{ padding: '48px 28px 32px', maxWidth: 880 }}>
+      <div className="page-meta">
+        <Link to="/">Home</Link>
+        <span>›</span>
+        <Link to="/lore">Lore</Link>
+        <span>›</span>
+        <Link to={`/lore/${category}`}>{SECTION_TITLES[category]}</Link>
+        <span>›</span>
+        <span style={{ color: 'var(--fg)' }}>{title}</span>
+        {id !== undefined && (
+          <>
+            <span style={{ flex: 1 }} />
+            <span>
+              {String(id).padStart(2, '0')} / {category === 'phases' ? '07' : '08'}
+            </span>
+          </>
         )}
+      </div>
+
+      <h1
+        style={{
+          fontFamily: 'var(--display)',
+          fontSize: 'clamp(48px, 9vw, 96px)',
+          letterSpacing: '0.02em',
+          lineHeight: 0.95,
+          margin: 0,
+          marginBottom: 8,
+          color: 'var(--fg)',
+          textTransform: 'uppercase',
+        }}
+      >
+        {heroH1}
       </h1>
-      {(model || (typeof doc.data.id === 'number' && category === 'levels')) && (
-        <p style={subtitleStyle}>
-          {model ?? title}
-          {model && typeof doc.data.id === 'number' && ' '}
-          {model && typeof doc.data.id === 'number' && (
-            <span style={{ color: '#999' }}>{title}</span>
-          )}
+      {subtitle && (
+        <p
+          style={{
+            fontFamily: 'var(--mono)',
+            fontSize: 13,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: 'var(--accent-num)',
+            margin: 0,
+            marginBottom: 18,
+          }}
+        >
+          {subtitle}
         </p>
       )}
+
       {motto && (
-        <p style={{ fontStyle: 'italic', color: '#555', marginBottom: 24 }}>„{motto}"</p>
+        <p
+          style={{
+            fontStyle: 'italic',
+            fontSize: 22,
+            color: 'var(--fg-dim)',
+            margin: '0 0 24px',
+            lineHeight: 1.5,
+          }}
+        >
+          „{motto}"
+        </p>
       )}
       {perex && (
-        <p style={{ fontSize: 17, color: '#444', lineHeight: 1.5, marginBottom: 24 }}>
+        <p
+          style={{
+            fontStyle: 'italic',
+            fontSize: 20,
+            color: 'var(--fg)',
+            lineHeight: 1.55,
+            margin: '0 0 28px',
+          }}
+        >
           {perex}
         </p>
       )}
-      {metaItems.length > 0 && <div style={metaRow}>{metaItems.join(' · ')}</div>}
+
+      {metaItems.length > 0 && (
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 8,
+            marginBottom: 32,
+          }}
+        >
+          {metaItems.map((m) => (
+            <span key={m} className="chip">
+              {m}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div style={{ height: 6, marginBottom: 32 }} className="stripes-thin" />
 
       <MarkdownView body={doc.body} />
 
       {(prevSlug || nextSlug) && (
-        <div style={navRow}>
-          <span>
-            {prevSlug && (
-              <Link to={`/lore/${category}/${prevSlug}`} style={{ color: '#444' }}>
-                ← Předchozí
-              </Link>
-            )}
-          </span>
-          <span>
-            {nextSlug && (
-              <Link to={`/lore/${category}/${nextSlug}`} style={{ color: '#444' }}>
-                Další →
-              </Link>
-            )}
-          </span>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: 12,
+            marginTop: 56,
+            paddingTop: 28,
+            borderTop: '1px dashed var(--rule-dashed)',
+          }}
+        >
+          {prevSlug ? (
+            <Link to={`/lore/${category}/${prevSlug}`} className="tile" style={{ textAlign: 'left' }}>
+              <div className="mono-caption" style={{ marginBottom: 6 }}>← Předchozí</div>
+              <div className="tile-title" style={{ fontSize: 18 }}>{prevSlug.replace(/-/g, ' ')}</div>
+            </Link>
+          ) : (
+            <div />
+          )}
+          {nextSlug ? (
+            <Link to={`/lore/${category}/${nextSlug}`} className="tile" style={{ textAlign: 'right' }}>
+              <div className="mono-caption" style={{ marginBottom: 6 }}>Další →</div>
+              <div className="tile-title" style={{ fontSize: 18 }}>{nextSlug.replace(/-/g, ' ')}</div>
+            </Link>
+          ) : (
+            <div />
+          )}
         </div>
       )}
     </main>

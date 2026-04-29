@@ -1,5 +1,7 @@
 import type { PublicQuestion } from './types';
 
+const LETTERS = ['A', 'B', 'C', 'D'];
+
 type Props = {
   question: PublicQuestion;
   selectedOptionId: string | undefined;
@@ -9,40 +11,76 @@ type Props = {
 export function QuestionCard({ question, selectedOptionId, onSelect }: Props) {
   return (
     <div>
-      <h2 style={{ fontSize: 22, lineHeight: 1.3, margin: 0, marginBottom: 24 }}>
+      <h2
+        style={{
+          fontFamily: 'var(--display)',
+          fontSize: 'clamp(32px, 5.5vw, 56px)',
+          letterSpacing: '0.01em',
+          lineHeight: 1.05,
+          margin: 0,
+          marginBottom: 32,
+          color: 'var(--fg)',
+        }}
+      >
         {question.text}
       </h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'grid', gap: 14 }}>
         {question.options.map((option, idx) => {
           const isSelected = option.id === selectedOptionId;
+          const letter = LETTERS[idx] ?? String(idx + 1);
           return (
             <button
               key={option.id}
               type="button"
               onClick={() => onSelect(option.id)}
               style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 18,
                 textAlign: 'left',
-                padding: '12px 16px',
-                border: `2px solid ${isSelected ? '#333' : '#ccc'}`,
-                background: isSelected ? '#f4f4f4' : '#fff',
-                borderRadius: 6,
+                padding: '20px 24px',
+                background: isSelected ? 'var(--bg-3)' : 'var(--bg-2)',
+                border: `2px solid ${isSelected ? 'var(--zlut)' : 'var(--rule)'}`,
+                color: 'var(--fg)',
                 cursor: 'pointer',
                 font: 'inherit',
-                fontSize: 15,
-                color: '#222',
+                fontSize: 17,
+                lineHeight: 1.5,
+                transition: 'background .15s, border-color .15s',
+              }}
+              onMouseEnter={(e) => {
+                if (!isSelected) {
+                  e.currentTarget.style.borderColor = 'var(--zlut)';
+                  e.currentTarget.style.background = 'var(--bg-3)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isSelected) {
+                  e.currentTarget.style.borderColor = 'var(--rule)';
+                  e.currentTarget.style.background = 'var(--bg-2)';
+                }
               }}
             >
               <span
                 style={{
-                  display: 'inline-block',
-                  width: 24,
-                  color: '#999',
-                  fontVariantNumeric: 'tabular-nums',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 36,
+                  height: 36,
+                  flexShrink: 0,
+                  background: isSelected ? 'var(--zlut)' : 'var(--bg)',
+                  color: 'var(--black)',
+                  border: '2px solid var(--black)',
+                  fontFamily: 'var(--mono)',
+                  fontWeight: 700,
+                  fontSize: 14,
+                  letterSpacing: 0,
                 }}
               >
-                {idx + 1}.
+                {letter}
               </span>
-              {option.text}
+              <span>{option.text}</span>
             </button>
           );
         })}

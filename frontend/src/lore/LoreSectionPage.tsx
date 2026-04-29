@@ -1,64 +1,6 @@
-import type { CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { findHub, getIntro, listByCategory, type LoreCategory } from './loreContent';
 import { MarkdownView } from './MarkdownView';
-
-const pageStyle: CSSProperties = {
-  maxWidth: 800,
-  margin: '0 auto',
-  padding: '48px 24px',
-};
-
-const titleStyle: CSSProperties = {
-  fontSize: 32,
-  margin: 0,
-  marginBottom: 8,
-  fontWeight: 700,
-};
-
-const breadcrumbStyle: CSSProperties = {
-  fontSize: 13,
-  color: '#888',
-  marginBottom: 16,
-};
-
-const introStyle: CSSProperties = {
-  fontSize: 15,
-  color: '#444',
-  marginBottom: 32,
-  lineHeight: 1.6,
-};
-
-const listStyle: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-  gap: 12,
-  listStyle: 'none',
-  padding: 0,
-  margin: 0,
-};
-
-const cardStyle: CSSProperties = {
-  display: 'block',
-  padding: '14px 16px',
-  border: '1px solid #e5e5e5',
-  borderRadius: 8,
-  textDecoration: 'none',
-  color: '#222',
-  background: '#fff',
-};
-
-const itemTitle: CSSProperties = {
-  fontSize: 15,
-  fontWeight: 600,
-  marginBottom: 4,
-};
-
-const itemSub: CSSProperties = {
-  fontSize: 13,
-  color: '#777',
-  lineHeight: 1.4,
-};
 
 const SECTION_TITLES: Record<LoreCategory, string> = {
   levels: 'Osm stupňů',
@@ -87,14 +29,31 @@ function isLoreCategory(value: string): value is LoreCategory {
   return (VALID_CATEGORIES as readonly string[]).includes(value);
 }
 
+const titleStyle = {
+  fontFamily: 'var(--display)',
+  fontSize: 'clamp(48px, 9vw, 96px)',
+  letterSpacing: '0.02em',
+  margin: '0 0 12px',
+  lineHeight: 0.95,
+  color: 'var(--fg)',
+  textTransform: 'uppercase' as const,
+};
+
+const perexStyle = {
+  fontFamily: 'var(--body)',
+  fontStyle: 'italic' as const,
+  fontSize: 20,
+  lineHeight: 1.5,
+  color: 'var(--fg-dim)',
+  margin: '0 0 32px',
+  maxWidth: 720,
+};
+
 export function LoreSectionPage() {
   const { category } = useParams<{ category: string }>();
   if (!category) {
     return (
-      <main style={pageStyle}>
-        <p style={breadcrumbStyle}>
-          <Link to="/lore">← Lore</Link>
-        </p>
+      <main className="container" style={{ padding: '48px 28px' }}>
         <p>Sekce nenalezena.</p>
       </main>
     );
@@ -104,12 +63,10 @@ export function LoreSectionPage() {
     const hub = findHub(category);
     if (!hub) {
       return (
-        <main style={pageStyle}>
-          <p style={breadcrumbStyle}>
-            <Link to="/lore" style={{ color: '#666' }}>
-              ← Lore
-            </Link>
-          </p>
+        <main className="container" style={{ padding: '48px 28px' }}>
+          <div className="page-meta">
+            <Link to="/lore">← Lore</Link>
+          </div>
           <p>Stránka „{category}" v lore není.</p>
         </main>
       );
@@ -117,14 +74,17 @@ export function LoreSectionPage() {
     const hubTitle = typeof hub.data.nazev === 'string' ? hub.data.nazev : hub.slug;
     const hubPerex = typeof hub.data.perex === 'string' ? hub.data.perex : undefined;
     return (
-      <main style={pageStyle}>
-        <p style={breadcrumbStyle}>
-          <Link to="/lore" style={{ color: '#888' }}>
-            ← Lore
-          </Link>
-        </p>
+      <main className="container" style={{ padding: '48px 28px 32px' }}>
+        <div className="page-meta">
+          <Link to="/">Home</Link>
+          <span>›</span>
+          <Link to="/lore">Lore</Link>
+          <span>›</span>
+          <span style={{ color: 'var(--fg)' }}>{hubTitle}</span>
+        </div>
         <h1 style={titleStyle}>{hubTitle}</h1>
-        {hubPerex && <p style={{ ...introStyle, marginBottom: 32 }}>{hubPerex}</p>}
+        {hubPerex && <p style={perexStyle}>{hubPerex}</p>}
+        <div style={{ height: 6, marginBottom: 32 }} className="stripes-thin" />
         <MarkdownView body={hub.body} />
       </main>
     );
@@ -135,33 +95,41 @@ export function LoreSectionPage() {
   const title = SECTION_TITLES[category];
 
   return (
-    <main style={pageStyle}>
-      <p style={breadcrumbStyle}>
-        <Link to="/lore" style={{ color: '#666' }}>
-          ← Lore
-        </Link>
-      </p>
+    <main className="container" style={{ padding: '48px 28px 32px' }}>
+      <div className="page-meta">
+        <Link to="/">Home</Link>
+        <span>›</span>
+        <Link to="/lore">Lore</Link>
+        <span>›</span>
+        <span style={{ color: 'var(--fg)' }}>{title}</span>
+        <span style={{ flex: 1 }} />
+        <span>{items.length} položek</span>
+      </div>
       <h1 style={titleStyle}>{title}</h1>
       {intro && (
-        <div style={introStyle}>
+        <div style={{ ...perexStyle, fontSize: 18 }}>
           <MarkdownView body={intro.body} />
         </div>
       )}
-      <ul style={listStyle}>
-        {items.map((doc) => (
-          <li key={doc.slug}>
-            <Link to={`/lore/${category}/${doc.slug}`} style={cardStyle}>
-              <div style={itemTitle}>
-                {typeof doc.data.id === 'number' && `${doc.data.id}. `}
-                {typeof doc.data.nazev === 'string' ? doc.data.nazev : doc.slug}
+      <div style={{ height: 6, marginBottom: 32 }} className="stripes-thin" />
+
+      <div className="card-grid">
+        {items.map((doc) => {
+          const itemTitle = typeof doc.data.nazev === 'string' ? doc.data.nazev : doc.slug;
+          const subtitle = typeof doc.data.perex === 'string' ? doc.data.perex : undefined;
+          const idPrefix = typeof doc.data.id === 'number' ? `${String(doc.data.id).padStart(2, '0')} · ` : '';
+          return (
+            <Link key={doc.slug} to={`/lore/${category}/${doc.slug}`} className="tile">
+              <div className="mono-caption" style={{ marginBottom: 6, color: 'var(--accent-num)' }}>
+                {idPrefix}
+                {category === 'levels' && typeof doc.data.model === 'string' ? doc.data.model : category}
               </div>
-              {typeof doc.data.perex === 'string' && (
-                <div style={itemSub}>{doc.data.perex}</div>
-              )}
+              <div className="tile-title">{itemTitle}</div>
+              {subtitle && <div className="tile-sub">{subtitle}</div>}
             </Link>
-          </li>
-        ))}
-      </ul>
+          );
+        })}
+      </div>
     </main>
   );
 }
