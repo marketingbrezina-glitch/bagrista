@@ -1,8 +1,9 @@
 import { useEffect, useState, type CSSProperties } from 'react';
-import { fetchQuestions } from './api';
+import { fetchQuestions, postScore } from './api';
 import { Progress } from './Progress';
 import { QuestionCard } from './QuestionCard';
-import type { PublicQuestion } from './types';
+import { ResultPage } from './ResultPage';
+import type { Answer, PublicQuestion, ScoreResult } from './types';
 
 const pageStyle: CSSProperties = {
   fontFamily: 'system-ui, sans-serif',
@@ -17,6 +18,8 @@ export function QuizPage() {
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [result, setResult] = useState<ScoreResult | null>(null);
+  const [scoring, setScoring] = useState<'idle' | 'loading' | 'error'>('idle');
 
   useEffect(() => {
     fetchQuestions()
@@ -28,10 +31,28 @@ export function QuizPage() {
   }, []);
 
   useEffect(() => {
+    if (!questions || result) return;
+    if (currentIndex < questions.length) return;
+    if (scoring !== 'idle') return;
+
+    const payload: Answer[] = Object.entries(answers).map(([questionId, optionId]) => ({
+      questionId,
+      optionId,
+    }));
+    setScoring('loading');
+    postScore(payload)
+      .then((r) => {
+        setResult(r);
+        setScoring('idle');
+      })
+      .catch(() => setScoring('error'));
+  }, [questions, currentIndex, answers, result, scoring]);
+
+  useEffect(() => {
     if (!questions) return;
 
     function onKey(e: KeyboardEvent) {
-      if (!questions) return;
+      if (!questions || result) return;
       if (e.key === 'ArrowLeft') {
         setCurrentIndex((idx) => Math.max(0, idx - 1));
         return;
@@ -48,7 +69,7 @@ export function QuizPage() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questions, currentIndex]);
+  }, [questions, currentIndex, result]);
 
   function selectOption(optionId: string) {
     if (!questions) return;
@@ -60,6 +81,17 @@ export function QuizPage() {
 
   function goBack() {
     setCurrentIndex((idx) => Math.max(0, idx - 1));
+  }
+
+  function restart() {
+    setAnswers({});
+    setCurrentIndex(0);
+    setResult(null);
+    setScoring('idle');
+  }
+
+  function retryScoring() {
+    setScoring('idle');
   }
 
   if (error) {
@@ -82,20 +114,26 @@ export function QuizPage() {
     );
   }
 
+  if (result) {
+    return <ResultPage result={result} onRestart={restart} />;
+  }
+
   if (currentIndex >= questions.length) {
+    if (scoring === 'error') {
+      return (
+        <main style={pageStyle}>
+          <p>Výsledek se nepodařilo spočítat.</p>
+          <button type="button" onClick={retryScoring} style={retryButtonStyle}>
+            Zkusit znovu
+          </button>
+        </main>
+      );
+    }
     return (
       <main style={pageStyle}>
         <Progress current={questions.length} total={questions.length} />
         <div style={{ marginTop: 48, textAlign: 'center' }}>
-          <p style={{ fontSize: 20, marginBottom: 8 }}>
-            Vyplnil jsi všech {questions.length} otázek.
-          </p>
-          <p style={{ color: '#666', fontSize: 14, marginBottom: 32 }}>
-            Výsledková stránka přijde v dalším kroku.
-          </p>
-          <button type="button" onClick={goBack} style={navButtonStyle(false)}>
-            ← Zpět na poslední otázku
-          </button>
+          <p style={{ fontSize: 18 }}>Počítám výsledek…</p>
         </div>
       </main>
     );
@@ -151,3 +189,15 @@ function navButtonStyle(disabled: boolean): CSSProperties {
     padding: 0,
   };
 }
+
+const retryButtonStyle: CSSProperties = {
+  background: '#333',
+  color: '#fff',
+  border: 'none',
+  padding: '8px 16px',
+  borderRadius: 6,
+  cursor: 'pointer',
+  font: 'inherit',
+  fontSize: 14,
+  marginTop: 16,
+};
