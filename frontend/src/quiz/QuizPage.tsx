@@ -3,6 +3,7 @@ import { fetchQuestions, postScore } from './api';
 import { Progress } from './Progress';
 import { QuestionCard } from './QuestionCard';
 import { ResultPage } from './ResultPage';
+import { clearHashFromUrl, decodeAnswers, encodeAnswers } from './share';
 import type { Answer, PublicQuestion, ScoreResult } from './types';
 
 const pageStyle: CSSProperties = {
@@ -20,6 +21,8 @@ export function QuizPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [scoring, setScoring] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [cameFromHash, setCameFromHash] = useState(false);
+  const [hashHandled, setHashHandled] = useState(false);
 
   useEffect(() => {
     fetchQuestions()
@@ -29,6 +32,24 @@ export function QuizPage() {
         setError(`Otázky se nepodařilo načíst (${msg}).`);
       });
   }, []);
+
+  useEffect(() => {
+    if (!questions || hashHandled) return;
+    setHashHandled(true);
+    const decoded = decodeAnswers(window.location.hash, questions);
+    if (!decoded) return;
+    const record: Record<string, string> = {};
+    for (const a of decoded) record[a.questionId] = a.optionId;
+    setAnswers(record);
+    setCameFromHash(true);
+    setScoring('loading');
+    postScore(decoded)
+      .then((r) => {
+        setResult(r);
+        setScoring('idle');
+      })
+      .catch(() => setScoring('error'));
+  }, [questions, hashHandled]);
 
   useEffect(() => {
     if (!questions || result) return;
@@ -88,6 +109,9 @@ export function QuizPage() {
     setCurrentIndex(0);
     setResult(null);
     setScoring('idle');
+    setCameFromHash(false);
+    setHashHandled(true);
+    clearHashFromUrl();
   }
 
   function retryScoring() {
@@ -115,7 +139,15 @@ export function QuizPage() {
   }
 
   if (result) {
-    return <ResultPage result={result} onRestart={restart} />;
+    const shareHash = encodeAnswers(answers, questions);
+    return (
+      <ResultPage
+        result={result}
+        shareHash={shareHash}
+        onRestart={restart}
+        restartLabel={cameFromHash ? 'Vyzkoušet sám' : 'Spočítat znovu'}
+      />
+    );
   }
 
   if (currentIndex >= questions.length) {

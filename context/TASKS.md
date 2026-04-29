@@ -10,7 +10,7 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- [ ] FE: výsledková stránka (`ResultPage` + `AxisBar` + `levels.ts`). Po q19 zavolá `POST /api/quiz/score` a zobrazí stupeň 1–8 s názvem modelu, krátký popis (FE placeholder do doby, než přijde popis z Lore endpointu kolegy), profil 4 os v procentech (BE rozšířen o `axisMax`), tlačítka „Spočítat znovu" a placeholder „Sdílet (brzy)".
+- [ ] FE: sdílení výsledku linkem (URL hash `#v1.<19chars>`) + tlačítko „Stáhnout PDF" (přes `window.print()` + print-stylesheet, žádné nové dependency). Otevření odkazu zavolá `POST /api/quiz/score` s dekódovanými volbami a renderuje výsledek bez kvízu; tlačítko „Vyzkoušet sám" čistí stav i hash.
 
 ### Brzy
 - [ ] FE: výsledková stránka (zobrazení stupně + profil os)
