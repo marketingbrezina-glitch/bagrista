@@ -40,6 +40,7 @@ Soubory: `frontend/src/lore/*`, `backend/src/lore/*`.
 
 ## Hotovo
 
+- [x] 2026-04-29 — Hotfix Homepage hero: wordmark „BAGRISTA" přečníval na širokých displejích za kartu „OHLÁŠENÍ". Font-size přepnut z `clamp(80px, 13vw, 200px)` (viewport-vázané) na `clamp(56px, 17cqi, 130px)` (vázané na šířku sloupce přes `container-type: inline-size`). Soubor: `frontend/src/HomePage.tsx`. Ověřeno na 1280/1920/2560/mobile — žádný překryv. Kolega: pokud chceš jiné scaling, jsme v společné zóně.
 - [x] 2026-04-29 — Pivot na static-only: quiz scoring + otázky přesunuty z `backend/` na FE, backend celý smazán, `frontend/vercel.json` připravený pro Vercel deploy. Detaily v `DECISIONS.md` (2026-04-29 — Static-only deploy).
 - [x] 2026-04-29 — Designová integrace: žluť/parchment/rust palette, Big Shoulders Stencil + Source Serif fonts, TopBar s wordmark + bucket diakritika, Footer (Bratrstvo žluté lžíce), Creed/Wikilink/Parchment/Chip komponenty, redesigned všechny stránky (Home/Lore index/sekce/detail, Quiz, Result). Reference v `design/`.
 - [x] 2026-04-29 — Wiki-linky `[[X]]` / `[[X|alias]]` / `[[X#anchor]]`: bold + Router Link, resolver přes `nazev`/slug/long-form aliasy. Výsledková stránka načítá plný lore stupně z `content/lore/levels/*.md` (FE už není zdroj pravdy popisů stupňů).

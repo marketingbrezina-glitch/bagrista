@@ -41,7 +41,7 @@ const wordmarkLabel: CSSProperties = {
 
 const wordmarkH1: CSSProperties = {
   fontFamily: "'Archivo Black', 'Anton', sans-serif",
-  fontSize: 'clamp(80px, 13vw, 200px)',
+  fontSize: 'clamp(56px, 17cqi, 130px)',
   lineHeight: 0.88,
   letterSpacing: '-0.012em',
   textTransform: 'uppercase',
@@ -125,7 +125,7 @@ export function HomePage() {
           </div>
 
           <div style={heroGrid}>
-            <div>
+            <div style={{ containerType: 'inline-size', minWidth: 0 }}>
               <div style={wordmarkLabel}>Jsem</div>
               <div style={{ position: 'relative', display: 'inline-block' }}>
                 <div
