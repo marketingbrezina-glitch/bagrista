@@ -10,7 +10,7 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- [ ] FE: stránka kvízu (jedna otázka + progress + 4 volby + zpět). Soubory `frontend/src/quiz/{QuizPage,QuestionCard,Progress}.tsx`, `frontend/src/quiz/{api,types}.ts`. Bez routeru (App.tsx → QuizPage napřímo) a bez CSS frameworku (jen inline neutrál) — sdílené věci se domluví s kolegou později.
+- [ ] BE: přidat 19. otázku „Naložení Tatry" (corporate-bagrista angle, čerpá z Cyklu bagrování). Sada se rozšíří 18 → 19. Re-kalibrace prahů odložena na okamžik, kdy půjde kvíz do reálného traffic — drobná inflace tieru (+2 pro all-d persona) je přijatelná.
 
 ### Brzy
 - [ ] FE: výsledková stránka (zobrazení stupně + profil os)

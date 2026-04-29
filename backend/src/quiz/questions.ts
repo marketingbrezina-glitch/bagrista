@@ -181,6 +181,16 @@ export const QUIZ_QUESTIONS: readonly Question[] = [
       { id: 'd', text: 'Plný rituál: walk-around naposled, závěrečné požehnání pro Bratrstvo, kus podvozku si nechám jako relikvii.', scores: { rituals: 3, narcis: 2 } },
     ],
   },
+  {
+    id: 'q19',
+    text: 'Celofiremní call. Šéf řekne: „Honzo, mohl bys nám krátce shrnout status?" Ty:',
+    options: [
+      { id: 'a', text: '„Status je: nestihli jsme. Příští týden."', scores: { mleti: -2 }, betrayal: 3 },
+      { id: 'b', text: 'Tři věty, jednou pointou. Mám-li čas, dvě další.', scores: {} },
+      { id: 'c', text: 'Začnu rozsahem projektu, představím tým, dotknu se zaměnitelných závislostí — kolem desáté minuty se v hlavě začne sbírat odpověď.', scores: { mleti: 3, narcis: 2 } },
+      { id: 'd', text: 'Spustím Naložení Tatry: tři fáze cyklu na úvod, čtvrtá s podporou grafu, pátá s emoční pauzou. Když se po patnácti minutách nikdo neptá, plný výkon — to je ono.', scores: { mleti: 3, narcis: 3, rituals: 1 } },
+    ],
+  },
 ];
 
 export function toPublicQuestion(question: Question): PublicQuestion {
