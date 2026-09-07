@@ -1,5 +1,6 @@
 import { useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
+import { trackEvent } from '../analytics';
 import { Creed } from '../brand/Creed';
 import { findLevelById } from '../lore/loreContent';
 import { MarkdownView } from '../lore/MarkdownView';
@@ -34,12 +35,14 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
 
   function onShare() {
     void copyShareLink(shareHash).then((ok) => {
+      trackEvent('result_share', { level_id: result.levelId, success: ok });
       setShareStatus(ok ? 'copied' : 'error');
       setTimeout(() => setShareStatus('idle'), 2500);
     });
   }
 
   function onPrint() {
+    trackEvent('result_print', { level_id: result.levelId });
     printResult(`Bagrista — Úroveň ${result.levelId} ${model}${epithet ? ` ${epithet}` : ''}`);
   }
 

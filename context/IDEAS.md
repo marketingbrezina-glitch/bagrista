@@ -59,7 +59,7 @@ Doporučuju **Plausible** nebo **Umami** — pro „satira pro kámoše" scope s
 
 **Implementation:** ~5 řádků skriptu v `<head>` `frontend/index.html` (nebo přes React helma). Zápis do `DECISIONS.md` po rozhodnutí.
 
-**Status:** parking lot. Vyžaduje rozhodnutí providera.
+**Status:** ✅ rozhodnuto 2026-09-07 — **GA4** (Honza měl property po ruce, kompletní eventy zdarma). Nasazeno v `frontend/src/analytics.ts`, detail v `DECISIONS.md` (2026-09-07). Cookie banner vědomě zatím neřešíme; pokud by to vadilo, přechod na Plausible/Umami je výměna jednoho modulu (`trackPageview`/`trackEvent` API zůstane).
 
 ---
 

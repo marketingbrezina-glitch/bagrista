@@ -23,6 +23,8 @@ npm run dev   # :5173
 
 Otevři `http://localhost:5173`.
 
+Google Analytics se v dev módu neměří; produkční build má ID zapečené v `frontend/src/analytics.ts` (přepsatelné env varem `VITE_GA_MEASUREMENT_ID`, viz `frontend/.env.example`).
+
 ## Struktura
 
 ```

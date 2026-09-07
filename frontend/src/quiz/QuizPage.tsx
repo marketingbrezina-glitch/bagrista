@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react';
+import { trackEvent } from '../analytics';
 import { fetchQuestions, postScore } from './api';
 import { Progress } from './Progress';
 import { QuestionCard } from './QuestionCard';
@@ -46,6 +47,7 @@ export function QuizPage() {
       .then((r) => {
         setResult(r);
         setScoring('idle');
+        trackEvent('result_view_shared', { level_id: r.levelId, level_slug: r.levelSlug });
       })
       .catch(() => setScoring('error'));
   }, [questions, hashHandled]);
@@ -64,6 +66,11 @@ export function QuizPage() {
       .then((r) => {
         setResult(r);
         setScoring('idle');
+        trackEvent('quiz_complete', {
+          level_id: r.levelId,
+          level_slug: r.levelSlug,
+          betrayal_score: r.betrayalScore,
+        });
       })
       .catch(() => setScoring('error'));
   }, [questions, currentIndex, answers, result, scoring]);
@@ -95,6 +102,7 @@ export function QuizPage() {
     if (!questions) return;
     const current = questions[currentIndex];
     if (!current) return;
+    if (Object.keys(answers).length === 0) trackEvent('quiz_start');
     setAnswers((prev) => ({ ...prev, [current.id]: optionId }));
     setCurrentIndex((idx) => idx + 1);
   }
@@ -104,6 +112,7 @@ export function QuizPage() {
   }
 
   function restart() {
+    trackEvent('quiz_restart', { from_shared: cameFromHash });
     setAnswers({});
     setCurrentIndex(0);
     setResult(null);

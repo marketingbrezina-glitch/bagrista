@@ -43,6 +43,7 @@ Vercel, GitHub-connected:
 - **Build Command:** `npm run build`
 - **Output Directory:** `dist`
 - Push do `main` → auto-deploy.
+- Google Analytics: produkční build používá ID z `frontend/src/analytics.ts` (`PRODUCTION_MEASUREMENT_ID`); volitelně přepsatelné env varem `VITE_GA_MEASUREMENT_ID`. Dev mód neměří.
 
 `frontend/vercel.json` má SPA rewrite (`/(.*) → /index.html`), aby React Router fungoval na všech URL.
 
@@ -76,6 +77,10 @@ Sdílení: URL hash `#v1.<19chars>` (po jednom písmenu a/b/c/d za otázku) — 
 - `SLUG_INDEX` mapuje `nazev` / slug / case-insensitive / long-form aliasy (`Stupeň N — MODEL · NAZEV`, `Fáze N — NAZEV`) na URL
 - `processWikiLinks(body)` přepisuje `[[Title]]` / `[[Title|alias]]` / `[[Title#anchor]]` na bold markdown linky
 - `MarkdownView` rendruje přes `react-markdown` + `remark-gfm`; `<a href="/lore/...">` se swappuje za React Router `<Link>` pro SPA navigaci
+
+## Analytics
+
+`frontend/src/analytics.ts` (gtag.js, GA4) + `frontend/src/usePageTracking.ts` (ruční `page_view` na změnu routy). Aktivní jen s `VITE_GA_MEASUREMENT_ID`. Kvízové eventy volá `frontend/src/quiz/{QuizPage,ResultPage}.tsx`. Viz `DECISIONS.md` (2026-09-07).
 
 ## Auth
 

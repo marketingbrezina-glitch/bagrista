@@ -5,8 +5,11 @@ import { LoreDocPage } from './lore/LoreDocPage';
 import { LoreHomePage } from './lore/LoreHomePage';
 import { LoreSectionPage } from './lore/LoreSectionPage';
 import { QuizPage } from './quiz/QuizPage';
+import { usePageTracking } from './usePageTracking';
 
 export function App() {
+  usePageTracking();
+
   return (
     <Routes>
       <Route element={<Layout />}>

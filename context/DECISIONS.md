@@ -6,6 +6,21 @@
 
 ---
 
+## 2026-09-07 — Google Analytics 4 přes gtag.js, bez knihovny, zapnuté jen přes env var
+Web jde ven pro kámoše a chceme vidět návštěvnost. Nasazeno **GA4 (gtag.js)** přímo, bez wrapper knihovny (`react-ga4` apod.) — jde o ~40 řádků v `frontend/src/analytics.ts`, dependency by nic nepřinesla.
+
+**Jak to funguje:**
+- Measurement ID `G-TST9NBRYZL` je jako `PRODUCTION_MEASUREMENT_ID` přímo v `analytics.ts` a použije se v produkčním buildu (`import.meta.env.PROD`) — žádná konfigurace ve Vercelu není nutná. ID je veřejné (je ve zdrojáku každé stránky s GA), hardcode není bezpečnostní problém. `VITE_GA_MEASUREMENT_ID` ho může přepsat (např. jiná property pro test). **V dev módu bez env var jsou všechny funkce no-op** — lokální dev statistiky nešpiní. Preview deploye z Vercelu měří do stejné property (přijatelné, děláme je zřídka).
+- `initAnalytics()` v `main.tsx` vloží `<script>` gtag.js dynamicky a zavolá `config` s `send_page_view: false`.
+- Pageviews posílá ručně hook `usePageTracking()` (`frontend/src/usePageTracking.ts`) v `App.tsx` při každé změně `pathname + search` — jinak by GA v SPA počítalo jen první load. Hash (`#v1.…` sdíleného výsledku) se do `page_path` nezapisuje, `page_location` ho ale obsahuje.
+- Vlastní eventy (Quiz, Honza): `quiz_start`, `quiz_complete {level_id, level_slug, betrayal_score}`, `result_view_shared {level_id, level_slug}` (otevření cizího výsledku z hashe), `result_share {level_id, success}`, `result_print {level_id}`, `quiz_restart {from_shared}`.
+
+**Sdílené soubory dotčené:** `main.tsx`, `App.tsx`, `vite-env.d.ts`, `.env.example` — jen přidání řádků, žádná změna chování. Kolega: `trackEvent(name, params)` z `../analytics` můžeš použít i v Lore.
+
+**Co se neřeší (zatím):** cookie consent banner. GA4 nastavuje cookies (`_ga`), což v EU formálně vyžaduje souhlas. Pro web-vtip pro kamarády to vědomě neřešíme; kdyby web nabral veřejný dosah, doplnit Consent Mode + banner.
+
+---
+
 ## 2026-04-29 — Static-only deploy: backend smazán, quiz běží na FE
 Pivot na čistě statickou architekturu pro nasazení na **Vercel**. Důvody:
 
