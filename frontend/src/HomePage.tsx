@@ -1,371 +1,271 @@
-import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
-import { Bucket } from './brand/Bucket';
-import { Creed } from './brand/Creed';
+import type { LoreDoc } from './lore/loreContent';
+import { findDoc, findHub, listByCategory } from './lore/loreContent';
+import { QUIZ_QUESTIONS } from './quiz/questions';
 
-const heroSection: CSSProperties = {
-  background: 'var(--bg)',
-  position: 'relative',
-  overflow: 'hidden',
-};
+function str(doc: LoreDoc | undefined, key: string, fallback = ''): string {
+  const value = doc?.data[key];
+  return typeof value === 'string' ? value : fallback;
+}
 
-const ohlasenStyle: CSSProperties = {
-  fontFamily: 'var(--mono)',
-  fontSize: 11,
-  letterSpacing: '0.42em',
-  textTransform: 'uppercase',
-  color: 'var(--accent-num)',
-  marginBottom: 28,
-  display: 'flex',
-  gap: 20,
-  alignItems: 'center',
-};
+function num(doc: LoreDoc | undefined, key: string): number | undefined {
+  const value = doc?.data[key];
+  return typeof value === 'number' ? value : undefined;
+}
 
-const heroGrid: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'minmax(0, 1.5fr) minmax(0, 1fr)',
-  gap: 60,
-  alignItems: 'end',
-};
-
-const wordmarkLabel: CSSProperties = {
-  fontFamily: 'var(--headline)',
-  fontWeight: 500,
-  fontSize: 22,
-  letterSpacing: '0.55em',
-  textTransform: 'uppercase',
-  color: 'var(--fg-dim)',
-  marginBottom: 12,
-  paddingLeft: '0.55em',
-};
-
-const wordmarkH1: CSSProperties = {
-  fontFamily: "'Archivo Black', 'Anton', sans-serif",
-  fontSize: 'clamp(56px, 17cqi, 130px)',
-  lineHeight: 0.88,
-  letterSpacing: '-0.012em',
-  textTransform: 'uppercase',
-  color: 'var(--fg)',
-  margin: 0,
-};
-
-const heroLead: CSSProperties = {
-  fontFamily: 'var(--body)',
-  fontStyle: 'italic',
-  fontSize: 22,
-  lineHeight: 1.5,
-  color: 'var(--fg-dim)',
-  maxWidth: 580,
-  marginTop: 32,
-};
-
-const dataSheet: CSSProperties = {
-  background: 'var(--bg-2)',
-  border: '1px solid var(--rule)',
-  padding: '24px 24px',
-  position: 'relative',
-};
-
-const sheetTitle: CSSProperties = {
-  fontFamily: 'var(--display)',
-  fontSize: 26,
-  letterSpacing: '0.04em',
-  color: 'var(--accent-num)',
-  marginBottom: 20,
-  lineHeight: 1.1,
-};
-
-const STATS: [string, string][] = [
-  ['Stupňů víry', '8 + 1'],
-  ['Kacířských sekt', '7'],
-  ['Otázek v kvízu', '19'],
-  ['Doba zařazení', '6 mth'],
-];
-
-const PILLARS = [
-  {
-    num: 'I',
-    title: 'KVÍZ',
-    kicker: '19 otázek · 6 mth',
-    body:
-      'Odpověz pravdivě a hydraulika tě zařadí. Některé výsledky budou bolet. Jeden bude ostuda.',
-    cta: 'Spusť kvíz',
-    to: '/kviz',
-  },
-  {
-    num: 'II',
-    title: 'STUPNĚ',
-    kicker: '8 stupňů + 1 propast',
-    body:
-      'Vertikální schody víry. Každý stupeň má svůj model, přezdívku a rituální dovětek.',
-    cta: 'Vystup po schodech',
-    to: '/lore/levels',
-  },
-  {
-    num: 'III',
-    title: 'SEKTY',
-    kicker: '7 odpadlických směrů',
-    body:
-      'Komatsuáni, Hitachisté, Volvoité a další. Co opustili žluť pro jiné barvy.',
-    cta: 'Pohleď na hereze',
-    to: '/lore/sects',
-  },
-];
+function levelPath(doc: LoreDoc): string {
+  return `/lore/levels/${doc.slug}`;
+}
 
 export function HomePage() {
+  const levels = listByCategory('levels');
+  const sects = listByCategory('sects');
+  const prayerBook = findHub('modlitebnik');
+  const desatero = findDoc('concepts', 'desatero');
+
+  // Stupeň 8 (Zrádce) stojí mimo schody — je to rozhodnutí, ne příčka.
+  const steps = levels.filter((doc) => num(doc, 'id') !== 8);
+  const traitor = levels.find((doc) => num(doc, 'id') === 8);
+
+  const facts: [string, string][] = [
+    ['Stupňů víry', `${steps.length} + 1`],
+    ['Kacířských sekt', String(sects.length)],
+    ['Otázek v kvízu', String(QUIZ_QUESTIONS.length)],
+    ['Doba zařazení', '6 mth'],
+  ];
+
   return (
     <main>
-      <section style={heroSection}>
-        <div className="container" style={{ padding: '80px 28px 100px', position: 'relative' }}>
-          <div style={ohlasenStyle}>
-            <span style={{ width: 36, height: 1, background: 'var(--zlut)' }} />
-            <span>Vyznání · MTH 0001</span>
-            <span style={{ flex: 1, height: 1, background: 'var(--rule)' }} />
-            <span style={{ color: 'var(--fg-dim)' }}>EST. NA MOTOHODINU</span>
+      <section className="head">
+        <div>
+          <div className="by lab">
+            <span>Vyznání víry · Credo bagristae</span>
           </div>
-
-          <div style={heroGrid}>
-            <div style={{ containerType: 'inline-size', minWidth: 0 }}>
-              <div style={wordmarkLabel}>Jsem</div>
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <div
-                  style={{
-                    position: 'absolute',
-                    right: 18,
-                    top: -42,
-                    transform: 'rotate(-8deg)',
-                  }}
-                >
-                  <Bucket size={68} />
-                </div>
-                <h1 style={wordmarkH1}>BAGRISTA</h1>
-              </div>
-              <p style={heroLead}>
-                „Věřím v jednu hydrauliku všemohoucí, tvůrkyni výkopů viditelných i
-                neviditelných. I v jednoho operátora, syna jejího jediného, jenž se
-                počal z dieselu a narodil se z motohodiny."
-              </p>
-              <div className="btn-row" style={{ marginTop: 36 }}>
-                <Link to="/kviz" className="btn">
-                  Zjisti svůj stupeň <span style={{ fontSize: 14 }}>→</span>
-                </Link>
-                <Link to="/lore/levels" className="btn ghost">
-                  Čti písmo
-                </Link>
-              </div>
-            </div>
-
-            <aside style={dataSheet}>
-              <div style={{ position: 'absolute', top: -1, left: -1, right: -1, height: 6 }} className="stripes-thin" />
-              <div className="mono-caption" style={{ marginTop: 8, marginBottom: 14 }}>
-                — Ohlášení —
-              </div>
-              <div style={sheetTitle}>
-                8 stupňů.<br />
-                7 sekt.<br />
-                1 hydraulika.
-              </div>
-              <div style={{ display: 'grid', gap: 10 }}>
-                {STATS.map(([k, v]) => (
-                  <div
-                    key={k}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      borderBottom: '1px dashed var(--rule-dashed)',
-                      paddingBottom: 6,
-                      fontFamily: 'var(--mono)',
-                      fontSize: 11,
-                      letterSpacing: '0.18em',
-                      color: 'var(--fg-dim)',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    <span>{k}</span>
-                    <span style={{ color: 'var(--fg)' }}>{v}</span>
-                  </div>
-                ))}
-              </div>
-            </aside>
+          <h1>Věřím v jednu hydrauliku všemohoucí</h1>
+          <p className="dk">
+            „…tvůrkyni výkopů viditelných i neviditelných. I v jednoho operátora, syna
+            jejího jediného, jenž se počal z dieselu a narodil se z motohodiny."
+          </p>
+          <div className="btn-row" style={{ marginTop: 30 }}>
+            <Link to="/kviz" className="btn">
+              Zjisti svůj stupeň
+            </Link>
+            <Link to="/lore/levels" className="btn o">
+              Číst písmo
+            </Link>
           </div>
         </div>
-        <div style={{ height: 12 }} className="stripes" />
+
+        <aside className="card">
+          <div className="sh">
+            <span>Anketa</span>
+            <span>
+              {QUIZ_QUESTIONS.length} otázek · 6 mth
+            </span>
+          </div>
+          <div
+            style={{
+              fontFamily: 'var(--np)',
+              fontWeight: 900,
+              fontSize: 52,
+              letterSpacing: '-0.03em',
+              lineHeight: 1,
+              marginBottom: 8,
+            }}
+          >
+            Kvíz
+          </div>
+          <p style={{ fontSize: 16 }}>
+            Odpověz pravdivě a hydraulika tě zařadí. Některé výsledky budou bolet. Jeden
+            bude ostuda.
+          </p>
+          <Link to="/kviz" className="btn">
+            Spustit kvíz
+          </Link>
+          <table className="tab" style={{ marginTop: 22 }}>
+            <tbody>
+              {facts.map(([key, value]) => (
+                <tr key={key}>
+                  <td>{key}</td>
+                  <td>{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </aside>
       </section>
 
-      <section className="container" style={{ padding: '80px 28px' }}>
-        <div className="sec-head">
-          <span className="num">§ 01</span>
-          <h2>Co je Bagrista</h2>
-        </div>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)',
-            gap: 60,
-            alignItems: 'start',
-          }}
-        >
-          <div style={{ fontSize: 19, lineHeight: 1.7, color: 'var(--fg)' }}>
-            <p style={{ marginTop: 0 }} className="dropcap">
+      <section className="sec two">
+        <div>
+          <div className="sh top">
+            <span>Úvodník</span>
+            <span>Co je Bagrista</span>
+          </div>
+          <div className="body">
+            <p>
               Bagrista není povolání. Je to vyznání. Cesta člověka skrze stupně víry — od
-              nejistého <Link to="/lore/levels/cat-301-novacek" className="wikilink">Nováčka</Link> u
-              páky pětitunky až k mlčenlivému{' '}
-              <Link to="/lore/levels/cat-6090-guru" className="wikilink">Guruovi</Link> v kabině
-              tisícitunového stroje. Mezi nimi: Profík, Vyšší zasvěcení, Pravá ruka šéfa
-              a další bratři ve <Link to="/lore/concepts/zlut" className="wikilink">žluti</Link>.
+              nejistého{' '}
+              <Link to="/lore/levels/cat-301-novacek" className="wikilink">
+                Nováčka
+              </Link>{' '}
+              u páky půldruhé tuny až k mlčenlivému{' '}
+              <Link to="/lore/levels/cat-6090-guru" className="wikilink">
+                Guruovi
+              </Link>{' '}
+              v kabině tisícitunového stroje. Mezi nimi Fanoušek, Řadový bagrista, Profík,
+              Vyšší zasvěcení a Pravá ruka šéfa — bratři ve{' '}
+              <Link to="/lore/concepts/zlut" className="wikilink">
+                žluti
+              </Link>
+              .
             </p>
             <p>
               Tento web je sborník našich textů. Najdeš zde{' '}
-              <Link to="/lore/levels" className="wikilink">Stupně</Link> — schody osmi
-              stupňů, po nichž stoupá každý.{' '}
-              <Link to="/lore/sects" className="wikilink">Sekty</Link> — hereze, které
-              opustily pravou žluť. Také{' '}
-              <Link to="/lore/modlitebnik" className="wikilink">Modlitebník</Link>,{' '}
-              <Link to="/lore/slovnik" className="wikilink">Slovník</Link>, paměť na{' '}
-              <Link to="/lore/mucednici" className="wikilink">mučedníky</Link> a kasta
-              nečistých — <Link to="/lore/mechanici" className="wikilink">mechanici</Link>,
-              kteří stojí mimo strukturu, ale bez nichž stroj zhasne.
+              <Link to="/lore/levels" className="wikilink">
+                Stupně
+              </Link>{' '}
+              — schody, po nichž stoupá každý. Najdeš{' '}
+              <Link to="/lore/sects" className="wikilink">
+                Sekty
+              </Link>{' '}
+              — hereze, které opustily pravou žluť a šly za jinými barvami. Najdeš{' '}
+              <Link to="/lore/modlitebnik" className="wikilink">
+                Modlitebník
+              </Link>
+              ,{' '}
+              <Link to="/lore/slovnik" className="wikilink">
+                Slovník
+              </Link>
+              , paměť na{' '}
+              <Link to="/lore/mucednici" className="wikilink">
+                mučedníky
+              </Link>{' '}
+              a kastu nečistých —{' '}
+              <Link to="/lore/mechanici" className="wikilink">
+                mechaniky
+              </Link>
+              , kteří stojí mimo strukturu, ale bez nichž stroj zhasne.
             </p>
             <p>Tak jest, na motohodinu.</p>
           </div>
-          <Creed label="Liturgická vsuvka" attrib="— pravidlo svatého Hydraula">
-            „Skrze pásy, s pásy a v pásech."
-          </Creed>
         </div>
+
+        <div>
+          <div className="sh top">
+            <span>Stupně</span>
+            <span>{steps.length} stupňů + propast</span>
+          </div>
+          <div className="steps">
+            {steps.map((doc) => (
+              <Link
+                key={doc.slug}
+                to={levelPath(doc)}
+                className="step"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <b>{String(num(doc, 'id') ?? 0).padStart(2, '0')}</b>
+                <span>{str(doc, 'nazev', doc.slug)}</span>
+                <span className="m">
+                  {str(doc, 'model')} · {num(doc, 'hmotnost_t')} t
+                </span>
+              </Link>
+            ))}
+            {traitor && (
+              <Link
+                to={levelPath(traitor)}
+                className="step z"
+                style={{ textDecoration: 'none' }}
+              >
+                <b>08</b>
+                <span>{str(traitor, 'nazev', 'Zrádce')} · propast</span>
+                <span className="m">{str(traitor, 'model')} · mimo strukturu</span>
+              </Link>
+            )}
+          </div>
+          <Link className="more" to="/lore/levels" style={{ marginTop: 16 }}>
+            Vystup po schodech →
+          </Link>
+        </div>
+      </section>
+
+      <section className="sec three" style={{ borderBottom: 0 }}>
+        <Link to="/lore/sects" className="card tile click" style={{ textDecoration: 'none' }}>
+          <div className="sh">
+            <span>Sekty</span>
+            <span>{sects.length} herezí</span>
+          </div>
+          <h3 className="st">Hereze, které opustily žluť</h3>
+          <p className="sm">
+            {sects
+              .slice(0, 3)
+              .map((doc) => str(doc, 'nazev', doc.slug))
+              .join(', ')}{' '}
+            a další. Co opustili žluť pro jiné barvy.
+          </p>
+          <span className="more">Pohleď na hereze →</span>
+        </Link>
+
+        <Link
+          to="/lore/modlitebnik"
+          className="card tile click"
+          style={{ textDecoration: 'none' }}
+        >
+          <div className="sh">
+            <span>Z modlitebníku</span>
+            <span>Modlitby a požehnání</span>
+          </div>
+          <h3 className="st">{str(prayerBook, 'nazev', 'Modlitebník')}</h3>
+          <p className="sm">{str(prayerBook, 'perex')}</p>
+          <span className="more">Číst celý →</span>
+        </Link>
+
+        <Link
+          to="/lore/concepts/desatero"
+          className="card tile y click"
+          style={{ textDecoration: 'none' }}
+        >
+          <div className="sh">
+            <span>{str(desatero, 'nazev', 'Desatero')}</span>
+            <span style={{ color: 'var(--ink-2)' }}>Výňatek</span>
+          </div>
+          <ol>
+            <li>Já jsem Caterpillar, tvůj Bůh, který tě vyvedl z lopaty.</li>
+            <li>Nebudeš mít jiných značek vedle mne.</li>
+            <li>Nevezmeš jméno Caterpillar nadarmo.</li>
+          </ol>
+          <span className="more" style={{ marginTop: 14, borderColor: 'var(--ink)' }}>
+            Pokračuje sedmi dalšími →
+          </span>
+        </Link>
       </section>
 
       <section
         style={{
-          background: 'var(--bg-2)',
-          borderTop: '1px solid var(--rule)',
-          borderBottom: '1px solid var(--rule)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 40,
+          padding: '20px 0 0',
+          borderTop: '1px solid var(--line)',
+          flexWrap: 'wrap',
         }}
       >
-        <div className="container" style={{ padding: '70px 28px' }}>
-          <div className="sec-head" style={{ marginTop: 0 }}>
-            <span className="num">§ 02</span>
-            <h2>Tři pilíře pravdy</h2>
-          </div>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: 24,
-              marginTop: 28,
-            }}
-          >
-            {PILLARS.map((p) => (
-              <Link
-                key={p.num}
-                to={p.to}
-                style={{
-                  background: 'var(--bg)',
-                  border: '1px solid var(--rule)',
-                  padding: '28px 24px',
-                  position: 'relative',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  display: 'block',
-                }}
-              >
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 16,
-                    right: 18,
-                    fontFamily: 'var(--display)',
-                    fontSize: 36,
-                    color: 'var(--accent-num)',
-                    opacity: 0.5,
-                    letterSpacing: '0.05em',
-                  }}
-                >
-                  {p.num}
-                </div>
-                <div className="mono-caption" style={{ color: 'var(--accent-num)' }}>
-                  {p.kicker}
-                </div>
-                <div
-                  style={{
-                    fontFamily: 'var(--display)',
-                    fontSize: 38,
-                    color: 'var(--fg)',
-                    letterSpacing: '0.04em',
-                    margin: '14px 0 12px',
-                  }}
-                >
-                  {p.title}
-                </div>
-                <p style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--fg-dim)', margin: '0 0 22px' }}>
-                  {p.body}
-                </p>
-                <div
-                  style={{
-                    fontFamily: 'var(--mono)',
-                    fontSize: 11,
-                    letterSpacing: '0.28em',
-                    textTransform: 'uppercase',
-                    color: 'var(--accent-num)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                  }}
-                >
-                  {p.cta} <span>→</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section style={{ background: 'var(--zlut)', position: 'relative' }}>
-        <div style={{ height: 8 }} className="stripes" />
-        <div
-          className="container"
+        <p
           style={{
-            padding: '54px 28px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 32,
-            flexWrap: 'wrap',
+            fontFamily: 'var(--np)',
+            fontStyle: 'italic',
+            fontWeight: 700,
+            fontSize: 30,
+            lineHeight: 1.2,
+            margin: '24px 0 0',
+            maxWidth: 820,
           }}
         >
-          <div>
-            <div
-              style={{
-                fontFamily: 'var(--mono)',
-                fontSize: 11,
-                letterSpacing: '0.36em',
-                textTransform: 'uppercase',
-                color: 'var(--slab-fg)',
-                opacity: 0.7,
-                marginBottom: 8,
-              }}
-            >
-              — Závěrečné požehnání —
-            </div>
-            <div
-              style={{
-                fontFamily: 'var(--body)',
-                fontStyle: 'italic',
-                fontSize: 28,
-                lineHeight: 1.35,
-                color: 'var(--slab-fg)',
-                maxWidth: 720,
-              }}
-            >
-              „Ať tě žluť provází. Ať tě pásy nesou.
-              <br />
-              Ať máš lžíci plnou a korbu blízko."
-            </div>
-          </div>
-          <Link to="/kviz" className="btn dark">
-            Zjisti svůj stupeň <span style={{ fontSize: 14 }}>→</span>
-          </Link>
-        </div>
-        <div style={{ height: 8 }} className="stripes" />
+          „Ať tě žluť provází. Ať tě pásy nesou. Ať máš lžíci plnou a korbu blízko."
+        </p>
+        <Link to="/kviz" className="btn" style={{ marginTop: 24 }}>
+          Zjisti svůj stupeň
+        </Link>
       </section>
     </main>
   );
