@@ -558,3 +558,31 @@ pre.pray {
   .tl::before { left: 115px; }
 }
 
+
+/* ============================== KARTA MODLITBY ============================== */
+
+/* Verše uvnitř karty se sázejí jako modlitba, ne jako těžký citační blok. */
+.prayer-card .lore-prose { font-size: 18px; }
+.prayer-card .lore-prose blockquote {
+  border: 0;
+  margin: 0 0 1.1em;
+  padding: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--ink);
+}
+.prayer-card .lore-prose blockquote p { margin: 0; }
+.prayer-card .lore-prose > p:first-of-type::first-letter {
+  font-size: inherit;
+  float: none;
+  padding: 0;
+  font-family: inherit;
+  font-weight: inherit;
+}
+.prayer-card .lore-prose h3 { font-size: 17px; margin: 22px 0 8px; }
+
+/* Rejstřík — tečkovaná linka mezi číslem a heslem */
+.toc a { display: flex; gap: 12px; align-items: baseline; }
+.toc b { flex-shrink: 0; }

@@ -2,12 +2,12 @@
 slug: mucednici
 nazev: Mučedníci
 typ: hub
-perex: Postavy, které trpěly za víru a jejichž příběh se předává dál. Pět kategorií, osm jmen, jedno mlčení.
+perex: Postavy, které trpěly za víru a jejichž příběh se předává dál. Šest kategorií, osm jmen, jedno mlčení.
 ---
 
 Společenství potřebuje **mučedníky** — postavy, které trpěly za víru a jejichž příběh se předává dál.
 
-Existuje **pět kategorií** podle toho, čemu mučedník padl za oběť: gravitaci, managementu, [[Motohodina|motohodinám]], pouti, slovům, nebo přechodu mezi [[Mechanici|nečisté]].
+Existuje **šest kategorií** podle toho, čemu mučedník padl za oběť: gravitaci, managementu, [[Motohodina|motohodinám]], pouti, slovům, nebo přechodu mezi [[Mechanici|nečisté]].
 
 ---
 
