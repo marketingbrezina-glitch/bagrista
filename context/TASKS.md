@@ -17,19 +17,18 @@ Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 - [ ] Doladit hranice stupňů 3↔4 a 6↔7 po prvních reálných průchodech (přidat 1–2 přechodové otázky nebo upravit prahy)
 - [ ] Po kompletaci webu: re-skin výsledkové stránky podle finálních design tokens (žluť CAT, typografie)
 
-## Kolega — Lore / Encyklopedie
+## Kolega — Lore obsah + design
 
-Vlastní: 8 stupňů jako stránky, slovník, modlitebník, rituály, svátky, kasta nečistých.
-Soubory: `frontend/src/lore/*`, `backend/src/lore/*`.
+Vlastní: `content/lore/*` (~70 markdown souborů), `design/*` (statický mockup), spolu s Honzou sdílené FE komponenty a design tokens.
 
 ### Dělá teď
-- [ ] TODO: první task (např. „Routing + layout pro `/lore/*`, první stránka stupně")
+- (nic v kódu; plánuje další iteraci — 4 nápady v `IDEAS.md` s datem 2026-04-29)
 
 ### Brzy
-- [ ] Stránka pro každý ze 8 stupňů (CAT 301.5 → CAT D9), obsah z knowledge base
-- [ ] Stránka „Slovník" (Komatsu, pozdravy, lidová rčení)
-- [ ] Stránka „Modlitebník" (modlitby, požehnání, Credo bagristae)
-- [ ] BE: `GET /api/lore/levels`, `GET /api/lore/levels/:id` — nebo všechno jako statický JSON v repu
+- [ ] Rozhodnout se s Honzou o **design v2** — buď doladit stávající implementaci mockupu, nebo nová iterace v Claude.ai. Detail v `IDEAS.md`.
+- [ ] **Newsletter form** — provider + umístění (Buttondown / Substack, homepage vs. výsledkovka). Detail v `IDEAS.md`.
+- [ ] **Google Analytics / Plausible** — rozhodnout providera, přidat script tag do `frontend/index.html`. Detail v `IDEAS.md`.
+- [ ] **Marketing designový prostor** — dohodnout, jestli v repu (`marketing/`) nebo mimo. Detail v `IDEAS.md`.
 
 ## Společné / sdílené
 
@@ -40,6 +39,8 @@ Soubory: `frontend/src/lore/*`, `backend/src/lore/*`.
 
 ## Hotovo
 
+- [x] 2026-04-29 — Lore obsah kompletní: ~70 markdown souborů v `content/lore/` (8 stupňů + 7 fází + 7 sekt + 6 značek + 6 svátků + 6 rituálů + 5 svatých písem + 9 pojmů + 5 hub stránek + Credo + Caterpillar). Šablony v `_TEMPLATES.md`. Wiki-linky `[[...]]` napříč obsahem. Kolega.
+- [x] 2026-04-29 — Designový mockup celého webu v `design/` (HTML + JSX bez buildu, přes Claude.ai Artifacts). 15 souborů: entry point, stylesheet, sdílené komponenty, TweaksPanel pro live-tweaking barev a fontů, 8 stránek + logo explorations. Slouží jako referenční vize pro `frontend/`. Kolega.
 - [x] 2026-04-29 — Hotfix Homepage hero: wordmark „BAGRISTA" přečníval na širokých displejích za kartu „OHLÁŠENÍ". Font-size přepnut z `clamp(80px, 13vw, 200px)` (viewport-vázané) na `clamp(56px, 17cqi, 130px)` (vázané na šířku sloupce přes `container-type: inline-size`). Soubor: `frontend/src/HomePage.tsx`. Ověřeno na 1280/1920/2560/mobile — žádný překryv. Kolega: pokud chceš jiné scaling, jsme v společné zóně.
 - [x] 2026-04-29 — Pivot na static-only: quiz scoring + otázky přesunuty z `backend/` na FE, backend celý smazán, `frontend/vercel.json` připravený pro Vercel deploy. Detaily v `DECISIONS.md` (2026-04-29 — Static-only deploy).
 - [x] 2026-04-29 — Designová integrace: žluť/parchment/rust palette, Big Shoulders Stencil + Source Serif fonts, TopBar s wordmark + bucket diakritika, Footer (Bratrstvo žluté lžíce), Creed/Wikilink/Parchment/Chip komponenty, redesigned všechny stránky (Home/Lore index/sekce/detail, Quiz, Result). Reference v `design/`.
