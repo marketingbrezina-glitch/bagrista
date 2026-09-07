@@ -38,7 +38,13 @@
 - Kdo bude psát obsah newsletteru? Frekvence (týdně, měsíčně, sezónně)?
 - GDPR — externí služba se stará. Přidat k formu jen „souhlas s odběrem" checkbox.
 
-**Status:** parking lot. Rozhodnutí volby providera + umístění potřeba, pak implementace = ~30 minut práce.
+**Status:** 🟡 rozestavěné 2026-09-07. Stránka **`/bratrstvo`** stojí a je nasazená (`frontend/src/NewsletterPage.tsx`, odkaz v navigaci i patičce). Adresa je **stabilní — QR kód se na ni může tisknout**: `https://jsembagrista.cz/bratrstvo`.
+
+**Zbývá jediné: vybrat providera a dát adresu jeho formuláře.** Ta se nastaví v Vercelu jako env var `VITE_NEWSLETTER_ACTION` (stejný vzor jako GA měřicí ID) — žádná změna kódu.
+
+Dokud proměnná chybí, stránka **vědomě nesbírá** a místo formuláře ukazuje „Kniha je vysázena, písař ještě brousí pero". Formulář, který e-maily tiše zahazuje, by byl horší než žádný — hlavně když na něj míří tištěný QR.
+
+Formulář sám je hotový: e-mail + povinný souhlas se zněním o účelu a odhlášení, odesílá se nativním POSTem na adresu providera (funguje u Buttondown, ConvertKit i Mailchimpu bez dalšího kódu). Po odeslání se posílá GA event `newsletter_signup`.
 
 ---
 

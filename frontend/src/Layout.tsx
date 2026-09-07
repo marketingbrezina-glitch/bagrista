@@ -12,6 +12,7 @@ const NAV_LINKS: NavItem[] = [
   { label: 'Mučedníci', to: '/lore/mucednici' },
   { label: 'Mechanici', to: '/lore/mechanici' },
   { label: 'Dějiny', to: '/lore/dejiny-pravdy' },
+  { label: 'Bratrstvo', to: '/bratrstvo' },
 ];
 
 const FOOTER_LORE: NavItem[] = [
@@ -98,6 +99,14 @@ export function Layout() {
 
           <div>
             <div className="sh">
+              <span>Věstník</span>
+            </div>
+            <ul>
+              <li>
+                <Link to="/bratrstvo">Přidej se k Bratrstvu</Link>
+              </li>
+            </ul>
+            <div className="sh" style={{ marginTop: 20 }}>
               <span>Pojmy</span>
             </div>
             <ul>

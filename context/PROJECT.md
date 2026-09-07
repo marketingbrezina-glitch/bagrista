@@ -1,6 +1,6 @@
 # Bagrista — co to je
 
-**Live:** https://bagrista.vercel.app (auto-deploy z `main` přes Vercel, Project Root = `frontend`)
+**Live:** https://jsembagrista.cz (auto-deploy z `main` přes Vercel, Project Root = `frontend`; `bagrista.vercel.app` běží dál jako Vercel adresa)
 
 ## Cíl
 

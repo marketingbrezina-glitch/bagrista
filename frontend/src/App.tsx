@@ -4,6 +4,7 @@ import { Layout } from './Layout';
 import { LoreDocPage } from './lore/LoreDocPage';
 import { LoreHomePage } from './lore/LoreHomePage';
 import { LoreSectionPage } from './lore/LoreSectionPage';
+import { NewsletterPage } from './NewsletterPage';
 import { QuizPage } from './quiz/QuizPage';
 import { usePageTracking } from './usePageTracking';
 
@@ -15,6 +16,7 @@ export function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="kviz" element={<QuizPage />} />
+        <Route path="bratrstvo" element={<NewsletterPage />} />
         <Route path="lore">
           <Route index element={<LoreHomePage />} />
           <Route path=":category" element={<LoreSectionPage />} />
