@@ -16,8 +16,10 @@ const SECTIONS: Section[] = [
   { to: '/lore/rituals', label: 'Rituály', hint: 'Walk-around, mazání, Naložení Tatry', rubric: 'Praxe' },
   { to: '/lore/scriptures', label: 'Svatá písma', hint: 'Genesis, Pentateuch, Apokryfy, Zjevení', rubric: 'Kánon' },
   { to: '/lore/concepts', label: 'Pojmy', hint: 'Žluť, Hydraulika, Motohodina, Desatero', rubric: 'Jazyk' },
-  { to: '/lore/brands', label: 'Značky', hint: 'Caterpillar a jeho stíny', rubric: 'Hereze' },
 ];
+
+// Značky (`/lore/brands`) tu schválně nejsou. Ke značce se chodí jen
+// kontextovým odkazem z článku o její sektě — proto mají `skryto_v_seznamu`.
 
 export function LoreHomePage() {
   return (

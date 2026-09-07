@@ -264,7 +264,8 @@ function HubBody({ hub }: { hub: LoreDoc }) {
 function HubDocument({ doc }: { doc: LoreDoc }) {
   const { intro, sections } = splitSections(doc.body);
 
-  if (sections.length < 2) {
+  // Rejstřík dává smysl až od několika hesel — kratší text ať se prostě čte.
+  if (sections.length < 4) {
     return (
       <section className="sec" style={{ borderBottom: 0 }}>
         <MarkdownView body={doc.body} />
@@ -381,7 +382,21 @@ export function LoreSectionPage() {
         </section>
       )}
 
-      {category === 'levels' ? (
+      {items.length === 0 ? (
+        <section className="sec" style={{ borderBottom: 0 }}>
+          <div className="note">
+            <div className="lab">Sekce bez seznamu</div>
+            <p className="q">
+              {category === 'brands'
+                ? 'Ke značce se nechodí seznamem. Vede k ní jen odkaz z článku o její sektě — tak to má být.'
+                : 'Tahle sekce zatím nemá žádné heslo.'}
+            </p>
+          </div>
+          <Link to="/lore/sects" className="btn o" style={{ marginTop: 8 }}>
+            {category === 'brands' ? 'Na kacířské sekty' : 'Zpět na Lore'}
+          </Link>
+        </section>
+      ) : category === 'levels' ? (
         <Staircase items={items} />
       ) : category === 'concepts' ? (
         <ConceptGlossary items={items} />
