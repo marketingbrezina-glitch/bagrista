@@ -1,83 +1,118 @@
-import { Link, NavLink, Outlet } from 'react-router-dom';
-import { WordmarkInline } from './brand/Wordmark';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
-const NAV_LINKS: { label: string; to: string; end?: boolean }[] = [
+type NavItem = { label: string; to: string; end?: boolean };
+
+const NAV_LINKS: NavItem[] = [
   { label: 'Domů', to: '/', end: true },
   { label: 'Kvíz', to: '/kviz' },
   { label: 'Stupně', to: '/lore/levels' },
   { label: 'Sekty', to: '/lore/sects' },
   { label: 'Slovník', to: '/lore/slovnik' },
   { label: 'Modlitebník', to: '/lore/modlitebnik' },
+  { label: 'Mučedníci', to: '/lore/mucednici' },
+  { label: 'Mechanici', to: '/lore/mechanici' },
+  { label: 'Dějiny', to: '/lore/dejiny-pravdy' },
+];
+
+const FOOTER_LORE: NavItem[] = [
+  { label: 'Stupně (8)', to: '/lore/levels' },
+  { label: 'Sekty (7)', to: '/lore/sects' },
+  { label: 'Modlitebník', to: '/lore/modlitebnik' },
+  { label: 'Mučedníci', to: '/lore/mucednici' },
+  { label: 'Mechanici', to: '/lore/mechanici' },
+  { label: 'Dějiny pravdy', to: '/lore/dejiny-pravdy' },
+];
+
+const FOOTER_CONCEPTS: NavItem[] = [
+  { label: 'Žluť', to: '/lore/concepts/zlut' },
+  { label: 'Hydraulika', to: '/lore/concepts/hydraulika' },
+  { label: 'Motohodina', to: '/lore/concepts/motohodina' },
+  { label: 'Schrödingerův vtip', to: '/lore/concepts/schrodingeruv-vtip' },
+  { label: 'Desatero', to: '/lore/concepts/desatero' },
 ];
 
 export function Layout() {
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+
   return (
-    <div className="shell">
-      <header className="topbar quiz-no-print">
-        <div className="topbar-inner">
-          <Link to="/" className="brand">
-            <WordmarkInline />
-          </Link>
-          <nav className="nav">
-            {NAV_LINKS.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.end}
-                className={({ isActive }) => (isActive ? 'active' : '')}
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </nav>
-          <Link to="/kviz" className="btn">
-            Spusť kvíz <span style={{ fontSize: 14 }}>→</span>
-          </Link>
+    <div className="sheet">
+      <header className="quiz-no-print">
+        <div className="ears lab">
+          <span>Bratrstvo žluté lžíce</span>
+          <span>Vydání první · Na motohodinu</span>
         </div>
-        <div style={{ height: 4 }} className="stripes-thin" />
+
+        <div className={isHome ? 'plate' : 'plate sm'}>
+          <h1>
+            <small>Věstník bagrovací komunity</small>
+            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Jsem Bagrista
+            </Link>
+          </h1>
+          <div className="mot">„Skrze pásy, s pásy a v pásech."</div>
+        </div>
+
+        <nav className="navr">
+          {NAV_LINKS.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.end}
+              className={({ isActive }) => (isActive ? 'on' : '')}
+            >
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
       </header>
 
-      <div style={{ flex: 1 }}>
-        <Outlet />
-      </div>
+      <Outlet />
 
-      <footer className="footer quiz-no-print">
-        <div className="footer-inner">
+      <footer className="quiz-no-print" style={{ display: 'block' }}>
+        <div className="fcols">
           <div>
-            <h4>— Bratrstvo žluté lžíce —</h4>
-            <div className="footer-creed">
+            <div className="sh">
+              <span>Bratrstvo žluté lžíce</span>
+            </div>
+            <p>
               <em>„Skrze pásy, s pásy a v pásech."</em>
               <br />
-              <br />
-              Bagrista je tu pro všechny, kteří hledají pravdu s lopatou v ruce.
-              Na motohodinu!
-            </div>
+              Bagrista je tu pro všechny, kteří hledají pravdu s lopatou v ruce. Na
+              motohodinu!
+            </p>
           </div>
+
           <div>
-            <h4>Lore</h4>
+            <div className="sh">
+              <span>Lore</span>
+            </div>
             <ul>
-              <li><Link to="/lore/levels">Osm stupňů</Link></li>
-              <li><Link to="/lore/sects">Kacířské sekty</Link></li>
-              <li><Link to="/lore/modlitebnik">Modlitebník</Link></li>
-              <li><Link to="/lore/mucednici">Mučedníci</Link></li>
-              <li><Link to="/lore/mechanici">Mechanici</Link></li>
-              <li><Link to="/lore/dejiny-pravdy">Dějiny pravdy</Link></li>
+              {FOOTER_LORE.map((link) => (
+                <li key={link.to}>
+                  <Link to={link.to}>{link.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
+
           <div>
-            <h4>Pojmy</h4>
+            <div className="sh">
+              <span>Pojmy</span>
+            </div>
             <ul>
-              <li><Link to="/lore/concepts/zlut">Žluť</Link></li>
-              <li><Link to="/lore/concepts/hydraulika">Hydraulika</Link></li>
-              <li><Link to="/lore/concepts/motohodina">Motohodina</Link></li>
-              <li><Link to="/lore/concepts/schrodingeruv-vtip">Schrödingerův vtip</Link></li>
-              <li><Link to="/lore/concepts/desatero">Desatero CAT</Link></li>
+              {FOOTER_CONCEPTS.map((link) => (
+                <li key={link.to}>
+                  <Link to={link.to}>{link.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
-        <div className="footer-bottom">
-          <span>MTH ∞ · BGR-001 · Vyznání v.1</span>
-          <span>— Ať tě žluť provází —</span>
+
+        <div className="lab" style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span>© Bagrista · Bratrstvo žluté lžíce</span>
+          <span>Ať tě žluť provází</span>
         </div>
       </footer>
     </div>

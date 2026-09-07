@@ -1,460 +1,654 @@
+/* ============================================================
+   Bagrista — design system v3 „Věstník"
+   Předloha: design/v3/styles.css
+   ============================================================ */
+
 :root {
-  --zlut: #FFCD11;
-  --zlut-deep: #C8841A;
-  --black: #0A0A0A;
-  --steel: #1C1C1C;
-  --steel-2: #2A2A2A;
-  --parchment: #F5F1E8;
-  --rust: #B8341A;
+  /* Podklad — stůl, na kterém list papíru leží */
+  --desk: #C9C0AC;
 
-  --bg: #F5F1E8;
-  --bg-2: #ECE6D5;
-  --bg-3: #DDD5BE;
-  --fg: #1A140A;
-  --fg-dim: #5A5040;
-  --fg-faint: #8A7E66;
-  --rule: #DDD5BE;
-  --rule-dashed: #C9BFA6;
+  /* Papír */
+  --paper: #F7F3E9;
+  --paper-2: #FDFBF5;
+  --paper-3: #F4EFE2;
 
-  --slab-bg: #FBF7EC;
-  --slab-fg: #1A140A;
-  --slab-rule: var(--rust);
+  /* Tisk */
+  --ink: #151412;
+  --ink-2: #2C2923;
+  --grey: #6A665D;
 
-  --accent-num: var(--zlut-deep);
+  /* Linky */
+  --line: #151412;
+  --hair: #D2CBB8;
+  --cardline: #E3DBC8;
 
-  --display: 'Big Shoulders Stencil Display', 'Anton', sans-serif;
-  --headline: 'Big Shoulders Display', 'Oswald', sans-serif;
-  --body: 'Source Serif 4', Georgia, serif;
-  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* Akcenty */
+  --yellow: #F2BE12;
+  --yellow-2: #FFDF7A;
+  --red: #9B2D1F;
+
+  /* Písma */
+  --np: 'Playfair Display', Georgia, serif;
+  --serif: 'Source Serif 4', Georgia, serif;
+
+  /* Stín papírové karty */
+  --sh: 0 1px 0 #fff inset, 0 1px 2px rgba(0, 0, 0, .06), 0 10px 24px -14px rgba(40, 30, 10, .45);
 }
+
+/* ============================== BASE ============================== */
 
 * { box-sizing: border-box; }
 
-html, body, #root {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--fg);
-}
+html, body { margin: 0; padding: 0; }
 
 body {
-  font-family: var(--body);
+  background: linear-gradient(180deg, #D3CAB6, var(--desk) 40%, #B8AD97) fixed;
+  font-family: var(--serif);
+  color: var(--ink);
   font-size: 17px;
-  line-height: 1.6;
-  text-rendering: optimizeLegibility;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  padding: 36px 16px 72px;
 }
 
-a { color: inherit; }
-
-button { font-family: var(--body); }
-
-.shell {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg);
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--yellow);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
-.container {
+p { margin: 0 0 .9em; text-wrap: pretty; }
+
+h1, h2, h3 {
+  font-family: var(--np);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0;
+  text-wrap: balance;
+}
+
+button { font-family: var(--serif); }
+
+/* ============================== LIST PAPÍRU ============================== */
+
+.sheet {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 28px;
+  background: var(--paper);
+  padding: 0 64px 44px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .08), 0 30px 60px -20px rgba(40, 30, 10, .5);
+  min-height: calc(100vh - 108px);
 }
 
-.stripes {
-  background-image: repeating-linear-gradient(-45deg, var(--black) 0 12px, var(--zlut) 12px 24px);
+/* Drobný popisek verzálkami — používá se všude jako „rubrika" */
+.lab {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--grey);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.stripes-thin {
-  background-image: repeating-linear-gradient(-45deg, var(--black) 0 6px, var(--zlut) 6px 12px);
+/* ============================== HLAVIČKA ============================== */
+
+.ears {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 0 10px;
+  border-bottom: 1px solid var(--line);
 }
+
+.plate { text-align: center; padding: 26px 0 18px; }
+
+.plate h1 {
+  font-weight: 900;
+  font-size: 104px;
+  line-height: .88;
+  letter-spacing: -0.035em;
+  cursor: pointer;
+}
+
+.plate h1 small {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  color: var(--grey);
+}
+
+.plate .mot {
+  font-style: italic;
+  font-size: 19px;
+  margin-top: 14px;
+  color: var(--ink-2);
+}
+
+/* Zmenšená hlavička na podstránkách */
+.plate.sm { padding: 18px 0 12px; }
+.plate.sm h1 { font-size: 56px; }
+.plate.sm h1 small { font-size: 11px; margin-bottom: 8px; }
+.plate.sm .mot { font-size: 15px; margin-top: 8px; }
+
+.navr {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  padding: 13px 0;
+  border-top: 3px double var(--line);
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.navr a {
+  color: var(--ink);
+  text-decoration: none;
+  padding: 4px 0;
+  cursor: pointer;
+}
+.navr a:hover { color: var(--grey); }
+.navr a.on { box-shadow: inset 0 -3px 0 var(--yellow); }
+
+/* ============================== PATIČKA ============================== */
+
+footer {
+  margin-top: 44px;
+  border-top: 3px solid var(--line);
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.fcols {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 40px;
+  padding: 20px 0 8px;
+  border-bottom: 1px solid var(--hair);
+  margin-bottom: 12px;
+}
+.fcols ul { list-style: none; margin: 0; padding: 0; font-size: 15px; line-height: 1.9; }
+.fcols li a { text-decoration: none; cursor: pointer; }
+.fcols li a:hover { text-decoration: underline; }
+.fcols p { font-size: 15px; color: var(--ink-2); max-width: 380px; }
+
+/* ============================== TLAČÍTKA ============================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 18px;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .2);
+  line-height: 1.2;
+}
+.btn:hover { background: #2A2722; }
+
+/* Obrysová varianta */
+.btn.o {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink), 0 2px 0 rgba(0, 0, 0, .12);
+}
+.btn.o:hover { background: var(--paper-2); }
+
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.btn-row { display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* Textový odkaz „číst dál" se žlutým podtržením */
+.more {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  display: inline-block;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid var(--yellow);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ============================== NADPISY SEKCÍ ============================== */
+
+.sh {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+  margin: 0 0 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sh span + span { color: var(--grey); font-weight: 500; }
+.sh.top { border-top: 3px solid var(--line); padding-top: 8px; }
+
+/* ============================== ZÁHLAVÍ STRÁNKY ============================== */
+
+.head {
+  padding: 40px 0 36px;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 56px;
+  align-items: end;
+}
+.head.solo { grid-template-columns: 1fr; }
+.head h1 { font-size: clamp(40px, 5vw, 62px); line-height: 1; }
+.head .dk {
+  font-size: 21px;
+  line-height: 1.4;
+  font-style: italic;
+  color: var(--ink-2);
+  margin: 20px 0 0;
+  max-width: 700px;
+}
+
+.by { margin-bottom: 14px; display: flex; justify-content: space-between; gap: 16px; }
+
+.sec { padding: 44px 0; border-bottom: 1px solid var(--line); }
+
+/* ============================== MŘÍŽKY ============================== */
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+.three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+
+/* ============================== KARTY ============================== */
+
+.card {
+  background: linear-gradient(180deg, var(--paper-2), #F6F1E4);
+  border: 1px solid var(--cardline);
+  padding: 24px 26px;
+  box-shadow: var(--sh);
+}
+.card.y {
+  background: linear-gradient(180deg, #FFDA5A, var(--yellow));
+  border-color: #D9A80C;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset, 0 12px 26px -14px rgba(120, 80, 0, .6);
+}
+.card.click { cursor: pointer; transition: transform .15s, box-shadow .15s; }
+.card.click:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 1px 0 #fff inset, 0 2px 4px rgba(0, 0, 0, .06), 0 16px 30px -14px rgba(40, 30, 10, .5);
+}
+.card.r { border-style: dashed; border-color: var(--red); background: transparent; box-shadow: none; }
+
+.tile { padding: 22px 24px 24px; display: flex; flex-direction: column; }
+.tile .st { font-size: 27px; line-height: 1.08; margin: 0 0 10px; font-family: var(--np); font-weight: 700; }
+.tile .sm { font-size: 16px; line-height: 1.5; margin: 0 0 auto; color: var(--ink-2); }
+.tile .more { margin-top: 16px; align-self: flex-start; }
+.tile ol { margin: 0; padding-left: 22px; font-size: 16px; line-height: 1.5; }
+.tile li { margin-bottom: 8px; }
+
+/* ============================== SCHODY (Stupně) ============================== */
+
+.steps { display: grid; gap: 6px; }
+
+.step {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: baseline;
+  font-size: 16px;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, var(--paper-2), var(--paper-3));
+  border: 1px solid var(--cardline);
+  box-shadow: 0 1px 0 #fff inset, 0 1px 2px rgba(0, 0, 0, .05);
+}
+.step b { font-weight: 600; font-size: 14px; font-variant-numeric: tabular-nums; }
+.step .m { color: var(--grey); font-size: 14px; text-align: right; }
+
+.step.on {
+  background: linear-gradient(180deg, var(--yellow-2), var(--yellow));
+  border-color: #D9A80C;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .7) inset, 0 8px 16px -8px rgba(120, 80, 0, .5);
+}
+
+/* Zrádce — mimo schody, červeně a čárkovaně */
+.step.z {
+  color: var(--red);
+  background: transparent;
+  border: 1px dashed var(--red);
+  box-shadow: none;
+  margin-top: 10px;
+}
+.step.z .m { color: var(--red); }
+
+.step.big { grid-template-columns: 56px 220px 1fr auto; gap: 24px; padding: 22px 24px; align-items: start; }
+.step.big b { font-family: var(--np); font-size: 30px; font-weight: 900; letter-spacing: -0.03em; line-height: 1; }
+.step.big .t { font-family: var(--np); font-size: 24px; font-weight: 700; letter-spacing: -0.015em; }
+.step.big .mm { font-size: 14px; color: var(--grey); margin-top: 6px; }
+.step.big p { margin: 0; color: var(--ink-2); font-size: 16px; }
+.step.big.click { cursor: pointer; }
+.step.big.click:hover .t {
+  text-decoration: underline;
+  text-decoration-color: var(--ink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* ============================== VÝŇATEK / MODLITBA ============================== */
+
+.note {
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 18px 0 16px;
+  margin: 36px 0;
+  background: transparent;
+}
+.note .q { font-family: var(--np); font-size: 22px; line-height: 1.4; font-style: italic; margin: 8px 0 0; }
+
+/* ============================== ŠTÍTKY / SEZNAMY ============================== */
+
+.tag {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 5px 10px;
+  border: 1px solid var(--hair);
+  color: var(--ink-2);
+  background: var(--paper-2);
+}
+.tag.y { background: var(--yellow); border-color: #D9A80C; color: var(--ink); }
+
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 8px 20px; font-size: 14px; margin: 0; }
+.kv dt { color: var(--grey); }
+.kv dd { margin: 0; font-weight: 600; }
+
+.crumb { display: flex; gap: 10px; padding: 14px 0; border-bottom: 1px solid var(--hair); }
+.crumb a { text-decoration: none; cursor: pointer; }
+.crumb a:hover { text-decoration: underline; }
+
+.toc a {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 6px 0;
+  border-bottom: 1px dotted var(--hair);
+  cursor: pointer;
+}
+.toc a:hover { color: var(--ink); }
+.toc b { color: var(--grey); font-weight: 600; margin-right: 10px; font-variant-numeric: tabular-nums; }
+
+/* ============================== KVÍZ ============================== */
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  text-align: left;
+  width: 100%;
+  background: linear-gradient(180deg, var(--paper-2), var(--paper-3));
+  border: 1px solid var(--cardline);
+  box-shadow: var(--sh);
+  padding: 18px 22px;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform .12s, border-color .12s;
+}
+.opt:hover { transform: translateY(-2px); border-color: var(--ink); }
+.opt b { font-size: 13px; font-weight: 600; color: var(--grey); width: 24px; flex-shrink: 0; }
+
+.prog { height: 4px; background: var(--hair); overflow: hidden; }
+.prog i { display: block; height: 100%; background: var(--yellow); transition: width .25s; }
+
+/* ============================== ČASOVÁ OSA ============================== */
+
+.tl { list-style: none; padding: 0; margin: 0; position: relative; }
+.tl::before { content: ''; position: absolute; left: 135px; top: 8px; bottom: 8px; width: 1px; background: var(--hair); }
+.tl li { display: grid; grid-template-columns: 110px 52px 1fr; align-items: start; padding-bottom: 40px; }
+.tl .yr { font-size: 14px; font-weight: 600; text-align: right; color: var(--ink-2); padding-top: 6px; }
+.tl .dot {
+  width: 10px;
+  height: 10px;
+  background: var(--yellow);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--hair);
+  margin: 8px auto 0;
+}
+
+/* ============================== TABULKY ============================== */
+
+.tab { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tab td { padding: 7px 0; border-top: 1px solid var(--hair); vertical-align: top; }
+.tab td:last-child { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ============================== PROZA ============================== */
+
+.body { font-size: 18px; line-height: 1.6; max-width: 720px; }
+.body p:first-child::first-letter {
+  font-size: 64px;
+  float: left;
+  line-height: .82;
+  padding: 6px 10px 0 0;
+  font-family: var(--np);
+  font-weight: 700;
+}
+.body h2 { font-size: 30px; margin: 36px 0 12px; }
+.body h3 { font-size: 22px; margin: 28px 0 8px; }
+.body ul { padding-left: 22px; }
+.body li { margin-bottom: 6px; }
+
+pre.pray {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Renderovaný markdown z content/lore — stejná typografie jako .body */
+.lore-prose { font-size: 18px; line-height: 1.65; color: var(--ink); max-width: 760px; }
+.lore-prose > p:first-of-type::first-letter {
+  font-size: 64px;
+  float: left;
+  line-height: .82;
+  padding: 6px 10px 0 0;
+  font-family: var(--np);
+  font-weight: 700;
+}
+.lore-prose h1 { font-size: 34px; margin: 40px 0 14px; }
+.lore-prose h2 { font-size: 28px; margin: 36px 0 12px; }
+.lore-prose h3 { font-size: 21px; margin: 28px 0 8px; }
+.lore-prose ul, .lore-prose ol { padding-left: 22px; margin: 0 0 1em; }
+.lore-prose li { margin-bottom: 6px; }
+.lore-prose blockquote {
+  margin: 1.4em 0;
+  padding: 14px 0 12px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--np);
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.lore-prose blockquote p { margin: 0; }
+.lore-prose hr { border: none; border-top: 1px solid var(--hair); margin: 2.2em 0; }
+.lore-prose table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 0 0 1.4em; }
+.lore-prose th, .lore-prose td { padding: 8px 12px; border-top: 1px solid var(--hair); text-align: left; vertical-align: top; }
+.lore-prose th {
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--grey);
+  border-bottom: 1px solid var(--line);
+  border-top: none;
+}
+.lore-prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .9em;
+  background: var(--paper-3);
+  padding: 1px 5px;
+}
+.lore-prose strong { font-weight: 700; }
+
+/* ============================== WIKI ODKAZY ============================== */
+
+.wikilink,
+.lore-prose a[href^="/lore"] {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--yellow);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.wikilink:hover,
+.lore-prose a[href^="/lore"]:hover {
+  background: var(--yellow);
+  text-decoration-color: var(--ink);
+}
+
+/* ============================== TISK ============================== */
+
+@media print {
+  .quiz-no-print { display: none !important; }
+  body { background: #fff !important; padding: 0 !important; }
+  .sheet { box-shadow: none !important; padding: 0 !important; max-width: none !important; }
+}
+
+/* ============================== RESPONZIVITA ============================== */
+
+@media (max-width: 960px) {
+  .sheet { padding: 0 24px 32px; }
+  .head, .two, .fcols { grid-template-columns: 1fr; }
+  .three { grid-template-columns: 1fr; }
+  .plate h1 { font-size: 56px; }
+  .step.big { grid-template-columns: 40px 1fr; gap: 8px 16px; }
+  .step.big p { grid-column: 2; }
+  .tl li { grid-template-columns: 96px 40px 1fr; }
+  .tl::before { left: 115px; }
+}
+
+/* ============================================================
+   LEGACY — design v1 „Industrial"
+   Dočasné. Drží nezportované stránky pohromadě, dokud se
+   nepřepíšou na v3. Smazat, až bude port hotový.
+   ============================================================ */
+
+:root {
+  --zlut: #FFCD11;
+  --zlut-deep: #C8841A;
+  --parchment: #F5F1E8;
+  --rust: #B8341A;
+  --bg: var(--paper);
+  --bg-2: var(--paper-3);
+  --fg: var(--ink);
+  --fg-dim: var(--ink-2);
+  --fg-faint: var(--grey);
+  --rule: var(--hair);
+  --rule-dashed: var(--cardline);
+  --accent-num: var(--zlut-deep);
+  --display: var(--np);
+  --body-font: var(--serif);
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.container { max-width: 1280px; margin: 0 auto; }
 
 .mono-caption {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.32em;
+  letter-spacing: .3em;
   text-transform: uppercase;
-  color: var(--fg-dim);
+  color: var(--grey);
 }
 
-/* TOPBAR */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: var(--bg);
-  border-bottom: 1px solid var(--rule);
-}
-.topbar-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 14px 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  cursor: pointer;
-  user-select: none;
-  text-decoration: none;
-}
-.brand-name {
-  font-family: var(--display);
-  font-size: 22px;
-  letter-spacing: 0.04em;
-  color: var(--fg);
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-.nav a {
-  text-decoration: none;
-  color: var(--fg-dim);
-  padding: 6px 0;
-  border-bottom: 1px solid transparent;
-  cursor: pointer;
-  transition: color .15s, border-color .15s;
-}
-.nav a:hover { color: var(--accent-num); }
-.nav a.active { color: var(--fg); border-bottom-color: var(--zlut); }
-
-/* BUTTONS */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 22px;
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  background: var(--zlut);
-  color: var(--black);
-  border: 2px solid var(--black);
-  cursor: pointer;
-  transition: transform .12s, box-shadow .12s;
-  text-decoration: none;
-}
-.btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--black); }
-.btn:active { transform: translate(0, 0); box-shadow: 0 0 0 var(--black); }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
-
-.btn.ghost {
-  background: transparent;
-  color: var(--fg);
-  border-color: var(--fg);
-}
-.btn.ghost:hover { box-shadow: 4px 4px 0 var(--zlut); background: var(--bg-2); }
-
-.btn.dark {
-  background: var(--black);
-  color: var(--zlut);
-  border-color: var(--black);
-}
-
-.btn-row { display: flex; gap: 14px; flex-wrap: wrap; }
-
-/* FOOTER */
-.footer {
-  background: var(--bg-2);
-  border-top: 2px solid var(--black);
-  padding: 36px 28px 24px;
-  margin-top: 80px;
-}
-.footer-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 40px;
-}
-.footer h4 {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--accent-num);
-  margin: 0 0 16px;
-}
-.footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-.footer a { color: var(--fg-dim); text-decoration: none; font-size: 14px; cursor: pointer; }
-.footer a:hover { color: var(--fg); }
-.footer-creed {
-  font-family: var(--body);
-  font-style: italic;
-  color: var(--fg-dim);
-  max-width: 380px;
-  font-size: 14px;
-  line-height: 1.55;
-}
-.footer-bottom {
-  max-width: 1280px;
-  margin: 36px auto 0;
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.28em;
-  color: var(--fg-faint);
-  text-transform: uppercase;
-}
-
-@media (max-width: 720px) {
-  .footer-inner { grid-template-columns: 1fr; }
-}
-
-/* SLAB / PARCHMENT */
-.parchment {
-  background: var(--slab-bg);
-  color: var(--slab-fg);
-  border: 2px solid var(--slab-rule);
-  position: relative;
-}
-.parchment::before {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border: 1px solid var(--slab-rule);
-  pointer-events: none;
-  opacity: 0.4;
-}
-
-.dropcap::first-letter {
-  font-family: var(--display);
-  font-size: 4.5em;
-  float: left;
-  line-height: 0.85;
-  margin: 6px 12px 0 0;
-  color: var(--accent-num);
-  font-weight: 700;
-}
-
-/* CREED */
-.creed {
-  position: relative;
-  border: 2px solid currentColor;
-  padding: 32px 36px;
-  background: repeating-linear-gradient(0deg, transparent 0 23px, rgba(127,127,127,0.10) 23px 24px);
-  margin: 36px 0;
-}
-.creed::before, .creed::after {
-  content: '';
-  position: absolute;
-  width: 14px; height: 14px;
-  border: 2px solid currentColor;
-  background: var(--slab-bg);
-}
-.creed::before { left: -8px; top: -8px; }
-.creed::after  { right: -8px; bottom: -8px; }
-.creed-label {
-  font-family: var(--mono);
-  font-size: 10px; letter-spacing: 0.36em;
-  text-transform: uppercase;
-  color: var(--rust);
-  margin-bottom: 12px;
-}
-.creed-text {
-  font-family: var(--body);
-  font-style: italic;
-  font-size: 19px;
-  line-height: 1.55;
-}
-.creed-attrib {
-  font-family: var(--mono);
-  font-size: 10px; letter-spacing: 0.28em;
-  text-transform: uppercase;
-  opacity: 0.65;
-  margin-top: 14px;
-}
-
-/* WIKILINK */
-.wikilink, .lore-prose a[href^="/lore"] {
-  color: var(--rust);
-  text-decoration: none;
-  border-bottom: 1px dotted var(--rust);
-  cursor: pointer;
-  font-weight: 600;
-}
-.wikilink:hover, .lore-prose a[href^="/lore"]:hover {
-  background: var(--zlut);
-  color: var(--black);
-  border-bottom-color: var(--black);
-}
-
-/* SECTION HEADER */
-.sec-head {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin: 60px 0 24px;
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 12px;
-}
-.sec-head .num {
-  font-family: var(--mono);
-  font-size: 11px; letter-spacing: 0.32em;
-  color: var(--accent-num);
-}
-.sec-head h2 {
-  font-family: var(--display);
-  font-size: 28px; letter-spacing: 0.04em;
-  font-weight: 700; margin: 0;
-  color: var(--fg);
-}
-
-/* CHIPS */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: 10px; letter-spacing: 0.22em;
-  text-transform: uppercase;
-  padding: 5px 9px;
-  background: transparent;
-  border: 1px solid var(--fg-faint);
-  color: var(--fg-dim);
-}
-.chip.zlut { background: var(--zlut); color: var(--black); border-color: var(--black); }
-.chip.rust { background: var(--rust); color: var(--parchment); border-color: var(--rust); }
-
-/* PAGE META (breadcrumb / status row) */
 .page-meta {
   font-family: var(--mono);
-  font-size: 10px; letter-spacing: 0.28em;
+  font-size: 10px;
+  letter-spacing: .26em;
   text-transform: uppercase;
-  color: var(--fg-faint);
+  color: var(--grey);
   display: flex;
   flex-wrap: wrap;
   gap: 18px;
   padding: 12px 0;
-  border-bottom: 1px dashed var(--rule-dashed);
+  border-bottom: 1px solid var(--hair);
   margin-bottom: 32px;
 }
-.page-meta a {
-  text-decoration: none;
-  color: var(--fg-dim);
-}
-.page-meta a:hover { color: var(--fg); }
+.page-meta a { text-decoration: none; color: var(--ink-2); }
+.page-meta a:hover { color: var(--ink); }
 
-/* LORE PROSE */
-.lore-prose {
-  font-family: var(--body);
-  font-size: 18px;
-  line-height: 1.7;
-  color: var(--fg);
-}
-.lore-prose h1,
-.lore-prose h2,
-.lore-prose h3 {
-  font-family: var(--display);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-  margin-top: 1.6em;
-  margin-bottom: 0.5em;
-  color: var(--fg);
-}
-.lore-prose h1 { font-size: 32px; }
-.lore-prose h2 { font-size: 26px; }
-.lore-prose h3 { font-size: 20px; }
-.lore-prose p { margin: 0 0 1em; }
-.lore-prose ul,
-.lore-prose ol { padding-left: 1.4em; margin: 0 0 1em; }
-.lore-prose li { margin-bottom: 0.4em; }
-.lore-prose blockquote {
-  margin: 1em 0;
-  padding: 0.6em 1.2em;
-  border-left: 3px solid var(--rust);
-  color: var(--fg-dim);
-  font-style: italic;
-  background: var(--bg-2);
-}
-.lore-prose code {
-  background: var(--bg-2);
-  padding: 1px 5px;
-  border-radius: 2px;
-  font-family: var(--mono);
-  font-size: 0.92em;
-}
-.lore-prose hr {
-  border: none;
-  border-top: 1px dashed var(--rule-dashed);
-  margin: 2em 0;
-}
-.lore-prose table {
-  border-collapse: collapse;
-  margin-bottom: 1em;
-  font-size: 14px;
-  width: 100%;
-}
-.lore-prose th,
-.lore-prose td {
-  border: 1px solid var(--rule);
-  padding: 8px 12px;
-  text-align: left;
-}
-.lore-prose th {
-  background: var(--bg-2);
-  font-family: var(--mono);
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.lore-prose strong { font-weight: 700; }
-
-/* CARDS */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+.sec-head {
+  display: flex;
+  align-items: baseline;
   gap: 16px;
+  margin: 56px 0 22px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
 }
-.tile {
-  display: block;
-  padding: 22px 24px;
-  background: var(--bg);
-  border: 1px solid var(--rule);
-  text-decoration: none;
-  color: var(--fg);
-  cursor: pointer;
-  transition: border-color .15s, transform .12s, box-shadow .12s;
-}
-.tile:hover {
-  border-color: var(--zlut);
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0 var(--zlut);
-}
-.tile-title {
-  font-family: var(--display);
-  font-size: 22px;
-  letter-spacing: 0.03em;
-  margin-bottom: 6px;
-  color: var(--fg);
-}
-.tile-sub {
-  font-family: var(--body);
-  font-size: 14px;
-  color: var(--fg-dim);
-  line-height: 1.5;
+.sec-head .num { font-family: var(--mono); font-size: 11px; letter-spacing: .3em; color: var(--grey); }
+.sec-head h2 { font-family: var(--np); font-size: 30px; font-weight: 700; margin: 0; }
+
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+.tile-title { font-family: var(--np); font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.tile-sub { font-size: 15px; color: var(--ink-2); line-height: 1.5; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  border: 1px solid var(--hair);
+  color: var(--ink-2);
 }
 
-@media print {
-  .quiz-no-print { display: none !important; }
-  body, #root { background: #fff !important; }
+.dropcap::first-letter {
+  font-family: var(--np);
+  font-size: 4.2em;
+  float: left;
+  line-height: .82;
+  margin: 6px 12px 0 0;
+  font-weight: 700;
 }
+
+.creed { border-top: 3px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 18px 0 16px; margin: 36px 0; }
+.creed-label { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--grey); }
+.creed-text { font-family: var(--np); font-style: italic; font-size: 22px; line-height: 1.4; margin: 8px 0 0; }
+.creed-attrib { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--grey); margin-top: 10px; }
+
+.stripes, .stripes-thin { display: none; }

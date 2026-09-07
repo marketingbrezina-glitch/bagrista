@@ -25,7 +25,10 @@ Vlastní: `content/lore/*` (~70 markdown souborů), `design/*` (statický mockup
 - [x] **Design v3 hotový a v repu** — `design/v3/`, nový směr (novinový věstník). Viz `design/README.md` pro v1↔v3 rozdíl.
 
 ### Brzy
-- [ ] **Přenést v3 do `frontend/`** — ⚠️ **sdílená zóna, potřebuje domluvu s Honzou.** Není to jen Lore: v3 mění design tokens, typografii i rámování, takže se překresluje i Quiz (`QuizPage`, `ResultPage`, `AxisBar`, `Progress`, `QuestionCard`). Návrh dělby: Kolega dělá tokens + Layout + Lore stránky, Honza re-skinuje Quiz podle nových tokenů (má to už v „Brzy" jako *re-skin výsledkové stránky*).
+- [ ] **Přenést v3 do `frontend/`** — **bere Kolega, celé včetně re-skinu kvízu.** v3 mění tokeny a typografii globálně, takže rozsekat to mezi dva lidi by znamenalo půlku webu v jednom stylu a půlku v druhém.
+  - **Hranice:** sahám jen na vizuál — `styles.css`, `index.html`, `Layout`, `HomePage`, `lore/*`, a z kvízu `QuizPage`, `ResultPage`, `AxisBar`, `Progress`, `QuestionCard`.
+  - **Honzo, na tohle nesahám:** `quiz/{questions,scoring,types,share,levels,api}.ts` — kalibrace prahů 3↔4 a 6↔7 máš volnou, můžeš na ní dělat paralelně.
+  - Postup po krocích, každý krok = commit, který staví i buildí.
 - [ ] **Newsletter form** — provider + umístění (Buttondown / Substack, homepage vs. výsledkovka). Detail v `IDEAS.md`.
 - [ ] **Google Analytics / Plausible** — rozhodnout providera, přidat script tag do `frontend/index.html`. Detail v `IDEAS.md`.
 - [ ] **Marketing designový prostor** — dohodnout, jestli v repu (`marketing/`) nebo mimo. Detail v `IDEAS.md`.
