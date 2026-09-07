@@ -225,6 +225,13 @@ export function getIntro(category: LoreCategory): LoreDoc | undefined {
   );
 }
 
+/** Rituální dovětek pod každou stránku dané kategorie (např. Závěrečné požehnání u stupňů). */
+export function getOutro(category: LoreCategory): LoreDoc | undefined {
+  return INTERNAL_DOCS.find(
+    (d) => d.category === category && d.slug === '_outro',
+  );
+}
+
 export function allHubs(): LoreDoc[] {
   return ALL_DOCS.filter((d) => d.category === 'hub');
 }

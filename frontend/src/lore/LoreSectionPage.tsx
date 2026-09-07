@@ -1,9 +1,10 @@
 import { Link, useParams } from 'react-router-dom';
-import { findHub, getIntro, listByCategory, type LoreCategory } from './loreContent';
+import { docTitle, num, optStr, str } from './frontmatter';
+import { findHub, getIntro, listByCategory, type LoreCategory, type LoreDoc } from './loreContent';
 import { MarkdownView } from './MarkdownView';
 
 const SECTION_TITLES: Record<LoreCategory, string> = {
-  levels: 'Osm stupňů',
+  levels: 'Schody víry',
   phases: 'Cyklus bagrování',
   sects: 'Kacířské sekty',
   brands: 'Značky',
@@ -11,6 +12,18 @@ const SECTION_TITLES: Record<LoreCategory, string> = {
   rituals: 'Rituály',
   concepts: 'Pojmy',
   scriptures: 'Svatá písma',
+  hub: 'Lore',
+};
+
+const SECTION_RUBRICS: Record<LoreCategory, string> = {
+  levels: 'Lore · Bridge',
+  phases: 'Lore · Kánon',
+  sects: 'Lore · Hereze',
+  brands: 'Lore · Hereze',
+  holidays: 'Lore · Kalendář',
+  rituals: 'Lore · Praxe',
+  concepts: 'Lore · Jazyk',
+  scriptures: 'Lore · Kánon',
   hub: 'Lore',
 };
 
@@ -29,63 +42,168 @@ function isLoreCategory(value: string): value is LoreCategory {
   return (VALID_CATEGORIES as readonly string[]).includes(value);
 }
 
-const titleStyle = {
-  fontFamily: 'var(--display)',
-  fontSize: 'clamp(48px, 9vw, 96px)',
-  letterSpacing: '0.02em',
-  margin: '0 0 12px',
-  lineHeight: 0.95,
-  color: 'var(--fg)',
-  textTransform: 'uppercase' as const,
-};
+function Breadcrumb({ current }: { current: string }) {
+  return (
+    <div className="crumb lab">
+      <Link to="/">Domů</Link>
+      <span>›</span>
+      <Link to="/lore">Lore</Link>
+      <span>›</span>
+      <span style={{ color: 'var(--ink)' }}>{current}</span>
+    </div>
+  );
+}
 
-const perexStyle = {
-  fontFamily: 'var(--body)',
-  fontStyle: 'italic' as const,
-  fontSize: 20,
-  lineHeight: 1.5,
-  color: 'var(--fg-dim)',
-  margin: '0 0 32px',
-  maxWidth: 720,
-};
+/** Schody víry — signature zobrazení osmi stupňů. */
+function Staircase({ items }: { items: LoreDoc[] }) {
+  const steps = items.filter((doc) => num(doc, 'id') !== 8);
+  const traitor = items.find((doc) => num(doc, 'id') === 8);
+
+  return (
+    <section className="sec">
+      <div className="lab" style={{ marginBottom: 12 }}>
+        Začátek · Nováček · 1,5 t
+      </div>
+
+      <div className="steps" style={{ gap: 10 }}>
+        {steps.map((doc) => (
+          <Link
+            key={doc.slug}
+            to={`/lore/levels/${doc.slug}`}
+            className="step big click"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <b>{String(num(doc, 'id') ?? 0).padStart(2, '0')}</b>
+            <div>
+              <div className="t">{docTitle(doc)}</div>
+              <div className="mm">
+                {str(doc, 'model')} · {num(doc, 'hmotnost_t')} t
+              </div>
+            </div>
+            <p>{str(doc, 'perex')}</p>
+            <span className="more">Číst dále →</span>
+          </Link>
+        ))}
+      </div>
+
+      <div className="lab" style={{ margin: '12px 0 28px', textAlign: 'right' }}>
+        Vrchol · Guru · mlčení
+      </div>
+
+      {traitor && (
+        <>
+          <div className="lab" style={{ color: 'var(--red)', marginBottom: 10 }}>
+            Propast · mimo strukturu
+          </div>
+          <Link
+            to={`/lore/levels/${traitor.slug}`}
+            className="step big z click"
+            style={{ marginTop: 0, textDecoration: 'none' }}
+          >
+            <b>08</b>
+            <div>
+              <div className="t">{docTitle(traitor)}</div>
+              <div className="mm" style={{ color: 'var(--red)' }}>
+                {str(traitor, 'model')} · exkomunikován
+              </div>
+            </div>
+            <p style={{ color: 'var(--ink-2)' }}>{str(traitor, 'perex')}</p>
+            <span className="more" style={{ borderColor: 'var(--red)' }}>
+              Číst dále →
+            </span>
+          </Link>
+        </>
+      )}
+    </section>
+  );
+}
+
+function CardGrid({ items, category }: { items: LoreDoc[]; category: LoreCategory }) {
+  return (
+    <section className="sec three" style={{ borderBottom: 0, paddingTop: 32 }}>
+      {items.map((doc) => {
+        const id = num(doc, 'id');
+        const model = optStr(doc, 'model');
+        const rubric =
+          id !== undefined ? String(id).padStart(2, '0') : (model ?? SECTION_TITLES[category]);
+        const motto = optStr(doc, 'motto');
+
+        return (
+          <Link
+            key={doc.slug}
+            to={`/lore/${category}/${doc.slug}`}
+            className="card tile click"
+            style={{ textDecoration: 'none' }}
+          >
+            <div className="sh">
+              <span>{rubric}</span>
+              {model && id !== undefined && <span>{model}</span>}
+            </div>
+            <h3 className="st">{docTitle(doc)}</h3>
+            {motto && (
+              <p className="sm" style={{ fontStyle: 'italic', marginBottom: 8 }}>
+                „{motto}"
+              </p>
+            )}
+            <p className="sm">{str(doc, 'perex')}</p>
+            <span className="more">Číst dále →</span>
+          </Link>
+        );
+      })}
+    </section>
+  );
+}
 
 export function LoreSectionPage() {
   const { category } = useParams<{ category: string }>();
+
   if (!category) {
     return (
-      <main className="container" style={{ padding: '48px 28px' }}>
-        <p>Sekce nenalezena.</p>
+      <main>
+        <Breadcrumb current="Nenalezeno" />
+        <section className="head solo">
+          <h1>Sekce nenalezena</h1>
+        </section>
       </main>
     );
   }
 
+  // Hub stránky (Slovník, Modlitebník, Mučedníci, …) jsou jeden dlouhý dokument.
   if (!isLoreCategory(category)) {
     const hub = findHub(category);
     if (!hub) {
       return (
-        <main className="container" style={{ padding: '48px 28px' }}>
-          <div className="page-meta">
-            <Link to="/lore">← Lore</Link>
-          </div>
-          <p>Stránka „{category}" v lore není.</p>
+        <main>
+          <Breadcrumb current="Nenalezeno" />
+          <section className="head solo">
+            <div>
+              <div className="by lab">
+                <span>Chybějící kapitola</span>
+              </div>
+              <h1>Kapitola se zapisuje</h1>
+              <p className="dk">Stránka „{category}" v Loru zatím není.</p>
+            </div>
+          </section>
         </main>
       );
     }
-    const hubTitle = typeof hub.data.nazev === 'string' ? hub.data.nazev : hub.slug;
-    const hubPerex = typeof hub.data.perex === 'string' ? hub.data.perex : undefined;
+
+    const hubTitle = docTitle(hub);
     return (
-      <main className="container" style={{ padding: '48px 28px 32px' }}>
-        <div className="page-meta">
-          <Link to="/">Home</Link>
-          <span>›</span>
-          <Link to="/lore">Lore</Link>
-          <span>›</span>
-          <span style={{ color: 'var(--fg)' }}>{hubTitle}</span>
-        </div>
-        <h1 style={titleStyle}>{hubTitle}</h1>
-        {hubPerex && <p style={perexStyle}>{hubPerex}</p>}
-        <div style={{ height: 6, marginBottom: 32 }} className="stripes-thin" />
-        <MarkdownView body={hub.body} />
+      <main>
+        <Breadcrumb current={hubTitle} />
+        <section className="head solo">
+          <div>
+            <div className="by lab">
+              <span>Lore · Sborník</span>
+            </div>
+            <h1>{hubTitle}</h1>
+            {optStr(hub, 'perex') && <p className="dk">{str(hub, 'perex')}</p>}
+          </div>
+        </section>
+        <section className="sec" style={{ borderBottom: 0 }}>
+          <MarkdownView body={hub.body} />
+        </section>
       </main>
     );
   }
@@ -95,41 +213,56 @@ export function LoreSectionPage() {
   const title = SECTION_TITLES[category];
 
   return (
-    <main className="container" style={{ padding: '48px 28px 32px' }}>
-      <div className="page-meta">
-        <Link to="/">Home</Link>
-        <span>›</span>
-        <Link to="/lore">Lore</Link>
-        <span>›</span>
-        <span style={{ color: 'var(--fg)' }}>{title}</span>
-        <span style={{ flex: 1 }} />
-        <span>{items.length} položek</span>
-      </div>
-      <h1 style={titleStyle}>{title}</h1>
-      {intro && (
-        <div style={{ ...perexStyle, fontSize: 18 }}>
-          <MarkdownView body={intro.body} />
+    <main>
+      <Breadcrumb current={title} />
+      <section className="head solo">
+        <div>
+          <div className="by lab">
+            <span>{SECTION_RUBRICS[category]}</span>
+            <span>{items.length} položek</span>
+          </div>
+          <h1>{title}</h1>
         </div>
-      )}
-      <div style={{ height: 6, marginBottom: 32 }} className="stripes-thin" />
+      </section>
 
-      <div className="card-grid">
-        {items.map((doc) => {
-          const itemTitle = typeof doc.data.nazev === 'string' ? doc.data.nazev : doc.slug;
-          const subtitle = typeof doc.data.perex === 'string' ? doc.data.perex : undefined;
-          const idPrefix = typeof doc.data.id === 'number' ? `${String(doc.data.id).padStart(2, '0')} · ` : '';
-          return (
-            <Link key={doc.slug} to={`/lore/${category}/${doc.slug}`} className="tile">
-              <div className="mono-caption" style={{ marginBottom: 6, color: 'var(--accent-num)' }}>
-                {idPrefix}
-                {category === 'levels' && typeof doc.data.model === 'string' ? doc.data.model : category}
+      {intro && (
+        <section className="sec">
+          <div className="body">
+            <MarkdownView body={intro.body} />
+          </div>
+        </section>
+      )}
+
+      {category === 'levels' ? (
+        <Staircase items={items} />
+      ) : (
+        <CardGrid items={items} category={category} />
+      )}
+
+      {category === 'levels' && (
+        <section className="sec" style={{ borderBottom: 0 }}>
+          <div
+            className="card"
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: 24,
+              flexWrap: 'wrap',
+            }}
+          >
+            <div>
+              <div className="lab" style={{ marginBottom: 6 }}>
+                Nevíš, kde stojíš?
               </div>
-              <div className="tile-title">{itemTitle}</div>
-              {subtitle && <div className="tile-sub">{subtitle}</div>}
+              <h3 style={{ fontSize: 28 }}>Spusť kvíz a hydraulika tě zařadí.</h3>
+            </div>
+            <Link to="/kviz" className="btn">
+              Zjisti svůj stupeň
             </Link>
-          );
-        })}
-      </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

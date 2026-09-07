@@ -1,17 +1,8 @@
 import { Link } from 'react-router-dom';
+import { num, str } from './lore/frontmatter';
 import type { LoreDoc } from './lore/loreContent';
 import { findDoc, findHub, listByCategory } from './lore/loreContent';
 import { QUIZ_QUESTIONS } from './quiz/questions';
-
-function str(doc: LoreDoc | undefined, key: string, fallback = ''): string {
-  const value = doc?.data[key];
-  return typeof value === 'string' ? value : fallback;
-}
-
-function num(doc: LoreDoc | undefined, key: string): number | undefined {
-  const value = doc?.data[key];
-  return typeof value === 'number' ? value : undefined;
-}
 
 function levelPath(doc: LoreDoc): string {
   return `/lore/levels/${doc.slug}`;

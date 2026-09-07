@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
-import { findDoc, type LoreCategory } from './loreContent';
+import { docTitle, num, optStr, str } from './frontmatter';
+import { findDoc, getOutro, type LoreCategory, type LoreDoc } from './loreContent';
 import { MarkdownView } from './MarkdownView';
 
 const VALID_CATEGORIES: readonly LoreCategory[] = [
@@ -18,7 +19,7 @@ function isLoreCategory(value: string): value is LoreCategory {
 }
 
 const SECTION_TITLES: Record<LoreCategory, string> = {
-  levels: 'Osm stupňů',
+  levels: 'Schody víry',
   phases: 'Cyklus bagrování',
   sects: 'Kacířské sekty',
   brands: 'Značky',
@@ -29,16 +30,95 @@ const SECTION_TITLES: Record<LoreCategory, string> = {
   hub: 'Lore',
 };
 
+const RUBRICS: Record<LoreCategory, string> = {
+  levels: 'Stupeň víry',
+  phases: 'Fáze cyklu',
+  sects: 'Hereze',
+  brands: 'Značka',
+  holidays: 'Svátek',
+  rituals: 'Rituál',
+  concepts: 'Pojem',
+  scriptures: 'Svaté písmo',
+  hub: 'Lore',
+};
+
+const FREKVENCE_LABELS: Record<string, string> = {
+  denni: 'Denní',
+  tydenni: 'Týdenní',
+  mesicni: 'Měsíční',
+  sezonni: 'Sezónní',
+  inicacni: 'Iniciační',
+};
+
+/** Popisky do karty dokumentu — jen ta pole, která daná kategorie skutečně nese. */
+function metaPairs(doc: LoreDoc): [string, string][] {
+  const pairs: [string, string][] = [];
+  const push = (label: string, value: string | number | undefined) => {
+    if (value !== undefined && value !== '') pairs.push([label, String(value)]);
+  };
+
+  push('Model', optStr(doc, 'model'));
+  push('Hmotnost', num(doc, 'hmotnost_t') && `${num(doc, 'hmotnost_t')} t`);
+  push('Stav', optStr(doc, 'stav'));
+  push('Původ', optStr(doc, 'puvod'));
+  push('Země', optStr(doc, 'zeme'));
+  push('Založeno', num(doc, 'zalozeno'));
+  push('Barva', optStr(doc, 'barva') ?? optStr(doc, 'barva_logo'));
+  push('Nebezpečnost', num(doc, 'nebezpecnost') && `${num(doc, 'nebezpecnost')} / 5`);
+  push('Kdy', optStr(doc, 'kdy'));
+  push('Typ', optStr(doc, 'typ') ?? optStr(doc, 'typ_pojmu'));
+  const frekvence = optStr(doc, 'frekvence');
+  push('Frekvence', frekvence ? (FREKVENCE_LABELS[frekvence] ?? frekvence) : undefined);
+  push('Trvání', num(doc, 'delka_min') && `${num(doc, 'delka_min')} min`);
+  push('Posvátnost', num(doc, 'posvatnost') && `${num(doc, 'posvatnost')} / 5`);
+  push('Hláška', optStr(doc, 'cislo_fraze'));
+
+  return pairs;
+}
+
+function NeighbourCard({
+  category,
+  slug,
+  direction,
+}: {
+  category: LoreCategory;
+  slug: string;
+  direction: 'prev' | 'next';
+}) {
+  const doc = findDoc(category, slug);
+  const isNext = direction === 'next';
+
+  return (
+    <Link
+      to={`/lore/${category}/${slug}`}
+      className="card click"
+      style={{ textDecoration: 'none', textAlign: isNext ? 'right' : 'left' }}
+    >
+      <div className="lab">{isNext ? 'Další →' : '← Předchozí'}</div>
+      <div style={{ fontFamily: 'var(--np)', fontWeight: 700, fontSize: 24, marginTop: 6 }}>
+        {doc ? docTitle(doc) : slug.replace(/-/g, ' ')}
+      </div>
+      {doc && optStr(doc, 'model') && (
+        <div className="lab" style={{ marginTop: 4, textTransform: 'none', letterSpacing: 0 }}>
+          {str(doc, 'model')}
+        </div>
+      )}
+    </Link>
+  );
+}
+
 export function LoreDocPage() {
   const { category, slug } = useParams<{ category: string; slug: string }>();
 
   if (!category || !slug || !isLoreCategory(category)) {
     return (
-      <main className="container" style={{ padding: '48px 28px' }}>
-        <div className="page-meta">
+      <main>
+        <div className="crumb lab">
           <Link to="/lore">← Lore</Link>
         </div>
-        <p>Stránka nenalezena.</p>
+        <section className="head solo">
+          <h1>Stránka nenalezena</h1>
+        </section>
       </main>
     );
   }
@@ -46,169 +126,149 @@ export function LoreDocPage() {
   const doc = findDoc(category, slug);
   if (!doc) {
     return (
-      <main className="container" style={{ padding: '48px 28px' }}>
-        <div className="page-meta">
+      <main>
+        <div className="crumb lab">
           <Link to={`/lore/${category}`}>← {SECTION_TITLES[category]}</Link>
         </div>
-        <p>Tahle stránka v lore zatím není.</p>
+        <section className="head solo">
+          <div>
+            <div className="by lab">
+              <span>Chybějící kapitola</span>
+            </div>
+            <h1>Kapitola se zapisuje</h1>
+            <p className="dk">Tahle stránka v Loru zatím není.</p>
+          </div>
+        </section>
       </main>
     );
   }
 
-  const title = typeof doc.data.nazev === 'string' ? doc.data.nazev : doc.slug;
-  const model = typeof doc.data.model === 'string' ? doc.data.model : undefined;
-  const motto = typeof doc.data.motto === 'string' ? doc.data.motto : undefined;
-  const perex = typeof doc.data.perex === 'string' ? doc.data.perex : undefined;
-  const id = typeof doc.data.id === 'number' ? doc.data.id : undefined;
+  const title = docTitle(doc);
+  const id = num(doc, 'id');
+  const total = category === 'phases' ? 7 : 8;
+  const perex = optStr(doc, 'perex');
+  const motto = optStr(doc, 'motto');
+  const stav = optStr(doc, 'stav');
+  const posvatne = doc.data.posvatne === true;
+  const prevSlug = optStr(doc, 'predchozi');
+  const nextSlug = optStr(doc, 'dalsi');
+  const pairs = metaPairs(doc);
+  const outro = getOutro(category);
 
-  const metaItems: string[] = [];
-  if (typeof doc.data.kdy === 'string') metaItems.push(doc.data.kdy);
-  if (typeof doc.data.frekvence === 'string') metaItems.push(doc.data.frekvence);
-  if (typeof doc.data.delka_min === 'number') metaItems.push(`${doc.data.delka_min} min`);
-  if (typeof doc.data.hmotnost_t === 'number') metaItems.push(`${doc.data.hmotnost_t} t`);
-  if (typeof doc.data.zeme === 'string') metaItems.push(doc.data.zeme);
-  if (typeof doc.data.zalozeno === 'number') metaItems.push(`Zal. ${doc.data.zalozeno}`);
-  if (typeof doc.data.typ_pojmu === 'string') metaItems.push(doc.data.typ_pojmu);
-  if (typeof doc.data.cislo_fraze === 'string') metaItems.push(`Fáze ${doc.data.cislo_fraze}`);
-  if (typeof doc.data.stav === 'string') metaItems.push(doc.data.stav);
-
-  const prevSlug = typeof doc.data.predchozi === 'string' ? doc.data.predchozi : undefined;
-  const nextSlug = typeof doc.data.dalsi === 'string' ? doc.data.dalsi : undefined;
-
-  const heroH1 =
-    category === 'levels' && id !== undefined ? `Bagrista úrovně ${id}` : title;
-
-  const subtitle =
-    category === 'levels'
-      ? [model, title].filter(Boolean).join(' · ')
-      : model;
+  const rubric =
+    id !== undefined ? `${RUBRICS[category]} · ${String(id).padStart(2, '0')}` : RUBRICS[category];
 
   return (
-    <main className="container" style={{ padding: '48px 28px 32px', maxWidth: 880 }}>
-      <div className="page-meta">
-        <Link to="/">Home</Link>
+    <main>
+      <div className="crumb lab">
+        <Link to="/">Domů</Link>
         <span>›</span>
         <Link to="/lore">Lore</Link>
         <span>›</span>
         <Link to={`/lore/${category}`}>{SECTION_TITLES[category]}</Link>
         <span>›</span>
-        <span style={{ color: 'var(--fg)' }}>{title}</span>
+        <span style={{ color: 'var(--ink)' }}>{title}</span>
         {id !== undefined && (
-          <>
-            <span style={{ flex: 1 }} />
-            <span>
-              {String(id).padStart(2, '0')} / {category === 'phases' ? '07' : '08'}
-            </span>
-          </>
+          <span style={{ marginLeft: 'auto' }}>
+            {String(id).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          </span>
         )}
       </div>
 
-      <h1
-        style={{
-          fontFamily: 'var(--display)',
-          fontSize: 'clamp(48px, 9vw, 96px)',
-          letterSpacing: '0.02em',
-          lineHeight: 0.95,
-          margin: 0,
-          marginBottom: 8,
-          color: 'var(--fg)',
-          textTransform: 'uppercase',
-        }}
-      >
-        {heroH1}
-      </h1>
-      {subtitle && (
-        <p
-          style={{
-            fontFamily: 'var(--mono)',
-            fontSize: 13,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: 'var(--accent-num)',
-            margin: 0,
-            marginBottom: 18,
-          }}
-        >
-          {subtitle}
-        </p>
-      )}
-
-      {motto && (
-        <p
-          style={{
-            fontStyle: 'italic',
-            fontSize: 22,
-            color: 'var(--fg-dim)',
-            margin: '0 0 24px',
-            lineHeight: 1.5,
-          }}
-        >
-          „{motto}"
-        </p>
-      )}
-      {perex && (
-        <p
-          style={{
-            fontStyle: 'italic',
-            fontSize: 20,
-            color: 'var(--fg)',
-            lineHeight: 1.55,
-            margin: '0 0 28px',
-          }}
-        >
-          {perex}
-        </p>
-      )}
-
-      {metaItems.length > 0 && (
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 8,
-            marginBottom: 32,
-          }}
-        >
-          {metaItems.map((m) => (
-            <span key={m} className="chip">
-              {m}
-            </span>
-          ))}
+      <section className={pairs.length > 0 ? 'head' : 'head solo'}>
+        <div>
+          <div className="by lab">
+            <span>{rubric}</span>
+            {optStr(doc, 'model') && <span>{str(doc, 'model')}</span>}
+          </div>
+          <h1>{title}</h1>
+          {(perex ?? motto) && <p className="dk">„{perex ?? motto}"</p>}
+          {(stav ?? posvatne) && (
+            <div style={{ display: 'flex', gap: 8, marginTop: 22, flexWrap: 'wrap' }}>
+              {posvatne && <span className="tag y">Kanonický</span>}
+              {stav && <span className="tag">{stav}</span>}
+            </div>
+          )}
         </div>
-      )}
 
-      <div style={{ height: 6, marginBottom: 32 }} className="stripes-thin" />
+        {pairs.length > 0 && (
+          <aside className="card">
+            <div className="sh">
+              <span>Karta</span>
+              {id !== undefined && (
+                <span>
+                  {String(id).padStart(2, '0')} / {String(total).padStart(2, '0')}
+                </span>
+              )}
+            </div>
+            {id !== undefined && (
+              <div
+                style={{
+                  fontFamily: 'var(--np)',
+                  fontWeight: 900,
+                  fontSize: 64,
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1,
+                  marginBottom: 16,
+                }}
+              >
+                {String(id).padStart(2, '0')}
+              </div>
+            )}
+            <dl className="kv">
+              {pairs.map(([label, value]) => (
+                <div key={label} style={{ display: 'contents' }}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
+        )}
+      </section>
 
-      <MarkdownView body={doc.body} />
+      <section className="sec">
+        <div className="sh top" style={{ maxWidth: 760 }}>
+          <span>{SECTION_TITLES[category]}</span>
+          <span>{title}</span>
+        </div>
+        <MarkdownView body={doc.body} />
 
-      {(prevSlug || nextSlug) && (
-        <div
+        {outro && (
+          <div className="note">
+            <div className="lab">{str(outro, 'nazev', 'Závěrečné požehnání')}</div>
+            <div className="lore-prose" style={{ marginTop: 8 }}>
+              <MarkdownView body={outro.body} />
+            </div>
+          </div>
+        )}
+      </section>
+
+      {(prevSlug ?? nextSlug) && (
+        <section
+          className="sec"
           style={{
+            borderBottom: 0,
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 12,
-            marginTop: 56,
-            paddingTop: 28,
-            borderTop: '1px dashed var(--rule-dashed)',
+            gridTemplateColumns: '1fr auto 1fr',
+            gap: 16,
+            alignItems: 'center',
           }}
         >
           {prevSlug ? (
-            <Link to={`/lore/${category}/${prevSlug}`} className="tile" style={{ textAlign: 'left' }}>
-              <div className="mono-caption" style={{ marginBottom: 6 }}>← Předchozí</div>
-              <div className="tile-title" style={{ fontSize: 18 }}>{prevSlug.replace(/-/g, ' ')}</div>
-            </Link>
+            <NeighbourCard category={category} slug={prevSlug} direction="prev" />
           ) : (
             <div />
           )}
+          <Link to={`/lore/${category}`} className="btn o">
+            {SECTION_TITLES[category]}
+          </Link>
           {nextSlug ? (
-            <Link to={`/lore/${category}/${nextSlug}`} className="tile" style={{ textAlign: 'right' }}>
-              <div className="mono-caption" style={{ marginBottom: 6 }}>Další →</div>
-              <div className="tile-title" style={{ fontSize: 18 }}>{nextSlug.replace(/-/g, ' ')}</div>
-            </Link>
+            <NeighbourCard category={category} slug={nextSlug} direction="next" />
           ) : (
             <div />
           )}
-        </div>
+        </section>
       )}
     </main>
   );
