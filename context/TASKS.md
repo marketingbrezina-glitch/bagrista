@@ -22,10 +22,10 @@ Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 Vlastní: `content/lore/*` (~70 markdown souborů), `design/*` (statický mockup), spolu s Honzou sdílené FE komponenty a design tokens.
 
 ### Dělá teď
-- (nic v kódu; plánuje další iteraci — 4 nápady v `IDEAS.md` s datem 2026-04-29)
+- [x] **Design v3 hotový a v repu** — `design/v3/`, nový směr (novinový věstník). Viz `design/README.md` pro v1↔v3 rozdíl.
 
 ### Brzy
-- [ ] Rozhodnout se s Honzou o **design v2** — buď doladit stávající implementaci mockupu, nebo nová iterace v Claude.ai. Detail v `IDEAS.md`.
+- [ ] **Přenést v3 do `frontend/`** — ⚠️ **sdílená zóna, potřebuje domluvu s Honzou.** Není to jen Lore: v3 mění design tokens, typografii i rámování, takže se překresluje i Quiz (`QuizPage`, `ResultPage`, `AxisBar`, `Progress`, `QuestionCard`). Návrh dělby: Kolega dělá tokens + Layout + Lore stránky, Honza re-skinuje Quiz podle nových tokenů (má to už v „Brzy" jako *re-skin výsledkové stránky*).
 - [ ] **Newsletter form** — provider + umístění (Buttondown / Substack, homepage vs. výsledkovka). Detail v `IDEAS.md`.
 - [ ] **Google Analytics / Plausible** — rozhodnout providera, přidat script tag do `frontend/index.html`. Detail v `IDEAS.md`.
 - [ ] **Marketing designový prostor** — dohodnout, jestli v repu (`marketing/`) nebo mimo. Detail v `IDEAS.md`.
