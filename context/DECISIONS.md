@@ -6,6 +6,24 @@
 
 ---
 
+## 2026-09-07 — Zápis kontaktů: serverless funkce jako prostředník k SmartEmailingu
+Stránka `/bratrstvo` sbírá e-maily do SmartEmailingu. **Tím se do jinak statického webu vrací kousek serveru** — vědomě, a jen tenhle jeden.
+
+**Proč to nejde bez něj:** SmartEmailing API v3 se autentizuje **Basic auth (e-mail účtu + API klíč)**. Cokoli, co se dostane do frontend bundlu, si přečte kdokoli přes „zobrazit zdroj" — API klíč v prohlížeči by znamenal cizí přístup do celého rozesílacího účtu. Klíč tedy musí zůstat na serveru.
+
+**Řešení:** Vercel Edge funkce `frontend/api/subscribe.ts`. Prohlížeč pošle `{email, consent}` na `/api/subscribe`, funkce ověří vstup a zavolá `POST https://app.smartemailing.cz/api/v3/import` s Basic auth z env proměnných (`SMARTEMAILING_USERNAME`, `_API_KEY`, `_LIST_ID`, volitelně `_DOI_EMAIL_ID`). Ty **nemají prefix `VITE_`**, takže je Vite do bundlu nezahrne.
+
+**Proč zrovna takhle:**
+- **Ne přímo z prohlížeče** — vyzrazený klíč, viz výše.
+- **Ne hostovaný formulář SmartEmailingu** — nešel by nastylovat do designu a odváděl by uživatele pryč ze stránky, na kterou právě přišel z QR kódu.
+- **Ne plnohodnotný backend** — jedna funkce bez stavu a bez databáze. Statický deploy na Vercelu zůstává, `ARCHITECTURE.md` „žádný backend" se tím zužuje na „žádný backend kromě `/api/subscribe`".
+
+**Chování bez konfigurace:** dokud env proměnné nejsou vyplněné, funkce vrací `503 not_configured` a stránka **přizná, že zápis ještě nefunguje** místo aby předstírala úspěch. Formulář, který kontakty tiše zahazuje, by byl horší než žádný — obzvlášť když na něj míří vytištěný QR kód.
+
+**Souhlas:** povinný checkbox se zněním o účelu a odhlášení; funkce request bez `consent: true` odmítne. Double opt-in se zapne doplněním `SMARTEMAILING_DOI_EMAIL_ID`.
+
+**Cena:** Vercel funkce mají na free plánu limity; při našem provozu (jednotky zápisů denně) nehrozí. Kdyby web někdy chytil, hlídat.
+
 ## 2026-09-07 — Google Analytics 4 přes gtag.js, bez knihovny, zapnuté jen přes env var
 Web jde ven pro kámoše a chceme vidět návštěvnost. Nasazeno **GA4 (gtag.js)** přímo, bez wrapper knihovny (`react-ga4` apod.) — jde o ~40 řádků v `frontend/src/analytics.ts`, dependency by nic nepřinesla.
 

@@ -38,13 +38,22 @@
 - Kdo bude psát obsah newsletteru? Frekvence (týdně, měsíčně, sezónně)?
 - GDPR — externí služba se stará. Přidat k formu jen „souhlas s odběrem" checkbox.
 
-**Status:** 🟡 rozestavěné 2026-09-07. Stránka **`/bratrstvo`** stojí a je nasazená (`frontend/src/NewsletterPage.tsx`, odkaz v navigaci i patičce). Adresa je **stabilní — QR kód se na ni může tisknout**: `https://jsembagrista.cz/bratrstvo`.
+**Status:** 🟡 postavené 2026-09-07, čeká na účet. Provider = **SmartEmailing** (rozhodnuto). Stránka **`/bratrstvo`** stojí, je nasazená a odkazovaná z navigace i patičky. Adresa je **stabilní — QR se na ni může tisknout**: `https://jsembagrista.cz/bratrstvo`.
 
-**Zbývá jediné: vybrat providera a dát adresu jeho formuláře.** Ta se nastaví v Vercelu jako env var `VITE_NEWSLETTER_ACTION` (stejný vzor jako GA měřicí ID) — žádná změna kódu.
+**Hotové:** formulář (e-mail + povinný souhlas), fotka „Církev", serverová funkce `frontend/api/subscribe.ts`, která volá SmartEmailing `/api/v3/import`. Architektura a proč zrovna takhle: `DECISIONS.md` (2026-09-07 — Zápis kontaktů).
 
-Dokud proměnná chybí, stránka **vědomě nesbírá** a místo formuláře ukazuje „Kniha je vysázena, písař ještě brousí pero". Formulář, který e-maily tiše zahazuje, by byl horší než žádný — hlavně když na něj míří tištěný QR.
+**Zbývá vyplnit ve Vercelu** (Settings → Environment Variables), pak už nic:
 
-Formulář sám je hotový: e-mail + povinný souhlas se zněním o účelu a odhlášení, odesílá se nativním POSTem na adresu providera (funguje u Buttondown, ConvertKit i Mailchimpu bez dalšího kódu). Po odeslání se posílá GA event `newsletter_signup`.
+| Proměnná | Kde vzít |
+|---|---|
+| `SMARTEMAILING_USERNAME` | e-mail účtu |
+| `SMARTEMAILING_API_KEY` | Nastavení účtu → API klíče |
+| `SMARTEMAILING_LIST_ID` | číslo kontaktního seznamu |
+| `SMARTEMAILING_DOI_EMAIL_ID` | volitelné — ID potvrzovacího e-mailu pro double opt-in |
+
+Dokud chybí, funkce vrací `503` a stránka **přizná, že zápis nefunguje** („Kniha je vysázena, písař ještě brousí pero") místo aby předstírala úspěch.
+
+**Otevřené k doladění:** znění potvrzovacího e-mailu, jestli double opt-in ano/ne, a do jakého seznamu to sypat.
 
 ---
 

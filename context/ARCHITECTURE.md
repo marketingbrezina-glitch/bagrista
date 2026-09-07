@@ -5,7 +5,7 @@
 - **Frontend** (jediná služba): Vite + React 18 + TypeScript, deploy na Vercel jako statický SPA
 - **Lore obsah**: Markdown soubory v `content/lore/` — bundlují se do FE přes Vite glob (`import.meta.glob`)
 - **Quiz**: scoring i otázky běží 100 % client-side v `frontend/src/quiz/{questions,scoring}.ts`
-- **Žádný backend**, žádná DB, žádné API, žádné CORS
+- **Bez backendu s jedinou výjimkou:** `frontend/api/subscribe.ts` — Vercel Edge funkce, která přijímá zápis z `/bratrstvo` a předává ho do SmartEmailingu. Existuje jen proto, že API klíč nesmí do prohlížeče. Žádná DB, žádný stav. Viz `DECISIONS.md` (2026-09-07 — Zápis kontaktů).
 
 Důvod: pro „satira pro kámoše" scope je server zbytečný. Viz `DECISIONS.md` 2026-04-29 — Static-only deploy.
 
