@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { docTitle, num, optStr, str } from './frontmatter';
+import { docTitle, num, optStr, str, tons } from './frontmatter';
 import { findDoc, getOutro, type LoreCategory, type LoreDoc } from './loreContent';
 import { MarkdownView } from './MarkdownView';
 
@@ -58,8 +58,8 @@ function metaPairs(doc: LoreDoc): [string, string][] {
   };
 
   push('Model', optStr(doc, 'model'));
-  push('Hmotnost', num(doc, 'hmotnost_t') && `${num(doc, 'hmotnost_t')} t`);
-  push('Stav', optStr(doc, 'stav'));
+  push('Hmotnost', tons(doc));
+  push('Stav', optStr(doc, 'stav')?.split('.')[0]?.trim());
   push('Původ', optStr(doc, 'puvod'));
   push('Země', optStr(doc, 'zeme'));
   push('Založeno', num(doc, 'zalozeno'));
@@ -149,6 +149,9 @@ export function LoreDocPage() {
   const perex = optStr(doc, 'perex');
   const motto = optStr(doc, 'motto');
   const stav = optStr(doc, 'stav');
+  // `stav` u stupňů je celá věta („Pravý bagrista. Tohle je první stupeň…").
+  // Do štítku patří jen první část, jinak nowrap rozhodí řádek.
+  const stavTag = stav?.split('.')[0]?.trim();
   const posvatne = doc.data.posvatne === true;
   const prevSlug = optStr(doc, 'predchozi');
   const nextSlug = optStr(doc, 'dalsi');
@@ -183,10 +186,10 @@ export function LoreDocPage() {
           </div>
           <h1>{title}</h1>
           {(perex ?? motto) && <p className="dk">„{perex ?? motto}"</p>}
-          {(stav ?? posvatne) && (
+          {(stavTag ?? posvatne) && (
             <div style={{ display: 'flex', gap: 8, marginTop: 22, flexWrap: 'wrap' }}>
               {posvatne && <span className="tag y">Kanonický</span>}
-              {stav && <span className="tag">{stav}</span>}
+              {stavTag && <span className="tag">{stavTag}</span>}
             </div>
           )}
         </div>

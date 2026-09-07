@@ -1,8 +1,8 @@
-import { useState, type CSSProperties } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { trackEvent } from '../analytics';
-import { Creed } from '../brand/Creed';
-import { findLevelById } from '../lore/loreContent';
+import { str } from '../lore/frontmatter';
+import { findLevelById, getOutro } from '../lore/loreContent';
 import { MarkdownView } from '../lore/MarkdownView';
 import { AxisBar } from './AxisBar';
 import { AXIS_LABELS } from './levels';
@@ -10,13 +10,6 @@ import { copyShareLink, printResult } from './share';
 import type { Axis, ScoreResult } from './types';
 
 const AXES: readonly Axis[] = ['mleti', 'narcis', 'komatsu', 'rituals'];
-
-const pageStyle: CSSProperties = {
-  padding: '40px 28px 80px',
-  maxWidth: 880,
-  margin: '0 auto',
-  color: 'var(--fg)',
-};
 
 type Props = {
   result: ScoreResult;
@@ -29,9 +22,10 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied' | 'error'>('idle');
   const isBetrayer = result.levelId === 8;
   const levelDoc = findLevelById(result.levelId);
-  const model = typeof levelDoc?.data.model === 'string' ? levelDoc.data.model : '';
-  const epithet = typeof levelDoc?.data.nazev === 'string' ? levelDoc.data.nazev : '';
-  const perex = typeof levelDoc?.data.perex === 'string' ? levelDoc.data.perex : '';
+  const model = str(levelDoc, 'model');
+  const epithet = str(levelDoc, 'nazev');
+  const perex = str(levelDoc, 'perex');
+  const outro = getOutro('levels');
 
   function onShare() {
     void copyShareLink(shareHash).then((ok) => {
@@ -47,114 +41,95 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
   }
 
   return (
-    <main style={pageStyle}>
-      <div className="page-meta quiz-no-print">
-        <Link to="/">Home</Link>
+    <main>
+      <div className="crumb lab quiz-no-print">
+        <Link to="/">Domů</Link>
         <span>›</span>
-        <span style={{ color: 'var(--fg)' }}>Výsledek</span>
-        <span style={{ flex: 1 }} />
-        <span>Stupeň {String(result.levelId).padStart(2, '0')} / 08</span>
+        <span style={{ color: 'var(--ink)' }}>Výsledek</span>
+        <span style={{ marginLeft: 'auto' }}>
+          Stupeň {String(result.levelId).padStart(2, '0')} / 08
+        </span>
       </div>
 
-      <div className="mono-caption" style={{ marginBottom: 12, color: 'var(--accent-num)' }}>
-        — Tvůj stupeň —
-      </div>
+      <section className="head" style={{ gridTemplateColumns: '1fr 260px' }}>
+        <div>
+          <div className="by lab">
+            <span>Výsledek</span>
+            {isBetrayer && <span style={{ color: 'var(--red)' }}>Exkomunikován</span>}
+          </div>
+          <div className="lab" style={{ marginBottom: 8 }}>
+            Hydraulika tě zařadila na
+          </div>
+          <h1 style={{ fontSize: 'clamp(48px, 7vw, 92px)', fontWeight: 900 }}>
+            {epithet || `Úroveň ${result.levelId}`}
+          </h1>
+          <p className="dk" style={{ fontStyle: 'normal', fontSize: 17 }}>
+            Bagrista úrovně {result.levelId}
+            {model && ` · ${model}`}
+          </p>
+        </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 140px) minmax(0, 1fr)',
-          gap: 28,
-          alignItems: 'flex-start',
-          marginBottom: 32,
-        }}
-      >
         <div
+          className="card"
           style={{
-            background: isBetrayer ? 'var(--rust)' : 'var(--zlut)',
-            color: isBetrayer ? 'var(--parchment)' : 'var(--black)',
-            border: '2px solid var(--black)',
-            outline: `2px solid ${isBetrayer ? 'var(--rust)' : 'var(--zlut)'}`,
-            outlineOffset: 4,
-            padding: '20px 18px',
             textAlign: 'center',
+            ...(isBetrayer
+              ? { borderColor: 'var(--red)', borderStyle: 'dashed', background: 'transparent' }
+              : {
+                  background: 'linear-gradient(180deg, #FFDA5A, var(--yellow))',
+                  borderColor: '#D9A80C',
+                }),
           }}
         >
+          <div className="lab" style={{ color: isBetrayer ? 'var(--red)' : 'var(--ink-2)' }}>
+            Stupeň
+          </div>
           <div
             style={{
-              fontFamily: 'var(--display)',
-              fontSize: 64,
+              fontFamily: 'var(--np)',
+              fontWeight: 900,
+              fontSize: 120,
               lineHeight: 1,
-              fontWeight: 700,
+              letterSpacing: '-0.04em',
+              color: isBetrayer ? 'var(--red)' : 'var(--ink)',
             }}
           >
             {String(result.levelId).padStart(2, '0')}
           </div>
-          <div
-            style={{
-              fontFamily: 'var(--mono)',
-              fontSize: 10,
-              letterSpacing: '0.32em',
-              textTransform: 'uppercase',
-              marginTop: 6,
-              opacity: 0.8,
-            }}
-          >
-            ze 08
+          <div className="lab" style={{ color: isBetrayer ? 'var(--red)' : 'var(--ink-2)' }}>
+            z 08
+          </div>
+        </div>
+      </section>
+
+      <section className="sec two">
+        <div>
+          <div className="sh top">
+            <span>Výklad</span>
+            {epithet && <span>{epithet}</span>}
+          </div>
+          <div className="body">
+            {perex && <p>{perex}</p>}
+            {isBetrayer ? (
+              <p style={{ color: 'var(--red)' }}>
+                Stupeň 8 byl udělen mimo standardní mapování — tvoje konzistentní volby
+                přímosti tě vyřadily z hierarchie. Vzpoura: {result.betrayalScore} bodů.
+                „O tom se nemluví."
+              </p>
+            ) : (
+              <p style={{ color: 'var(--ink-2)', fontStyle: 'italic' }}>
+                Pravda je proměnlivá. Motohodiny stoupají. Možná za rok budeš jinde.
+                {result.betrayalScore > 0 &&
+                  ` (Vzpoura: ${result.betrayalScore} bodů — k D9 chybělo víc.)`}
+              </p>
+            )}
           </div>
         </div>
 
         <div>
-          <h1
-            style={{
-              fontFamily: 'var(--display)',
-              fontSize: 'clamp(40px, 7vw, 72px)',
-              letterSpacing: '0.02em',
-              lineHeight: 0.95,
-              margin: 0,
-              marginBottom: 6,
-              color: 'var(--fg)',
-              textTransform: 'uppercase',
-            }}
-          >
-            Bagrista úrovně {result.levelId}
-          </h1>
-          <div
-            style={{
-              fontFamily: 'var(--mono)',
-              fontSize: 12,
-              letterSpacing: '0.28em',
-              textTransform: 'uppercase',
-              color: 'var(--accent-num)',
-              marginBottom: 16,
-            }}
-          >
-            {model}
-            {model && epithet && ' · '}
-            {epithet}
+          <div className="sh top">
+            <span>Profil os</span>
           </div>
-          {perex && (
-            <p
-              style={{
-                fontStyle: 'italic',
-                fontSize: 19,
-                lineHeight: 1.55,
-                color: 'var(--fg)',
-                margin: 0,
-              }}
-            >
-              {perex}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <section style={{ marginBottom: 40 }}>
-        <div className="sec-head" style={{ marginTop: 32 }}>
-          <span className="num">§ 01</span>
-          <h2>Profil os</h2>
-        </div>
-        <div>
           {AXES.map((axis) => (
             <AxisBar
               key={axis}
@@ -163,37 +138,23 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
               max={result.axisMax[axis]}
             />
           ))}
-        </div>
 
-        {isBetrayer && (
-          <div style={{ marginTop: 28 }}>
-            <Creed label="Verdikt hydrauliky" attrib={`Vzpoura: ${result.betrayalScore} bodů`}>
-              Stupeň 8 byl udělen mimo standardní mapování. Tvoje konzistentní volby
-              přímosti tě vyřadily z hierarchie. „O tom se nemluví."
-            </Creed>
-          </div>
-        )}
-        {!isBetrayer && result.betrayalScore > 0 && (
-          <p
-            style={{
-              fontFamily: 'var(--mono)',
-              fontSize: 11,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: 'var(--fg-faint)',
-              marginTop: 18,
-            }}
-          >
-            Vzpoura: {result.betrayalScore} bodů (k D9 chybělo víc)
-          </p>
-        )}
+          {outro && (
+            <div className="note">
+              <div className="lab">{str(outro, 'nazev', 'Závěrečné požehnání')}</div>
+              <div className="lore-prose" style={{ marginTop: 8 }}>
+                <MarkdownView body={outro.body} />
+              </div>
+            </div>
+          )}
+        </div>
       </section>
 
       {levelDoc && (
-        <section style={{ marginBottom: 40 }}>
-          <div className="sec-head">
-            <span className="num">§ 02</span>
-            <h2>Lore stupně</h2>
+        <section className="sec">
+          <div className="sh top" style={{ maxWidth: 760 }}>
+            <span>Lore stupně</span>
+            <span>{model}</span>
           </div>
           <MarkdownView body={levelDoc.body} />
           <p style={{ marginTop: 24 }}>
@@ -204,67 +165,38 @@ export function ResultPage({ result, shareHash, onRestart, restartLabel }: Props
         </section>
       )}
 
-      <div
-        className="quiz-no-print btn-row"
+      <section
+        className="sec quiz-no-print"
         style={{
+          borderBottom: 0,
+          display: 'flex',
+          gap: 12,
+          justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: 32,
-          paddingTop: 28,
-          borderTop: '1px dashed var(--rule-dashed)',
+          flexWrap: 'wrap',
         }}
       >
-        <button type="button" onClick={onShare} className="btn">
-          Sdílet
-        </button>
-        <button type="button" onClick={onPrint} className="btn ghost">
-          Stáhnout PDF
-        </button>
-        <button
-          type="button"
-          onClick={onRestart}
-          style={{
-            background: 'none',
-            border: 'none',
-            font: 'inherit',
-            fontFamily: 'var(--mono)',
-            fontSize: 11,
-            letterSpacing: '0.28em',
-            textTransform: 'uppercase',
-            color: 'var(--fg-dim)',
-            cursor: 'pointer',
-            textDecoration: 'underline',
-            padding: '10px 0',
-          }}
-        >
+        <div className="btn-row" style={{ alignItems: 'center' }}>
+          <button type="button" onClick={onShare} className="btn">
+            Sdílet
+          </button>
+          <button type="button" onClick={onPrint} className="btn o">
+            Stáhnout PDF
+          </button>
+          <Link to="/lore/levels" className="btn o">
+            Všech 8 stupňů
+          </Link>
+          {shareStatus === 'copied' && <span className="lab">Odkaz zkopírován</span>}
+          {shareStatus === 'error' && (
+            <span className="lab" style={{ color: 'var(--red)' }}>
+              Nepovedlo se · zkopíruj z adresního řádku
+            </span>
+          )}
+        </div>
+        <button type="button" onClick={onRestart} className="btn o">
           {restartLabel}
         </button>
-        {shareStatus === 'copied' && (
-          <span
-            style={{
-              color: 'var(--accent-num)',
-              fontFamily: 'var(--mono)',
-              fontSize: 11,
-              letterSpacing: '0.28em',
-              textTransform: 'uppercase',
-            }}
-          >
-            Odkaz zkopírován
-          </span>
-        )}
-        {shareStatus === 'error' && (
-          <span
-            style={{
-              color: 'var(--rust)',
-              fontFamily: 'var(--mono)',
-              fontSize: 11,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-            }}
-          >
-            Nepovedlo se · zkopíruj z adresního řádku
-          </span>
-        )}
-      </div>
+      </section>
     </main>
   );
 }

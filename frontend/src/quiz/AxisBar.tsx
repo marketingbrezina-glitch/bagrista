@@ -7,36 +7,31 @@ type Props = {
 export function AxisBar({ label, score, max }: Props) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (score / max) * 100)) : 0;
   return (
-    <div style={{ marginBottom: 14 }}>
+    <div style={{ marginBottom: 16 }}>
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          fontFamily: 'var(--mono)',
-          fontSize: 11,
-          letterSpacing: '0.22em',
-          textTransform: 'uppercase',
-          marginBottom: 4,
+          alignItems: 'baseline',
+          marginBottom: 6,
         }}
       >
-        <span style={{ color: 'var(--fg)' }}>{label}</span>
-        <span style={{ color: 'var(--accent-num)' }}>{Math.round(pct)} %</span>
-      </div>
-      <div
-        style={{
-          height: 8,
-          background: 'var(--bg-3)',
-          position: 'relative',
-        }}
-      >
-        <div
+        <span className="lab" style={{ color: 'var(--ink)' }}>
+          {label}
+        </span>
+        <span
           style={{
-            width: `${pct}%`,
-            height: '100%',
-            background: 'var(--zlut)',
-            transition: 'width 220ms ease',
+            fontFamily: 'var(--np)',
+            fontWeight: 700,
+            fontSize: 18,
+            fontVariantNumeric: 'tabular-nums',
           }}
-        />
+        >
+          {Math.round(pct)} %
+        </span>
+      </div>
+      <div className="prog" style={{ height: 8 }}>
+        <i style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

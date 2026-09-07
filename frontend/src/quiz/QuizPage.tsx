@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useState } from 'react';
 import { trackEvent } from '../analytics';
 import { fetchQuestions, postScore } from './api';
 import { Progress } from './Progress';
@@ -6,13 +6,6 @@ import { QuestionCard } from './QuestionCard';
 import { ResultPage } from './ResultPage';
 import { clearHashFromUrl, decodeAnswers, encodeAnswers } from './share';
 import type { Answer, PublicQuestion, ScoreResult } from './types';
-
-const pageStyle: CSSProperties = {
-  padding: '40px 28px 80px',
-  maxWidth: 760,
-  margin: '0 auto',
-  color: 'var(--fg)',
-};
 
 export function QuizPage() {
   const [questions, setQuestions] = useState<PublicQuestion[] | null>(null);
@@ -128,26 +121,31 @@ export function QuizPage() {
 
   if (error) {
     return (
-      <main style={pageStyle}>
-        <div className="mono-caption" style={{ color: 'var(--rust)', marginBottom: 16 }}>
-          — Hydraulika spí —
-        </div>
-        <h1 style={{ fontFamily: 'var(--display)', fontSize: 40, margin: 0, marginBottom: 12 }}>
-          Otázky se nenačetly
-        </h1>
-        <p style={{ color: 'var(--fg-dim)' }}>{error}</p>
-        <p style={{ color: 'var(--fg-faint)', fontSize: 14 }}>
-          Backend musí běžet na <code>:3001</code>.
-        </p>
+      <main>
+        <section className="head solo">
+          <div>
+            <div className="by lab">
+              <span style={{ color: 'var(--red)' }}>Hydraulika spí</span>
+            </div>
+            <h1>Otázky se nenačetly</h1>
+            <p className="dk">{error}</p>
+          </div>
+        </section>
       </main>
     );
   }
 
   if (!questions) {
     return (
-      <main style={pageStyle}>
-        <div className="mono-caption">— Hydraulika se připravuje —</div>
-        <p style={{ marginTop: 12 }}>Načítám otázky…</p>
+      <main>
+        <section className="head solo">
+          <div>
+            <div className="by lab">
+              <span>Hydraulika se připravuje</span>
+            </div>
+            <h1>Načítám otázky…</h1>
+          </div>
+        </section>
       </main>
     );
   }
@@ -167,26 +165,32 @@ export function QuizPage() {
   if (currentIndex >= questions.length) {
     if (scoring === 'error') {
       return (
-        <main style={pageStyle}>
-          <div className="mono-caption" style={{ color: 'var(--rust)' }}>
-            — Hydraulika prskla —
-          </div>
-          <p style={{ marginTop: 12, marginBottom: 24 }}>Výsledek se nepodařilo spočítat.</p>
-          <button type="button" onClick={retryScoring} className="btn">
-            Zkusit znovu
-          </button>
+        <main>
+          <section className="head solo">
+            <div>
+              <div className="by lab">
+                <span style={{ color: 'var(--red)' }}>Hydraulika prskla</span>
+              </div>
+              <h1>Výsledek se nepodařilo spočítat</h1>
+            </div>
+          </section>
+          <section className="sec" style={{ borderBottom: 0 }}>
+            <button type="button" onClick={retryScoring} className="btn">
+              Zkusit znovu
+            </button>
+          </section>
         </main>
       );
     }
     return (
-      <main style={pageStyle}>
+      <main>
         <Progress current={questions.length} total={questions.length} />
-        <div style={{ marginTop: 64, textAlign: 'center' }}>
-          <div className="mono-caption">— Hydraulika počítá —</div>
-          <p style={{ fontFamily: 'var(--display)', fontSize: 32, marginTop: 12 }}>
-            Skládám tvůj profil…
-          </p>
-        </div>
+        <section className="sec" style={{ borderBottom: 0, textAlign: 'center', paddingTop: 72 }}>
+          <div className="lab" style={{ marginBottom: 12 }}>
+            Hydraulika počítá
+          </div>
+          <h1 style={{ fontSize: 40 }}>Skládám tvůj profil…</h1>
+        </section>
       </main>
     );
   }
@@ -195,58 +199,39 @@ export function QuizPage() {
   if (!current) return null;
 
   return (
-    <main style={pageStyle}>
-      <div className="mono-caption" style={{ marginBottom: 12, color: 'var(--accent-num)' }}>
-        — Hydraulika se ptá —
-      </div>
+    <main>
       <Progress current={currentIndex + 1} total={questions.length} />
-      <div style={{ marginTop: 40 }}>
+
+      <section className="sec" style={{ maxWidth: 860, borderBottom: 0 }}>
         <QuestionCard
           question={current}
           selectedOptionId={answers[current.id]}
           onSelect={selectOption}
         />
-      </div>
-      <div
-        style={{
-          marginTop: 32,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          fontFamily: 'var(--mono)',
-          fontSize: 11,
-          letterSpacing: '0.22em',
-          textTransform: 'uppercase',
-          color: 'var(--fg-faint)',
-        }}
-      >
-        <button
-          type="button"
-          onClick={goBack}
-          disabled={currentIndex === 0}
+
+        <div
           style={{
-            ...navButtonStyle(currentIndex === 0),
-            fontFamily: 'var(--mono)',
-            fontSize: 11,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
+            marginTop: 32,
+            paddingTop: 18,
+            borderTop: '1px solid var(--hair)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 16,
+            flexWrap: 'wrap',
           }}
         >
-          ← Zpět
-        </button>
-        <span>Klávesy 1–4 vyberou · ← vrátí</span>
-      </div>
+          <button
+            type="button"
+            onClick={goBack}
+            disabled={currentIndex === 0}
+            className="btn o"
+          >
+            ← Zpět
+          </button>
+          <span className="lab">Klávesy 1–4 vyberou · ← vrátí</span>
+        </div>
+      </section>
     </main>
   );
-}
-
-function navButtonStyle(disabled: boolean): CSSProperties {
-  return {
-    background: 'none',
-    border: 'none',
-    color: disabled ? 'var(--fg-faint)' : 'var(--fg-dim)',
-    cursor: disabled ? 'default' : 'pointer',
-    font: 'inherit',
-    padding: 0,
-  };
 }

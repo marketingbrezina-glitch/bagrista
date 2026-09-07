@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { num, str } from './lore/frontmatter';
+import { num, str, tons } from './lore/frontmatter';
 import type { LoreDoc } from './lore/loreContent';
 import { findDoc, findHub, listByCategory } from './lore/loreContent';
 import { QUIZ_QUESTIONS } from './quiz/questions';
@@ -157,7 +157,7 @@ export function HomePage() {
                 <b>{String(num(doc, 'id') ?? 0).padStart(2, '0')}</b>
                 <span>{str(doc, 'nazev', doc.slug)}</span>
                 <span className="m">
-                  {str(doc, 'model')} · {num(doc, 'hmotnost_t')} t
+                  {str(doc, 'model')} · {tons(doc)}
                 </span>
               </Link>
             ))}

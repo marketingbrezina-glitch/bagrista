@@ -21,3 +21,9 @@ export function num(doc: LoreDoc | undefined, key: string): number | undefined {
 export function docTitle(doc: LoreDoc): string {
   return str(doc, 'nazev', doc.slug);
 }
+
+/** Hmotnost stroje v tunách, česky (desetinná čárka): „1,5 t". */
+export function tons(doc: LoreDoc | undefined): string | undefined {
+  const value = num(doc, 'hmotnost_t');
+  return value === undefined ? undefined : `${value.toLocaleString('cs-CZ')} t`;
+}

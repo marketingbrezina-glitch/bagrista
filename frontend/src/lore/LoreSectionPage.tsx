@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { docTitle, num, optStr, str } from './frontmatter';
+import { docTitle, num, optStr, str, tons } from './frontmatter';
 import { findHub, getIntro, listByCategory, type LoreCategory, type LoreDoc } from './loreContent';
 import { MarkdownView } from './MarkdownView';
 
@@ -77,7 +77,7 @@ function Staircase({ items }: { items: LoreDoc[] }) {
             <div>
               <div className="t">{docTitle(doc)}</div>
               <div className="mm">
-                {str(doc, 'model')} · {num(doc, 'hmotnost_t')} t
+                {str(doc, 'model')} · {tons(doc)}
               </div>
             </div>
             <p>{str(doc, 'perex')}</p>
