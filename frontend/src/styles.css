@@ -258,7 +258,10 @@ footer {
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 56px;
-  align-items: end;
+  /* Zarovnat nahoru, ne dolů. Mockup měl `end`, protože tam byla karta vpravo
+     vždycky nízká. U vysoké karty (fotka, kvíz) by to text odtlačilo dolů
+     a nad nadpisem by zůstala díra. */
+  align-items: start;
 }
 .head.solo { grid-template-columns: 1fr; }
 .head h1 { font-size: clamp(40px, 5vw, 62px); line-height: 1; }
