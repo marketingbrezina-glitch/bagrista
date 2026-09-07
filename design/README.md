@@ -16,4 +16,9 @@ Slouží jako **referenční designová vize** pro `frontend/` (Vite + React + T
 
 ## Vlastník
 
-Hrabě (Lore feature). Hotovo přes Claude.ai web (Artifacts).
+Hrabě (Lore feature). Vytvořeno v **Claude Design** (claude.ai/design) — ne v Artifacts.
+Proto je to multi-file projekt s CDN závislostmi (React, Babel, Google Fonts), ne
+jednosouborový self-contained artifact.
+
+Důsledek: `bagrista-web.html` **nejde otevřít přes `file://`** (Babel nesmí načítat
+lokální `.jsx` soubory). Spusť přes lokální HTTP server — např. VS Code Live Server.
