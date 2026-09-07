@@ -25,10 +25,7 @@ Vlastní: `content/lore/*` (~70 markdown souborů), `design/*` (statický mockup
 - [x] **Design v3 hotový a v repu** — `design/v3/`, nový směr (novinový věstník). Viz `design/README.md` pro v1↔v3 rozdíl.
 
 ### Brzy
-- [ ] **Přenést v3 do `frontend/`** — **bere Kolega, celé včetně re-skinu kvízu.** v3 mění tokeny a typografii globálně, takže rozsekat to mezi dva lidi by znamenalo půlku webu v jednom stylu a půlku v druhém.
-  - **Hranice:** sahám jen na vizuál — `styles.css`, `index.html`, `Layout`, `HomePage`, `lore/*`, a z kvízu `QuizPage`, `ResultPage`, `AxisBar`, `Progress`, `QuestionCard`.
-  - **Honzo, na tohle nesahám:** `quiz/{questions,scoring,types,share,levels,api}.ts` — kalibrace prahů 3↔4 a 6↔7 máš volnou, můžeš na ní dělat paralelně.
-  - Postup po krocích, každý krok = commit, který staví i buildí.
+- [ ] Projít v3 na mobilu — port je ověřený jen na desktopu (1440×900). Breakpoint `960px` z mockupu je v `styles.css`, ale reálně proklikané to není.
 - [ ] **Newsletter form** — provider + umístění (Buttondown / Substack, homepage vs. výsledkovka). Detail v `IDEAS.md`.
 - [ ] **Google Analytics / Plausible** — rozhodnout providera, přidat script tag do `frontend/index.html`. Detail v `IDEAS.md`.
 - [ ] **Marketing designový prostor** — dohodnout, jestli v repu (`marketing/`) nebo mimo. Detail v `IDEAS.md`.
@@ -42,6 +39,7 @@ Vlastní: `content/lore/*` (~70 markdown souborů), `design/*` (statický mockup
 
 ## Hotovo
 
+- [x] 2026-09-07 — **Design v3 „Věstník" přenesen do `frontend/`** (Kolega, celé včetně kvízu — domluveno s Honzou). Čtyři commity: tokeny+masthead → homepage → lore stránky → re-skin kvízu. Playfair Display místo stencilu, list papíru na stole, novinová hlavička a linky. Legacy v1 vrstva ze `styles.css` smazána, `brand/` složka zrušena (masthead je čistá typografie). **Kvíz je re-skin bez zásahu do logiky** — `quiz/{questions,scoring,types,share,levels,api}.ts` nedotčené, Honzova kalibrace prahů volná. Homepage i Lore stránky teď čtou počty a názvy z `content/lore/**/*.md`, ne z mockupu. Nově se renderuje `levels/_outro.md` (Závěrečné požehnání) pod stupni i na výsledkovce. Ověřeno v prohlížeči: homepage, schody, detail stupně, průchod kvízem, výsledek Zrádce — bez chyb v konzoli.
 - [x] 2026-09-07 — Google Analytics 4 (Honza). `frontend/src/analytics.ts` + `usePageTracking.ts`; produkční build používá ID `G-TST9NBRYZL` zapečené v `analytics.ts` (přepsatelné `VITE_GA_MEASUREMENT_ID`), dev mód neměří. Pageviews na každou SPA routu + kvízové eventy (`quiz_start`, `quiz_complete`, `result_share`, `result_print`, `result_view_shared`, `quiz_restart`). Dotknuto sdílených `main.tsx`/`App.tsx` (jen přidané řádky). Detail v `DECISIONS.md` (2026-09-07 — GA4). Rozhodnutí GA4 vs. Plausible viz `IDEAS.md`.
 - [x] 2026-04-29 — Lore obsah kompletní: ~70 markdown souborů v `content/lore/` (8 stupňů + 7 fází + 7 sekt + 6 značek + 6 svátků + 6 rituálů + 5 svatých písem + 9 pojmů + 5 hub stránek + Credo + Caterpillar). Šablony v `_TEMPLATES.md`. Wiki-linky `[[...]]` napříč obsahem. Kolega.
 - [x] 2026-04-29 — Designový mockup celého webu v `design/` (HTML + JSX bez buildu, vytvořeno v **Claude Design** na claude.ai/design). 15 souborů: entry point, stylesheet, sdílené komponenty, TweaksPanel pro live-tweaking barev a fontů, 8 stránek + logo explorations. Slouží jako referenční vize pro `frontend/`. Kolega.

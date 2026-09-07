@@ -14,13 +14,12 @@ Důvod: pro „satira pro kámoše" scope je server zbytečný. Viz `DECISIONS.m
 ```
 frontend/        — Vite SPA, jediná build artefakta
   src/
-    quiz/        — Honza: types, questions, scoring, share, UI
-    lore/        — Honza scaffold + kolegovy designové revize: rendering markdownu
-    brand/       — Bucket SVG, Wordmark, Creed
-    Layout.tsx   — TopBar + Footer (sdílené)
+    quiz/        — Honza: types, questions, scoring, share. UI re-skinuto na v3.
+    lore/        — rendering markdownu + frontmatter.ts (typované čtení hlaviček)
+    Layout.tsx   — masthead (ears/plate/navr) + patička, obaluje vše do .sheet
     HomePage.tsx — homepage
     App.tsx      — router
-    styles.css   — design tokens, design system tříd
+    styles.css   — design systém v3 „Věstník" (předloha: design/v3/)
   vercel.json    — SPA rewrites pro Vercel
 content/lore/    — Kolega: 70+ markdown souborů (levels, sects, holidays, …)
 context/         — sdílený kontext (Claude i lidi)
