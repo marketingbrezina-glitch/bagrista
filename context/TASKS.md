@@ -10,7 +10,7 @@ Vlastní: kvízová cesta, scoring algoritmus, výsledková stránka, sdílení 
 Soubory: `frontend/src/quiz/*`, `backend/src/quiz/*`.
 
 ### Dělá teď
-- (nic; static-only build hotový, deploy na Vercel připravený — vercel.json v `frontend/`)
+- [x] 2026-09-09 — **Archiv kontaktů z `/bratrstvo` do soukromého GitHub repa** (`frontend/api/subscribe.ts`, env `CONTACTS_GITHUB_REPO` + `CONTACTS_GITHUB_TOKEN`). Důvod: leták s QR na akci, SmartEmailing nenapojený, kontakty padaly do 503. Detail v `DECISIONS.md` (2026-09-09). Kolega: tvoje SmartEmailing cesta je nedotčená, jen běží vedle archivu.
 
 ### Brzy
 - [ ] Domluva s kolegou: jak Quiz získá popis stupně z Lore (`ARCHITECTURE.md` → Sdílená rozhraní). Aktuálně FE má vlastní 2-věty popisy v `frontend/src/quiz/levels.ts`; ty by měly přejít na Lore endpoint.

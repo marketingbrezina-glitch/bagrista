@@ -6,6 +6,21 @@
 
 ---
 
+## 2026-09-09 — Kontakty z `/bratrstvo` se archivují do soukromého GitHub repa (i bez mailového nástroje)
+Leták s QR na `/bratrstvo` šel do tisku a na akci, ale SmartEmailing env proměnné nebyly nastavené → funkce vracela `503 not_configured` a **kontakty se zahazovaly**. Potřeba: uložit je bezpečně kamkoli, stáhnout později.
+
+**Řešení:** `frontend/api/subscribe.ts` má druhou, nezávislou cestu — **archiv do soukromého GitHub repa `bagrista-kontakty`** přes Contents API. Každé odeslání = jeden soubor `kontakty/<den>/<čas>-<náhoda>.json` (`email`, `consent`, `at`, `source`). Konfigurace `CONTACTS_GITHUB_REPO` + `CONTACTS_GITHUB_TOKEN` (fine-grained PAT jen na to repo, Contents R/W). Export do CSV = `git clone` + `jq`, návod v README toho repa.
+
+**Proč GitHub a ne Vercel KV/Blob/Postgres:** žádná nová dependency, žádné zakládání store přes Vercel marketplace, tokenu rozumíme, a „stáhnout si data" je `git clone`. Do repa vidí jen vlastníci. Repo `bagrista` je **veřejné**, proto kontakty leží v samostatném soukromém repu, nikdy tady.
+
+**Proč jeden soubor na zápis:** Contents API při přepisu sdíleného souboru vyžaduje `sha` a dva souběžné zápisy by kolidovaly (409). Samostatné soubory nekolidují; duplicity (jeden člověk odešle dvakrát) se čistí až při exportu.
+
+**Chování:** Když je nastavený archiv i SmartEmailing, zapíše se do obou; výpadek SmartEmailingu se uživateli neukáže, pokud archiv uspěl (kontakt je v bezpečí). Když není nastavené nic, dál `503` a stránka to přizná. Archiv zůstává zapnutý i po napojení mailového nástroje jako záloha a doklad souhlasu (`at` = čas zaškrtnutí).
+
+**Cena:** GitHub API 5000 požadavků/h na token — pro akci s desítkami zápisů nepodstatné. Repo poroste o jeden malý commit na kontakt.
+
+---
+
 ## 2026-09-07 — Zápis kontaktů: serverless funkce jako prostředník k SmartEmailingu
 Stránka `/bratrstvo` sbírá e-maily do SmartEmailingu. **Tím se do jinak statického webu vrací kousek serveru** — vědomě, a jen tenhle jeden.
 
